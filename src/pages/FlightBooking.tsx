@@ -163,7 +163,7 @@ const FlightBooking = () => {
                           </Select>
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-luxury-navy font-semibold">الرضع (<2)</Label>
+                          <Label className="text-luxury-navy font-semibold">الرضع (أقل من 2)</Label>
                           <Select value={flightData.infants} onValueChange={(value) => setFlightData({...flightData, infants: value})}>
                             <SelectTrigger className="h-12 rounded-xl"><SelectValue /></SelectTrigger>
                             <SelectContent>{[0,1,2].map(n => <SelectItem key={n} value={n.toString()}>{n}</SelectItem>)}</SelectContent>

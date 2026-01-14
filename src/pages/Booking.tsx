@@ -269,7 +269,7 @@ const BookingPage = () => {
                         <Label className="text-luxury-navy font-semibold">الوجهة *</Label>
                         <Select value={formData.destinationId} onValueChange={(v) => handleSelectChange("destinationId", v)}>
                           <SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="اختر الوجهة" /></SelectTrigger>
-                          <Select Content>
+                          <SelectContent>
                             {destinations.map((d) => (
                               <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
                             ))}
