@@ -386,26 +386,27 @@ export async function createFlightBooking(data: FlightBookingData) {
   const totalPrice = basePrice + taxes;
 
   const booking = {
-    booking_reference: generateBookingReference('TRV-FL-'),
-    flight_offer_id: data.flight_offer_id,
-    customer_name: data.customer_name,
-    customer_email: data.customer_email,
-    customer_phone: data.customer_phone,
+    pnr: generateBookingReference('TRV-FL-'),
+    contact_first_name: data.customer_name.split(' ')[0] || data.customer_name,
+    contact_last_name: data.customer_name.split(' ').slice(1).join(' ') || data.customer_name,
+    contact_email: data.customer_email,
+    contact_phone: data.customer_phone,
     origin_code: flightOffer.origin_airport?.iata_code || '',
     destination_code: flightOffer.destination_airport?.iata_code || '',
     departure_date: flightOffer.departure_date,
     return_date: flightOffer.return_date,
-    passengers: JSON.parse(JSON.stringify(data.passengers)),
-    adults_count: data.adults_count,
-    children_count: data.children_count,
-    infants_count: data.infants_count,
+    adults: data.adults_count,
+    children: data.children_count,
+    infants: data.infants_count,
+    total_passengers: data.adults_count + data.children_count + data.infants_count,
     base_price: basePrice,
     taxes: taxes,
     total_price: totalPrice,
-    currency: flightOffer.currency,
-    special_requests: data.special_requests,
+    currency: flightOffer.currency || 'SAR',
+    notes: data.special_requests,
     status: 'pending',
     payment_status: 'pending',
+    flight_offer: {} as any,
   };
 
   const { data: result, error } = await supabase
@@ -471,16 +472,8 @@ export async function createHotelBooking(data: HotelBookingData) {
 export async function getFlightBooking(reference: string) {
   const { data, error } = await supabase
     .from('flight_bookings')
-    .select(`
-      *,
-      flight_offer:flight_offers(
-        *,
-        origin_airport:airports!origin_airport_id(*),
-        destination_airport:airports!destination_airport_id(*),
-        airline:airlines!airline_id(*)
-      )
-    `)
-    .eq('booking_reference', reference)
+    .select('*')
+    .eq('pnr', reference)
     .single();
 
   if (error) return null;

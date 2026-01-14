@@ -257,11 +257,9 @@ interface DashboardBooking {
   id: string;
   booking_reference: string;
   booking_type: string;
-  status: string;
+  status: string | null;
   total_amount: number;
-  user?: {
-    full_name: string;
-  };
+  user_id: string;
 }
 
 const AdminDashboard = () => {
@@ -296,7 +294,7 @@ const AdminDashboard = () => {
       // Fetch recent bookings
       const { data: recentBookings } = await supabase
         .from("bookings")
-        .select("*, user:users(full_name)")
+        .select("id, booking_reference, booking_type, status, total_amount, user_id")
         .order("created_at", { ascending: false })
         .limit(5);
 
@@ -305,7 +303,7 @@ const AdminDashboard = () => {
         revenue: totalRevenue,
         usersCount: usersCount || 0,
         destinationsCount: destinationsCount || 0,
-        recentBookings: recentBookings || [],
+        recentBookings: (recentBookings || []) as DashboardBooking[],
       });
     } catch (error) {
       console.error("Dashboard error:", error);
@@ -410,7 +408,7 @@ const AdminDashboard = () => {
                     {stats.recentBookings.map((booking) => (
                       <tr key={booking.id} className="border-b last:border-0 hover:bg-muted/50">
                         <td className="py-3 px-2 text-sm font-mono">{booking.booking_reference}</td>
-                        <td className="py-3 px-2 text-sm">{booking.user?.full_name || "عميل خارجي"}</td>
+                        <td className="py-3 px-2 text-sm">عميل</td>
                         <td className="py-3 px-2 text-sm uppercase">{booking.booking_type}</td>
                         <td className="py-3 px-2">
                           <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${

@@ -93,10 +93,6 @@ const AdminMessages = () => {
     toast.info("ميزة التمييز غير متوفرة حالياً");
     console.log("Toggle star for:", id);
   };
-    } catch (error) {
-      toast.error("حدث خطأ");
-    }
-  };
 
   const deleteMessage = async (id: string) => {
     if (!confirm("هل أنت متأكد من حذف هذه الرسالة؟")) return;
@@ -118,8 +114,8 @@ const AdminMessages = () => {
 
   const filteredMessages = messages.filter((msg) => {
     const matchesSearch =
-      msg.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      msg.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      msg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (msg.subject || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       msg.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || msg.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -250,7 +246,7 @@ const AdminMessages = () => {
                 {/* Avatar */}
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-lg font-bold text-primary">
-                    {message.full_name.charAt(0)}
+                    {message.name.charAt(0)}
                   </span>
                 </div>
 
@@ -259,17 +255,14 @@ const AdminMessages = () => {
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center gap-2">
                       <h3 className={`font-medium ${message.status === "new" ? "font-bold" : ""}`}>
-                        {message.full_name}
+                        {message.name}
                       </h3>
-                      {message.is_starred && (
-                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       {getStatusBadge(message.status)}
                       <span className="text-xs text-muted-foreground flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        {formatDate(message.created_at)}
+                        {message.created_at ? formatDate(message.created_at) : ""}
                       </span>
                     </div>
                   </div>
@@ -308,11 +301,11 @@ const AdminMessages = () => {
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
                       <span className="text-lg font-bold text-primary">
-                        {selectedMessage.full_name.charAt(0)}
+                        {selectedMessage.name.charAt(0)}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium">{selectedMessage.full_name}</p>
+                      <p className="font-medium">{selectedMessage.name}</p>
                       <p className="text-sm text-muted-foreground">{selectedMessage.email}</p>
                     </div>
                   </div>
@@ -320,10 +313,10 @@ const AdminMessages = () => {
                     <Button 
                       variant="outline" 
                       size="icon"
-                      onClick={() => toggleStarred(selectedMessage.id, selectedMessage.is_starred)}
-                      aria-label={selectedMessage.is_starred ? "إلغاء التمييز" : "تمييز"}
+                      onClick={() => toggleStarred(selectedMessage.id, false)}
+                      aria-label="تمييز"
                     >
-                      <Star className={`w-4 h-4 ${selectedMessage.is_starred ? "fill-yellow-500 text-yellow-500" : ""}`} />
+                      <Star className="w-4 h-4" />
                     </Button>
                     <Button variant="outline" size="sm" asChild>
                       <a href={`mailto:${selectedMessage.email}`}>
@@ -346,7 +339,7 @@ const AdminMessages = () => {
                 <div className="p-4 border rounded-lg">
                   <p className="text-sm leading-relaxed whitespace-pre-wrap">{selectedMessage.message}</p>
                   <p className="text-xs text-muted-foreground mt-4">
-                    {new Date(selectedMessage.created_at).toLocaleString('ar-SA')}
+                    {selectedMessage.created_at ? new Date(selectedMessage.created_at).toLocaleString('ar-SA') : ""}
                   </p>
                 </div>
 

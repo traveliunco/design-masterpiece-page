@@ -30,17 +30,17 @@ import { toast } from "sonner";
 interface Offer {
   id: string;
   code: string;
-  name_ar: string;
+  name_ar: string | null;
   name_en: string | null;
   discount_type: string;
   discount_value: number;
-  min_amount: number | null;
-  max_uses: number | null;
-  used_count: number;
-  start_date: string;
-  end_date: string;
-  is_active: boolean;
-  created_at: string;
+  min_order_amount: number | null;
+  usage_limit: number | null;
+  used_count: number | null;
+  valid_from: string;
+  valid_until: string;
+  is_active: boolean | null;
+  created_at: string | null;
 }
 
 const AdminOffers = () => {
@@ -57,7 +57,7 @@ const AdminOffers = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("offers")
+        .from("promo_codes")
         .select("*")
         .order("created_at", { ascending: false });
 
@@ -75,7 +75,7 @@ const AdminOffers = () => {
     if (!confirm("هل أنت متأكد من حذف هذا العرض؟")) return;
 
     try {
-      const { error } = await supabase.from("offers").delete().eq("id", id);
+      const { error } = await supabase.from("promo_codes").delete().eq("id", id);
       if (error) throw error;
       toast.success("تم حذف العرض بنجاح");
       loadOffers();
@@ -84,10 +84,10 @@ const AdminOffers = () => {
     }
   };
 
-  const toggleStatus = async (id: string, currentStatus: boolean) => {
+  const toggleStatus = async (id: string, currentStatus: boolean | null) => {
     try {
       const { error } = await supabase
-        .from("offers")
+        .from("promo_codes")
         .update({ is_active: !currentStatus })
         .eq("id", id);
 
@@ -106,13 +106,13 @@ const AdminOffers = () => {
 
   const getOfferStatus = (offer: Offer) => {
     const now = new Date();
-    const start = new Date(offer.start_date);
-    const end = new Date(offer.end_date);
+    const start = new Date(offer.valid_from);
+    const end = new Date(offer.valid_until);
 
     if (!offer.is_active) return "disabled";
     if (now < start) return "upcoming";
     if (now > end) return "expired";
-    if (offer.max_uses && offer.used_count >= offer.max_uses) return "exhausted";
+    if (offer.usage_limit && (offer.used_count || 0) >= offer.usage_limit) return "exhausted";
     return "active";
   };
 
@@ -141,7 +141,7 @@ const AdminOffers = () => {
   const filteredOffers = offers.filter((offer) => {
     const matchesSearch = 
       offer.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      offer.name_ar.toLowerCase().includes(searchTerm.toLowerCase());
+      (offer.name_ar || "").toLowerCase().includes(searchTerm.toLowerCase());
     const status = getOfferStatus(offer);
     const matchesStatus = statusFilter === "all" || status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -202,7 +202,7 @@ const AdminOffers = () => {
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-3xl font-bold text-blue-600">
-              {offers.reduce((sum, o) => sum + o.used_count, 0)}
+              {offers.reduce((sum, o) => sum + (o.used_count || 0), 0)}
             </p>
             <p className="text-sm text-muted-foreground">مرات الاستخدام</p>
           </CardContent>
@@ -294,19 +294,19 @@ const AdminOffers = () => {
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-1 text-sm">
                         <Users className="w-4 h-4 text-muted-foreground" />
-                        {offer.used_count} / {offer.max_uses || "∞"}
+                        {offer.used_count || 0} / {offer.usage_limit || "∞"}
                       </div>
                     </td>
                     <td className="py-4 px-4 text-sm">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4 text-muted-foreground" />
-                        {new Date(offer.end_date).toLocaleDateString("ar-SA")}
+                        {new Date(offer.valid_until).toLocaleDateString("ar-SA")}
                       </div>
                     </td>
                     <td className="py-4 px-4">{getStatusBadge(getOfferStatus(offer))}</td>
                     <td className="py-4 px-4">
                       <Switch
-                        checked={offer.is_active}
+                        checked={offer.is_active || false}
                         onCheckedChange={() => toggleStatus(offer.id, offer.is_active)}
                       />
                     </td>

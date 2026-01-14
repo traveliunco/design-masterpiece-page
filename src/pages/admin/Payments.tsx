@@ -81,7 +81,7 @@ const AdminPayments = () => {
     try {
       const { error } = await supabase
         .from("payments")
-        .update({ payment_status: status })
+        .update({ status: status })
         .eq("id", id);
 
       if (error) throw error;
