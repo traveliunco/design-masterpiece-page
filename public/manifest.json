@@ -1,0 +1,21 @@
+{
+    "name": "Traveliun",
+    "short_name": "Traveliun",
+    "description": "ترافليون - أفضل شركة سياحة سعودية. احجز رحلتك الآن!",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#1e1b4b",
+    "orientation": "portrait-primary",
+    "lang": "ar",
+    "dir": "rtl",
+    "icons": [],
+    "categories": [
+        "travel",
+        "tourism",
+        "booking"
+    ],
+    "shortcuts": [],
+    "related_applications": [],
+    "prefer_related_applications": false
+}

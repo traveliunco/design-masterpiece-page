@@ -1,0 +1,13 @@
+# روبوتس - ترافليون
+# https://traveliun.com
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://traveliun.com/sitemap.xml
+
+# Disallow admin pages from indexing
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /api/

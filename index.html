@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ترافليون | رحلات الأحلام - أفضل عروض السياحة والسفر</title>
+    <meta
+      name="description"
+      content="ترافليون للسياحة والسفر - اكتشف أجمل الوجهات السياحية حول العالم مع عروض شهر العسل، بكجات السفر الشاملة، وخدمات فاخرة على مدار الساعة"
+    />
+    <meta
+      name="keywords"
+      content="سياحة، سفر، شهر عسل، ماليزيا، تايلاند، تركيا، إندونيسيا، عروض سفر، بكجات سياحية"
+    />
+    <meta name="author" content="Traveliun" />
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0c4a6e" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Traveliun" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Traveliun" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="canonical" href="https://traveliun.com.sa" />
+
+    <meta
+      property="og:image"
+      content="https://storage.googleapis.com/gpt-engineer-file-uploads/R1rLGpj2jXToqppzdgLFhqEnU6J3/social-images/social-1766907409031-عرض-هووية-ترافليون-pdf-07-17-2025_11_14_AM - Copy.png"
+    />
+    <meta
+      name="twitter:image"
+      content="https://storage.googleapis.com/gpt-engineer-file-uploads/R1rLGpj2jXToqppzdgLFhqEnU6J3/social-images/social-1766907409031-عرض-هووية-ترافليون-pdf-07-17-2025_11_14_AM - Copy.png"
+    />
+    <meta
+      property="og:title"
+      content="ترافليون | رحلات الأحلام - أفضل عروض السياحة والسفر"
+    />
+    <meta
+      name="twitter:title"
+      content="ترافليون | رحلات الأحلام - أفضل عروض السياحة والسفر"
+    />
+    <meta
+      property="og:description"
+      content="ترافليون للسياحة والسفر - اكتشف أجمل الوجهات السياحية حول العالم مع عروض شهر العسل، بكجات السفر الشاملة، وخدمات فاخرة على مدار الساعة"
+    />
+    <meta
+      name="twitter:description"
+      content="ترافليون للسياحة والسفر - اكتشف أجمل الوجهات السياحية حول العالم مع عروض شهر العسل، بكجات السفر الشاملة، وخدمات فاخرة على مدار الساعة"
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://storage.googleapis.com/gpt-engineer-file-uploads/R1rLGpj2jXToqppzdgLFhqEnU6J3/uploads/1767166292393-عرض-هووية-ترافليون-pdf-07-17-2025_11_14_AM - Copy.png"
+    />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("SW registered:", registration.scope);
+            })
+            .catch((error) => {
+              console.log("SW registration failed:", error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
