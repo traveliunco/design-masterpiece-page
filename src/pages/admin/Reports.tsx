@@ -90,15 +90,15 @@ const AdminReports = () => {
       // Fetch top destinations
       const { data: destinations } = await supabase
         .from("destinations")
-        .select("name_ar, total_bookings")
-        .order("total_bookings", { ascending: false })
+        .select("name_ar")
+        .eq("is_active", true)
         .limit(5);
 
       // Fetch payments by method
       const { data: payments } = await supabase
         .from("payments")
         .select("payment_method, amount")
-        .eq("payment_status", "completed")
+        .eq("status", "completed")
         .gte("created_at", startDate.toISOString());
 
       // Aggregate payments by method
@@ -113,7 +113,7 @@ const AdminReports = () => {
         totalUsers: usersCount || 0,
         totalDestinations: destinationsCount || 0,
         bookingsByMonth: [], // Would need more complex query
-        topDestinations: destinations?.map(d => ({ name: d.name_ar, bookings: d.total_bookings || 0 })) || [],
+        topDestinations: destinations?.map(d => ({ name: d.name_ar, bookings: 0 })) || [],
         revenueByPaymentMethod: Object.entries(paymentsByMethod).map(([method, amount]) => ({ method, amount })),
       });
     } catch (error) {

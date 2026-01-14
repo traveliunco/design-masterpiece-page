@@ -31,17 +31,17 @@ import { supabase } from "@/integrations/supabase/client";
 interface Offer {
   id: string;
   code: string;
-  name_ar: string;
+  name_ar: string | null;
   name_en: string | null;
-  description_ar: string | null;
+  description: string | null;
   discount_type: string;
   discount_value: number;
-  min_amount: number | null;
-  max_uses: number | null;
-  used_count: number;
-  start_date: string;
-  end_date: string;
-  is_active: boolean;
+  min_order_amount: number | null;
+  usage_limit: number | null;
+  used_count: number | null;
+  valid_from: string;
+  valid_until: string;
+  is_active: boolean | null;
 }
 
 const AdminOfferEdit = () => {
@@ -54,14 +54,14 @@ const AdminOfferEdit = () => {
     code: "",
     name_ar: "",
     name_en: "",
-    description_ar: "",
+    description: "",
     discount_type: "percentage",
     discount_value: 0,
-    min_amount: 0,
-    max_uses: 100,
+    min_order_amount: 0,
+    usage_limit: 100,
     used_count: 0,
-    start_date: "",
-    end_date: "",
+    valid_from: "",
+    valid_until: "",
     is_active: true,
   });
 
@@ -78,7 +78,7 @@ const AdminOfferEdit = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("offers")
+        .from("promo_codes")
         .select("*")
         .eq("id", id)
         .single();
@@ -89,14 +89,14 @@ const AdminOfferEdit = () => {
           code: data.code || "",
           name_ar: data.name_ar || "",
           name_en: data.name_en || "",
-          description_ar: data.description_ar || "",
+          description: data.description || "",
           discount_type: data.discount_type || "percentage",
           discount_value: data.discount_value || 0,
-          min_amount: data.min_amount || 0,
-          max_uses: data.max_uses || 100,
+          min_order_amount: data.min_order_amount || 0,
+          usage_limit: data.usage_limit || 100,
           used_count: data.used_count || 0,
-          start_date: data.start_date ? data.start_date.split("T")[0] : "",
-          end_date: data.end_date ? data.end_date.split("T")[0] : "",
+          valid_from: data.valid_from ? data.valid_from.split("T")[0] : "",
+          valid_until: data.valid_until ? data.valid_until.split("T")[0] : "",
           is_active: data.is_active ?? true,
         });
       }
@@ -118,18 +118,18 @@ const AdminOfferEdit = () => {
     setSaving(true);
     try {
       const { error } = await supabase
-        .from("offers")
+        .from("promo_codes")
         .update({
           code: formData.code,
           name_ar: formData.name_ar,
           name_en: formData.name_en,
-          description_ar: formData.description_ar,
+          description: formData.description,
           discount_type: formData.discount_type,
           discount_value: formData.discount_value,
-          min_amount: formData.min_amount,
-          max_uses: formData.max_uses,
-          start_date: formData.start_date,
-          end_date: formData.end_date,
+          min_order_amount: formData.min_order_amount,
+          usage_limit: formData.usage_limit,
+          valid_from: formData.valid_from,
+          valid_until: formData.valid_until,
           is_active: formData.is_active,
         })
         .eq("id", id);
@@ -200,8 +200,8 @@ const AdminOfferEdit = () => {
               <div className="space-y-2">
                 <Label>وصف العرض</Label>
                 <Textarea
-                  value={formData.description_ar}
-                  onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
                 />
               </div>
@@ -246,8 +246,8 @@ const AdminOfferEdit = () => {
                   <Label>الحد الأدنى للحجز</Label>
                   <Input
                     type="number"
-                    value={formData.min_amount}
-                    onChange={(e) => setFormData({ ...formData, min_amount: parseFloat(e.target.value) || 0 })}
+                    value={formData.min_order_amount}
+                    onChange={(e) => setFormData({ ...formData, min_order_amount: parseFloat(e.target.value) || 0 })}
                   />
                 </div>
 
@@ -255,8 +255,8 @@ const AdminOfferEdit = () => {
                   <Label>الحد الأقصى للاستخدام</Label>
                   <Input
                     type="number"
-                    value={formData.max_uses}
-                    onChange={(e) => setFormData({ ...formData, max_uses: parseInt(e.target.value) || 100 })}
+                    value={formData.usage_limit}
+                    onChange={(e) => setFormData({ ...formData, usage_limit: parseInt(e.target.value) || 100 })}
                   />
                 </div>
               </div>
@@ -276,16 +276,16 @@ const AdminOfferEdit = () => {
                   <Label>تاريخ البداية</Label>
                   <Input
                     type="date"
-                    value={formData.start_date}
-                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                    value={formData.valid_from}
+                    onChange={(e) => setFormData({ ...formData, valid_from: e.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label>تاريخ النهاية</Label>
                   <Input
                     type="date"
-                    value={formData.end_date}
-                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                    value={formData.valid_until}
+                    onChange={(e) => setFormData({ ...formData, valid_until: e.target.value })}
                   />
                 </div>
               </div>
@@ -311,7 +311,7 @@ const AdminOfferEdit = () => {
 
               <div className="p-3 bg-muted rounded-lg">
                 <p className="text-sm text-muted-foreground">تم استخدامه</p>
-                <p className="text-2xl font-bold">{formData.used_count} / {formData.max_uses}</p>
+                <p className="text-2xl font-bold">{formData.used_count} / {formData.usage_limit}</p>
               </div>
 
               <div className="flex items-center justify-between pt-4 border-t">

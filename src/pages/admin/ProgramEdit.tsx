@@ -98,13 +98,13 @@ const AdminProgramEdit = () => {
             program_type: data.program_type || "",
             duration_days: data.duration_days || 7,
             duration_nights: data.duration_nights || 6,
-            price: data.price || data.base_price || 0,
+            price: data.base_price || 0,
             description_ar: data.description_ar || "",
             description_en: data.description_en || "",
             is_active: data.is_active ?? true,
             is_featured: data.is_featured ?? false,
-            includes: data.includes || [],
-            excludes: data.excludes || [],
+            includes: Array.isArray(data.includes) ? (data.includes as string[]) : [],
+            excludes: Array.isArray(data.excludes) ? (data.excludes as string[]) : [],
           });
         }
       }

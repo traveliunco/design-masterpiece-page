@@ -34,14 +34,13 @@ import { toast } from "sonner";
 
 interface User {
   id: string;
-  full_name: string | null;
+  first_name: string;
+  last_name: string;
   email: string;
   phone: string | null;
-  role: string;
-  status: string;
-  total_bookings: number | null;
-  total_spent: number | null;
-  created_at: string;
+  role: string | null;
+  status: string | null;
+  created_at: string | null;
 }
 
 const AdminUsers = () => {
@@ -104,7 +103,8 @@ const AdminUsers = () => {
   };
 
   const filteredUsers = users.filter((user) => {
-    const matchesSearch = (user.full_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const fullName = `${user.first_name} ${user.last_name}`;
+    const matchesSearch = fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = roleFilter === "all" || user.role === roleFilter;
     const matchesStatus = statusFilter === "all" || user.status === statusFilter;
@@ -255,13 +255,13 @@ const AdminUsers = () => {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                           <span className="font-bold text-primary">
-                            {(user.full_name || user.email).charAt(0).toUpperCase()}
+                            {user.first_name.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <div>
-                          <p className="font-medium">{user.full_name || "بدون اسم"}</p>
+                          <p className="font-medium">{user.first_name} {user.last_name}</p>
                           <p className="text-xs text-muted-foreground">
-                            منذ {new Date(user.created_at).toLocaleDateString("ar-SA")}
+                            منذ {user.created_at ? new Date(user.created_at).toLocaleDateString("ar-SA") : ""}
                           </p>
                         </div>
                       </div>
@@ -280,10 +280,10 @@ const AdminUsers = () => {
                         )}
                       </div>
                     </td>
-                    <td className="py-4 px-4">{getRoleBadge(user.role)}</td>
-                    <td className="py-4 px-4 text-sm font-medium">{user.total_bookings || 0}</td>
-                    <td className="py-4 px-4 text-sm font-medium">{(user.total_spent || 0).toLocaleString()} ر.س</td>
-                    <td className="py-4 px-4">{getStatusBadge(user.status)}</td>
+                    <td className="py-4 px-4">{getRoleBadge(user.role || "customer")}</td>
+                    <td className="py-4 px-4 text-sm font-medium">0</td>
+                    <td className="py-4 px-4 text-sm font-medium">0 ر.س</td>
+                    <td className="py-4 px-4">{getStatusBadge(user.status || "active")}</td>
                     <td className="py-4 px-4">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>

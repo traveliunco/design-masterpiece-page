@@ -36,18 +36,18 @@ const AdminOfferNew = () => {
     code: "",
     name_ar: "",
     name_en: "",
-    description_ar: "",
+    description: "",
     discount_type: "percentage",
     discount_value: 0,
-    min_amount: 0,
-    max_uses: 100,
-    start_date: "",
-    end_date: "",
+    min_order_amount: 0,
+    usage_limit: 100,
+    valid_from: "",
+    valid_until: "",
     is_active: true,
   });
 
   const handleSave = async () => {
-    if (!formData.name_ar || !formData.discount_value || !formData.start_date || !formData.end_date) {
+    if (!formData.name_ar || !formData.discount_value || !formData.valid_from || !formData.valid_until) {
       toast.error("يرجى ملء جميع الحقول المطلوبة");
       return;
     }
@@ -60,19 +60,19 @@ const AdminOfferNew = () => {
     setSaving(true);
     try {
       const { error } = await supabase
-        .from("offers")
+        .from("promo_codes")
         .insert({
           code: formData.code,
           name_ar: formData.name_ar,
           name_en: formData.name_en,
-          description_ar: formData.description_ar,
+          description: formData.description,
           discount_type: formData.discount_type,
           discount_value: formData.discount_value,
-          min_amount: formData.min_amount,
-          max_uses: formData.max_uses,
+          min_order_amount: formData.min_order_amount,
+          usage_limit: formData.usage_limit,
           used_count: 0,
-          start_date: formData.start_date,
-          end_date: formData.end_date,
+          valid_from: formData.valid_from,
+          valid_until: formData.valid_until,
           is_active: formData.is_active,
         });
 
@@ -141,10 +141,10 @@ const AdminOfferNew = () => {
               </div>
 
               <div className="space-y-2">
-                <Label>وصف العرض (عربي)</Label>
+                <Label>وصف العرض</Label>
                 <Textarea
-                  value={formData.description_ar}
-                  onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
                   placeholder="وصف مفصل للعرض..."
                 />
@@ -191,8 +191,8 @@ const AdminOfferNew = () => {
                   <Label>الحد الأدنى للحجز</Label>
                   <Input
                     type="number"
-                    value={formData.min_amount}
-                    onChange={(e) => setFormData({ ...formData, min_amount: parseFloat(e.target.value) || 0 })}
+                    value={formData.min_order_amount}
+                    onChange={(e) => setFormData({ ...formData, min_order_amount: parseFloat(e.target.value) || 0 })}
                     placeholder="2000"
                   />
                 </div>
@@ -201,8 +201,8 @@ const AdminOfferNew = () => {
                   <Label>عدد مرات الاستخدام</Label>
                   <Input
                     type="number"
-                    value={formData.max_uses}
-                    onChange={(e) => setFormData({ ...formData, max_uses: parseInt(e.target.value) || 100 })}
+                    value={formData.usage_limit}
+                    onChange={(e) => setFormData({ ...formData, usage_limit: parseInt(e.target.value) || 100 })}
                     placeholder="100"
                   />
                 </div>
@@ -223,16 +223,16 @@ const AdminOfferNew = () => {
                   <Label>تاريخ البداية *</Label>
                   <Input
                     type="date"
-                    value={formData.start_date}
-                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                    value={formData.valid_from}
+                    onChange={(e) => setFormData({ ...formData, valid_from: e.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label>تاريخ النهاية *</Label>
                   <Input
                     type="date"
-                    value={formData.end_date}
-                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                    value={formData.valid_until}
+                    onChange={(e) => setFormData({ ...formData, valid_until: e.target.value })}
                   />
                 </div>
               </div>
