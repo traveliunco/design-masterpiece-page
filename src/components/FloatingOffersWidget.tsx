@@ -105,7 +105,7 @@ const FloatingOffersWidget = () => {
               </div>
               <div className="text-right">
                 <div className="font-bold text-sm text-primary">عروض حصرية</div>
-                <div className="text-white/60 text-xs">اطلع على أحدث العروض</div>
+                <div className="text-xs text-primary">اطلع على أحدث العروض</div>
               </div>
               <ChevronRight className="w-5 h-5 text-luxury-gold group-hover:-translate-x-1 transition-transform" />
             </div>
