@@ -35,8 +35,6 @@ const TamaraPage = () => {
           </>
         }
         subtitle="ترافليون وتمارا يجتمعان ليمنحاك تجربة حجز لا مثيل لها. سافر لأي وجهة وادفع بالتقسيط"
-        gradientFrom="from-orange-400"
-        gradientTo="to-rose-500"
       />
 
       {/* Benefits */}
