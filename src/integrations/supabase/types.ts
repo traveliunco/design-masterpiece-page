@@ -283,6 +283,136 @@ export type Database = {
         }
         Relationships: []
       }
+      booking_passengers: {
+        Row: {
+          booking_id: string
+          created_at: string | null
+          date_of_birth: string
+          first_name: string
+          frequent_flyer_number: string | null
+          gender: string
+          id: string
+          last_name: string
+          meal_preference: string | null
+          nationality: string | null
+          passenger_type: string
+          passport_country: string | null
+          passport_expiry: string | null
+          passport_number: string | null
+          seat_number: string | null
+          special_requests: string | null
+          title: string | null
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string | null
+          date_of_birth: string
+          first_name: string
+          frequent_flyer_number?: string | null
+          gender?: string
+          id?: string
+          last_name: string
+          meal_preference?: string | null
+          nationality?: string | null
+          passenger_type?: string
+          passport_country?: string | null
+          passport_expiry?: string | null
+          passport_number?: string | null
+          seat_number?: string | null
+          special_requests?: string | null
+          title?: string | null
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string | null
+          date_of_birth?: string
+          first_name?: string
+          frequent_flyer_number?: string | null
+          gender?: string
+          id?: string
+          last_name?: string
+          meal_preference?: string | null
+          nationality?: string | null
+          passenger_type?: string
+          passport_country?: string | null
+          passport_expiry?: string | null
+          passport_number?: string | null
+          seat_number?: string | null
+          special_requests?: string | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_passengers_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "flight_bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_payments: {
+        Row: {
+          amount: number
+          booking_id: string
+          card_brand: string | null
+          card_last_four: string | null
+          completed_at: string | null
+          created_at: string | null
+          currency: string | null
+          error_message: string | null
+          gateway_response: Json | null
+          id: string
+          installment_plan: Json | null
+          payment_method: string
+          refunded_at: string | null
+          status: string | null
+          transaction_id: string | null
+        }
+        Insert: {
+          amount?: number
+          booking_id: string
+          card_brand?: string | null
+          card_last_four?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          currency?: string | null
+          error_message?: string | null
+          gateway_response?: Json | null
+          id?: string
+          installment_plan?: Json | null
+          payment_method?: string
+          refunded_at?: string | null
+          status?: string | null
+          transaction_id?: string | null
+        }
+        Update: {
+          amount?: number
+          booking_id?: string
+          card_brand?: string | null
+          card_last_four?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          currency?: string | null
+          error_message?: string | null
+          gateway_response?: Json | null
+          id?: string
+          installment_plan?: Json | null
+          payment_method?: string
+          refunded_at?: string | null
+          status?: string | null
+          transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_payments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "flight_bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           adults_count: number
@@ -634,125 +764,126 @@ export type Database = {
       }
       flight_bookings: {
         Row: {
-          adults_count: number | null
+          additional_services: Json | null
+          admin_notes: string | null
+          adults: number | null
+          amadeus_order_id: string | null
           base_price: number
-          booking_reference: string
+          cabin_class: string | null
           cancelled_at: string | null
-          children_count: number | null
+          children: number | null
           confirmed_at: string | null
+          contact_email: string
+          contact_first_name: string
+          contact_last_name: string
+          contact_phone: string
           created_at: string | null
           currency: string | null
-          customer_email: string
-          customer_id: string | null
-          customer_name: string
-          customer_phone: string
           departure_date: string
+          destination_city: string | null
           destination_code: string
-          discount: number | null
-          fees: number | null
-          flight_offer_id: string | null
+          flight_offer: Json
           id: string
-          infants_count: number | null
-          internal_notes: string | null
-          ip_address: string | null
+          infants: number | null
+          notes: string | null
+          origin_city: string | null
           origin_code: string
-          paid_at: string | null
-          passengers: Json
-          payment_method: string | null
-          payment_reference: string | null
           payment_status: string | null
+          pnr: string
           return_date: string | null
-          source: string | null
-          special_requests: string | null
+          seat_selections: Json | null
+          services_price: number | null
           status: string | null
           taxes: number | null
+          ticket_numbers: string[] | null
+          ticketed_at: string | null
+          total_passengers: number
           total_price: number
+          trip_type: string | null
           updated_at: string | null
-          user_agent: string | null
+          user_id: string | null
         }
         Insert: {
-          adults_count?: number | null
-          base_price: number
-          booking_reference: string
+          additional_services?: Json | null
+          admin_notes?: string | null
+          adults?: number | null
+          amadeus_order_id?: string | null
+          base_price?: number
+          cabin_class?: string | null
           cancelled_at?: string | null
-          children_count?: number | null
+          children?: number | null
           confirmed_at?: string | null
+          contact_email: string
+          contact_first_name: string
+          contact_last_name: string
+          contact_phone: string
           created_at?: string | null
           currency?: string | null
-          customer_email: string
-          customer_id?: string | null
-          customer_name: string
-          customer_phone: string
           departure_date: string
+          destination_city?: string | null
           destination_code: string
-          discount?: number | null
-          fees?: number | null
-          flight_offer_id?: string | null
+          flight_offer?: Json
           id?: string
-          infants_count?: number | null
-          internal_notes?: string | null
-          ip_address?: string | null
+          infants?: number | null
+          notes?: string | null
+          origin_city?: string | null
           origin_code: string
-          paid_at?: string | null
-          passengers: Json
-          payment_method?: string | null
-          payment_reference?: string | null
           payment_status?: string | null
+          pnr?: string
           return_date?: string | null
-          source?: string | null
-          special_requests?: string | null
+          seat_selections?: Json | null
+          services_price?: number | null
           status?: string | null
           taxes?: number | null
-          total_price: number
+          ticket_numbers?: string[] | null
+          ticketed_at?: string | null
+          total_passengers?: number
+          total_price?: number
+          trip_type?: string | null
           updated_at?: string | null
-          user_agent?: string | null
+          user_id?: string | null
         }
         Update: {
-          adults_count?: number | null
+          additional_services?: Json | null
+          admin_notes?: string | null
+          adults?: number | null
+          amadeus_order_id?: string | null
           base_price?: number
-          booking_reference?: string
+          cabin_class?: string | null
           cancelled_at?: string | null
-          children_count?: number | null
+          children?: number | null
           confirmed_at?: string | null
+          contact_email?: string
+          contact_first_name?: string
+          contact_last_name?: string
+          contact_phone?: string
           created_at?: string | null
           currency?: string | null
-          customer_email?: string
-          customer_id?: string | null
-          customer_name?: string
-          customer_phone?: string
           departure_date?: string
+          destination_city?: string | null
           destination_code?: string
-          discount?: number | null
-          fees?: number | null
-          flight_offer_id?: string | null
+          flight_offer?: Json
           id?: string
-          infants_count?: number | null
-          internal_notes?: string | null
-          ip_address?: string | null
+          infants?: number | null
+          notes?: string | null
+          origin_city?: string | null
           origin_code?: string
-          paid_at?: string | null
-          passengers?: Json
-          payment_method?: string | null
-          payment_reference?: string | null
           payment_status?: string | null
+          pnr?: string
           return_date?: string | null
-          source?: string | null
-          special_requests?: string | null
+          seat_selections?: Json | null
+          services_price?: number | null
           status?: string | null
           taxes?: number | null
+          ticket_numbers?: string[] | null
+          ticketed_at?: string | null
+          total_passengers?: number
           total_price?: number
+          trip_type?: string | null
           updated_at?: string | null
-          user_agent?: string | null
+          user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "flight_bookings_flight_offer_id_fkey"
-            columns: ["flight_offer_id"]
-            isOneToOne: false
-            referencedRelation: "flight_offers"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       flight_offers: {
         Row: {
