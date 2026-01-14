@@ -1,28 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { 
-  ArrowLeft, 
-  Sparkles, 
-  MapPin, 
-  Star,
-  Play,
-  Shield,
-  Clock,
-  Users
-} from "lucide-react";
+import { ArrowLeft, Sparkles, MapPin, Star, Play, Shield, Clock, Users } from "lucide-react";
 import heroImage from "@/assets/hero-resort.jpg";
 import HeroSearch from "./HeroSearch";
-
 const PremiumHero = () => {
-  return (
-    <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-luxury-navy via-[#0a4b5c] to-luxury-navy">
+  return <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-luxury-navy via-[#0a4b5c] to-luxury-navy">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
-        <img 
-          src={heroImage} 
-          alt="Luxury Resort" 
-          className="w-full h-full object-cover scale-110 animate-[pulse_20s_ease-in-out_infinite]"
-        />
+        <img src={heroImage} alt="Luxury Resort" className="w-full h-full object-cover scale-110 animate-[pulse_20s_ease-in-out_infinite]" />
         {/* Lighter Overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-luxury-navy/50 via-luxury-navy/40 to-luxury-navy/70" />
         <div className="absolute inset-0 bg-gradient-to-r from-luxury-navy/60 via-transparent to-[#0a4b5c]/40" />
@@ -35,18 +20,12 @@ const PremiumHero = () => {
       
       {/* Animated Floating Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-white/40 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `float ${5 + Math.random() * 10}s linear infinite`,
-              animationDelay: `${Math.random() * 5}s`,
-            }}
-          />
-        ))}
+        {[...Array(15)].map((_, i) => <div key={i} className="absolute w-1 h-1 bg-white/40 rounded-full" style={{
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        animation: `float ${5 + Math.random() * 10}s linear infinite`,
+        animationDelay: `${Math.random() * 5}s`
+      }} />)}
       </div>
       
       {/* Floating Glass Cards */}
@@ -56,11 +35,7 @@ const PremiumHero = () => {
         {/* Title Section - Right Aligned */}
         <div className="text-right mb-12 max-w-3xl mr-0">
           {/* Premium Badge */}
-          <div className="inline-flex items-center gap-3 glass-dark rounded-full px-6 py-3 mb-8 animate-reveal">
-            <Sparkles className="w-4 h-4 text-luxury-gold" />
-            <span className="text-white/80 text-sm font-medium">الوكالة الرائدة في السعودية</span>
-            <div className="w-2 h-2 bg-luxury-gold rounded-full animate-pulse" />
-          </div>
+          
 
           {/* Headline */}
           <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 animate-reveal delay-100 leading-tight">
@@ -101,8 +76,6 @@ const PremiumHero = () => {
 
       {/* Bottom Gradient */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
-    </section>
-  );
+    </section>;
 };
-
 export default PremiumHero;
