@@ -113,11 +113,11 @@ const DestinationsPage = () => {
                   <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      <span>{destination.duration}</span>
+                      <span>{destination.programs?.[0]?.days || 5} أيام</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Users className="w-4 h-4" />
-                      <span>{destination.groupSize}</span>
+                      <span>{destination.total_reviews} تقييم</span>
                     </div>
                   </div>
 
@@ -125,7 +125,7 @@ const DestinationsPage = () => {
                   <div className="flex items-center justify-between pt-4 border-t border-border">
                     <div>
                       <span className="text-muted-foreground text-xs">ابتداءً من</span>
-                      <div className="text-luxury-teal font-bold text-xl">{destination.price} ر.س</div>
+                      <div className="text-luxury-teal font-bold text-xl">{destination.startPrice || destination.starting_price} ر.س</div>
                     </div>
                     <div className="flex items-center gap-2 text-luxury-teal font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
                       <span>استكشف</span>

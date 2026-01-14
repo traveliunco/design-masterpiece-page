@@ -47,8 +47,6 @@ const Loyalty = () => {
         badgeIcon={<Gift className="w-4 h-4 text-luxury-gold" />}
         title={<>برنامج <span className="text-gradient-gold">الولاء</span></>}
         subtitle="كل حجز يقربك من مكافآت حصرية وخصومات مذهلة على رحلاتك القادمة"
-        gradientFrom="from-luxury-gold"
-        gradientTo="to-amber-600"
       />
 
       {/* Points Balance Section */}

@@ -34,14 +34,13 @@ import { toast } from "sonner";
 
 interface Message {
   id: string;
-  full_name: string;
+  name: string;
   email: string;
   phone: string | null;
-  subject: string;
+  subject: string | null;
   message: string;
-  status: string;
-  is_starred: boolean;
-  created_at: string;
+  status: string | null;
+  created_at: string | null;
 }
 
 const AdminMessages = () => {
@@ -65,7 +64,7 @@ const AdminMessages = () => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setMessages(data || []);
+      setMessages((data || []) as Message[]);
     } catch (error) {
       console.error("Error loading messages:", error);
       toast.error("حدث خطأ في تحميل الرسائل");
@@ -89,15 +88,11 @@ const AdminMessages = () => {
     }
   };
 
-  const toggleStarred = async (id: string, currentValue: boolean) => {
-    try {
-      const { error } = await supabase
-        .from("contact_messages")
-        .update({ is_starred: !currentValue })
-        .eq("id", id);
-
-      if (error) throw error;
-      loadMessages();
+  const toggleStarred = async (id: string, _currentValue: boolean) => {
+    // Star functionality not available in current schema
+    toast.info("ميزة التمييز غير متوفرة حالياً");
+    console.log("Toggle star for:", id);
+  };
     } catch (error) {
       toast.error("حدث خطأ");
     }

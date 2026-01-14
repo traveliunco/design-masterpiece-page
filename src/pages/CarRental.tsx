@@ -62,8 +62,6 @@ const CarRental = () => {
         badgeIcon={<Car className="w-4 h-4 text-orange-400" />}
         title={<>تأجير السيارات <span className="text-gradient-orange">مع أو بدون سائق</span></>}
         subtitle="استمتع برحلتك مع سيارات حديثة وسائقين محترفين"
-        gradientFrom="from-orange-500"
-        gradientTo="to-red-600"
       />
 
       {/* Search Form */}

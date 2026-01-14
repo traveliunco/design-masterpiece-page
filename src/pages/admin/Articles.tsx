@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Plus, Edit, Trash2, Eye, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 interface Article {
@@ -25,9 +24,44 @@ interface Article {
   views: number;
 }
 
+// Mock articles for admin management
+const initialArticles: Article[] = [
+  {
+    id: "1",
+    title: "أفضل 10 وجهات سياحية في ماليزيا",
+    slug: "best-10-destinations-malaysia",
+    excerpt: "اكتشف أجمل الأماكن السياحية في ماليزيا",
+    content: "# أفضل 10 وجهات سياحية في ماليزيا\n\nمحتوى المقال...",
+    cover_image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800",
+    author_name: "فريق ترافليون",
+    category: "دليل السفر",
+    tags: ["ماليزيا", "سياحة"],
+    status: "published",
+    reading_time: 8,
+    is_featured: true,
+    published_at: "2026-01-10T10:00:00Z",
+    views: 1250
+  },
+  {
+    id: "2",
+    title: "نصائح ذهبية لشهر العسل المثالي",
+    slug: "honeymoon-tips",
+    excerpt: "كل ما تحتاج معرفته لتخطيط شهر عسل لا يُنسى",
+    content: "# نصائح ذهبية لشهر العسل\n\nمحتوى المقال...",
+    cover_image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800",
+    author_name: "سارة أحمد",
+    category: "شهر العسل",
+    tags: ["شهر عسل", "نصائح"],
+    status: "published",
+    reading_time: 6,
+    is_featured: true,
+    published_at: "2026-01-08T10:00:00Z",
+    views: 890
+  }
+];
+
 const AdminArticles = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [articles, setArticles] = useState<Article[]>(initialArticles);
   const [editingArticle, setEditingArticle] = useState<Article | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -47,86 +81,47 @@ const AdminArticles = () => {
 
   const [formData, setFormData] = useState<Partial<Article>>(emptyArticle);
 
-  useEffect(() => {
-    fetchArticles();
-  }, []);
-
-  const fetchArticles = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("articles")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      setArticles(data || []);
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("خطأ في تحميل المقالات");
-    } finally {
-      setLoading(false);
+  const handleSave = () => {
+    if (!formData.title || !formData.content) {
+      toast.error("الرجاء إكمال الحقول المطلوبة");
+      return;
     }
+
+    // Generate slug if not provided
+    if (!formData.slug) {
+      formData.slug = formData.title
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w\-]+/g, "");
+    }
+
+    if (editingArticle) {
+      // Update existing article
+      setArticles(prev => 
+        prev.map(a => a.id === editingArticle.id ? { ...a, ...formData } as Article : a)
+      );
+      toast.success("تم تحديث المقال بنجاح");
+    } else {
+      // Create new article
+      const newArticle: Article = {
+        ...formData,
+        id: Date.now().toString(),
+        published_at: new Date().toISOString(),
+        views: 0,
+      } as Article;
+      setArticles(prev => [newArticle, ...prev]);
+      toast.success("تم إنشاء المقال بنجاح");
+    }
+
+    setEditingArticle(null);
+    setIsCreating(false);
+    setFormData(emptyArticle);
   };
 
-  const handleSave = async () => {
-    try {
-      if (!formData.title || !formData.content) {
-        toast.error("الرجاء إكمال الحقول المطلوبة");
-        return;
-      }
-
-      // Generate slug if not provided
-      if (!formData.slug) {
-        formData.slug = formData.title
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^\w\-]+/g, "");
-      }
-
-      if (editingArticle) {
-        // Update
-        const { error } = await supabase
-          .from("articles")
-          .update(formData)
-          .eq("id", editingArticle.id);
-
-        if (error) throw error;
-        toast.success("تم تحديث المقال بنجاح");
-      } else {
-        // Create
-        const { error } = await supabase
-          .from("articles")
-          .insert([formData]);
-
-        if (error) throw error;
-        toast.success("تم إنشاء المقال بنجاح");
-      }
-
-      setEditingArticle(null);
-      setIsCreating(false);
-      setFormData(emptyArticle);
-      fetchArticles();
-    } catch (error: any) {
-      console.error("Error:", error);
-      toast.error(error.message || "حدث خطأ");
-    }
-  };
-
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     if (!confirm("هل أنت متأكد من حذف هذا المقال؟")) return;
-
-    try {
-      const { error } = await supabase
-        .from("articles")
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
-      toast.success("تم حذف المقال");
-      fetchArticles();
-    } catch (error) {
-      toast.error("خطأ في الحذف");
-    }
+    setArticles(prev => prev.filter(a => a.id !== id));
+    toast.success("تم حذف المقال");
   };
 
   const handleEdit = (article: Article) => {
@@ -140,10 +135,6 @@ const AdminArticles = () => {
     setIsCreating(false);
     setFormData(emptyArticle);
   };
-
-  if (loading) {
-    return <div className="p-8 text-center">جاري التحميل...</div>;
-  }
 
   if (isCreating || editingArticle) {
     return (
@@ -294,6 +285,13 @@ const AdminArticles = () => {
           <Plus className="w-4 h-4 ml-2" />
           مقال جديد
         </Button>
+      </div>
+
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+        <p className="text-amber-800 text-sm">
+          ⚠️ ملاحظة: المقالات محفوظة محلياً فقط في هذه النسخة التجريبية. 
+          لربط المقالات بقاعدة البيانات، يرجى إنشاء جدول "articles" في Supabase.
+        </p>
       </div>
 
       <div className="card-3d overflow-hidden">

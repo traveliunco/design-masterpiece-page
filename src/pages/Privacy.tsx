@@ -1,6 +1,6 @@
 import PageLayout from "@/layouts/PageLayout";
 import PageHeader from "@/components/ui/PageHeader";
-import { Shield, Eye, Lock, Database, UserCheck, Mail, Fingerprint, Sparkles, CheckCircle, AlertTriangle } from "lucide-react";
+import { Shield, Eye, Lock, Database, UserCheck, Mail, Fingerprint, Sparkles, CheckCircle, AlertTriangle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 

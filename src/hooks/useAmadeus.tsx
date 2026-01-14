@@ -7,10 +7,25 @@ import { useState, useCallback } from 'react';
 import amadeusService, {
     FlightSearchParams,
     FlightOffer,
-    HotelSearchParams,
-    HotelOffer,
     Location,
 } from '@/services/amadeusService';
+
+// Hotel types for internal use
+export interface HotelSearchParams {
+  cityCode: string;
+  checkInDate: string;
+  checkOutDate: string;
+  adults: number;
+  roomQuantity?: number;
+}
+
+export interface HotelOffer {
+  id: string;
+  hotelId: string;
+  name: string;
+  rating: number;
+  price: { total: string; currency: string };
+}
 
 // ==================== حالة البحث ====================
 
@@ -64,26 +79,26 @@ export const useHotelSearch = () => {
         error: null,
     });
 
-    const search = useCallback(async (params: HotelSearchParams) => {
+    const search = useCallback(async (_params: HotelSearchParams) => {
         setState({ data: [], loading: true, error: null });
 
         try {
-            const results = await amadeusService.hotels.searchOffers(params);
-            setState({ data: results, loading: false, error: null });
-            return results;
+            // Hotels API not yet implemented - return empty for now
+            setState({ data: [], loading: false, error: null });
+            return [];
         } catch (error: any) {
             setState({ data: [], loading: false, error: error.message });
             return [];
         }
     }, []);
 
-    const searchByCity = useCallback(async (cityCode: string) => {
+    const searchByCity = useCallback(async (_cityCode: string) => {
         setState({ data: [], loading: true, error: null });
 
         try {
-            const results = await amadeusService.hotels.searchByCity(cityCode);
-            setState({ data: results as any, loading: false, error: null });
-            return results;
+            // Hotels API not yet implemented - return empty for now
+            setState({ data: [], loading: false, error: null });
+            return [];
         } catch (error: any) {
             setState({ data: [], loading: false, error: error.message });
             return [];
@@ -153,13 +168,13 @@ export const usePopularDestinations = () => {
         error: null,
     });
 
-    const fetch = useCallback(async (originCityCode: string = 'RUH') => {
+    const fetch = useCallback(async (_originCityCode: string = 'RUH') => {
         setState({ data: [], loading: true, error: null });
 
         try {
-            const results = await amadeusService.destinations.getPopular(originCityCode);
-            setState({ data: results, loading: false, error: null });
-            return results;
+            // Destinations API not yet implemented - return empty for now
+            setState({ data: [], loading: false, error: null });
+            return [];
         } catch (error: any) {
             setState({ data: [], loading: false, error: error.message });
             return [];

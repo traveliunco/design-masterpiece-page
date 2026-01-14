@@ -3,9 +3,7 @@ import { Calendar, User, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin, 
 import PageLayout from "@/layouts/PageLayout";
 import { useSEO } from "@/hooks/useSEO";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import ReactMarkdown from "react-markdown";
 
 interface Article {
   id: string;
@@ -22,12 +20,96 @@ interface Article {
   views: number;
 }
 
+// Mock articles data
+const mockArticles: Article[] = [
+  {
+    id: "1",
+    title: "أفضل 10 وجهات سياحية في ماليزيا",
+    slug: "best-10-destinations-malaysia",
+    excerpt: "اكتشف أجمل الأماكن السياحية في ماليزيا من الجزر الاستوائية إلى المدن الحديثة",
+    content: `# أفضل 10 وجهات سياحية في ماليزيا
+
+ماليزيا هي واحدة من أجمل الوجهات السياحية في جنوب شرق آسيا، حيث تجمع بين الطبيعة الخلابة والمدن الحديثة والثقافة الغنية.
+
+## 1. كوالالمبور
+العاصمة الماليزية هي نقطة البداية المثالية لأي رحلة. لا تفوت زيارة برجي بتروناس التوأم الشهيرين.
+
+## 2. جزيرة لانكاوي
+جنة استوائية بشواطئها الرملية البيضاء ومياهها الفيروزية. مثالية للاسترخاء والأنشطة المائية.
+
+## 3. جورج تاون
+مدينة التراث العالمي في بينانغ، معروفة بفن الشارع والطعام اللذيذ.
+
+## 4. كاميرون هايلاندز
+للهروب من الحرارة الاستوائية، استمتع بمزارع الشاي الخضراء والطقس البارد.
+
+## 5. ملاكا
+مدينة تاريخية تحكي قصة التجارة والاستعمار عبر العصور.`,
+    cover_image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800",
+    author_name: "فريق ترافليون",
+    category: "دليل السفر",
+    tags: ["ماليزيا", "سياحة", "جزر"],
+    reading_time: 8,
+    published_at: "2026-01-10T10:00:00Z",
+    views: 1250
+  },
+  {
+    id: "2",
+    title: "نصائح ذهبية لشهر العسل المثالي",
+    slug: "honeymoon-tips",
+    excerpt: "كل ما تحتاج معرفته لتخطيط شهر عسل لا يُنسى مع شريك حياتك",
+    content: `# نصائح ذهبية لشهر العسل المثالي
+
+شهر العسل هو بداية حياتكما معاً، ويستحق أن يكون مميزاً ولا يُنسى.
+
+## التخطيط المبكر
+ابدأ التخطيط قبل 6 أشهر على الأقل لضمان أفضل العروض والحجوزات.
+
+## اختيار الوجهة المناسبة
+فكّر في اهتماماتكما المشتركة: هل تفضلان الشاطئ أم المغامرة أم المدن الثقافية؟
+
+## الميزانية الواقعية
+حدد ميزانية واضحة وخصص جزءاً للمفاجآت والتجارب الخاصة.`,
+    cover_image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800",
+    author_name: "سارة أحمد",
+    category: "شهر العسل",
+    tags: ["شهر عسل", "رومانسي", "نصائح"],
+    reading_time: 6,
+    published_at: "2026-01-08T10:00:00Z",
+    views: 890
+  },
+  {
+    id: "3",
+    title: "استكشف جمال طرابزون التركية",
+    slug: "trabzon-turkey-guide",
+    excerpt: "رحلة في الشمال التركي الساحر - الطبيعة الخلابة والثقافة الغنية",
+    content: `# استكشف جمال طرابزون التركية
+
+طرابزون هي جوهرة الشمال التركي، حيث تلتقي الجبال الخضراء بالبحر الأسود.
+
+## دير سوميلا
+معلق على جرف صخري، هذا الدير البيزنطي القديم هو أيقونة طرابزون.
+
+## بحيرة أوزنجول
+قرية ساحرة على ضفاف بحيرة هادئة، محاطة بالغابات الكثيفة.
+
+## مرتفعات حيدر نبي
+للاستمتاع بإطلالات خلابة وتجربة الحياة الريفية التركية.`,
+    cover_image: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800",
+    author_name: "محمد العلي",
+    category: "دليل السفر",
+    tags: ["تركيا", "طرابزون", "طبيعة"],
+    reading_time: 10,
+    published_at: "2026-01-05T10:00:00Z",
+    views: 650
+  }
+];
+
 const BlogPost = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useSEO({
     title: article ? `${article.title} - مدونة ترافليون` : "مدونة ترافليون",
@@ -37,50 +119,23 @@ const BlogPost = () => {
 
   useEffect(() => {
     if (slug) {
-      fetchArticle();
+      const foundArticle = mockArticles.find(a => a.slug === slug);
+      if (foundArticle) {
+        setArticle(foundArticle);
+        // Find related articles
+        const related = mockArticles
+          .filter(a => a.category === foundArticle.category && a.id !== foundArticle.id)
+          .slice(0, 3);
+        setRelatedArticles(related);
+      } else {
+        navigate("/blog");
+      }
     }
-  }, [slug]);
-
-  const fetchArticle = async () => {
-    try {
-      // Fetch main article
-      const { data, error } = await supabase
-        .from("articles")
-        .select("*")
-        .eq("slug", slug)
-        .eq("status", "published")
-        .single();
-
-      if (error) throw error;
-      setArticle(data);
-
-      // Increment views
-      await supabase
-        .from("articles")
-        .update({ views: (data.views || 0) + 1 })
-        .eq("id", data.id);
-
-      // Fetch related articles
-      const { data: related } = await supabase
-        .from("articles")
-        .select("*")
-        .eq("status", "published")
-        .eq("category", data.category)
-        .neq("id", data.id)
-        .limit(3);
-
-      setRelatedArticles(related || []);
-    } catch (error) {
-      console.error("Error fetching article:", error);
-      navigate("/blog");
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [slug, navigate]);
 
   const shareUrl = window.location.href;
 
-  if (loading) {
+  if (!article) {
     return (
       <PageLayout>
         <div className="container px-4 py-20 text-center">
@@ -90,9 +145,22 @@ const BlogPost = () => {
     );
   }
 
-  if (!article) {
-    return null;
-  }
+  // Simple markdown to HTML converter
+  const renderContent = (content: string) => {
+    const lines = content.split('\n');
+    return lines.map((line, i) => {
+      if (line.startsWith('# ')) {
+        return <h1 key={i} className="text-3xl font-bold text-luxury-navy mb-4">{line.slice(2)}</h1>;
+      }
+      if (line.startsWith('## ')) {
+        return <h2 key={i} className="text-2xl font-bold text-luxury-navy mt-8 mb-3">{line.slice(3)}</h2>;
+      }
+      if (line.trim() === '') {
+        return <br key={i} />;
+      }
+      return <p key={i} className="text-muted-foreground leading-relaxed mb-4">{line}</p>;
+    });
+  };
 
   return (
     <PageLayout>
@@ -148,8 +216,8 @@ const BlogPost = () => {
             <div className="flex gap-12">
               {/* Main Content */}
               <div className="flex-1">
-                <div className="card-3d p-8 md:p-12 prose prose-lg max-w-none">
-                  <ReactMarkdown>{article.content}</ReactMarkdown>
+                <div className="card-3d p-8 md:p-12">
+                  {renderContent(article.content)}
                 </div>
 
                 {/* Tags */}
