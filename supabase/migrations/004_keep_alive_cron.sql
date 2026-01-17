@@ -13,11 +13,11 @@ GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA cron TO postgres;
 -- Remove existing job if exists
 SELECT cron.unschedule('keep-alive-daily');
 
--- Schedule keep-alive job to run every day at 6:00 AM UTC
--- This will call the edge function to keep database active
+-- Schedule keep-alive job to run every 12 hours (at 6:00 AM and 6:00 PM UTC)
+-- This ensures database stays active without excessive pings
 SELECT cron.schedule(
   'keep-alive-daily',
-  '0 6 * * *',
+  '0 6,18 * * *',
   $$
   SELECT net.http_post(
     url := 'https://jglcaorqdnczzgviadgy.supabase.co/functions/v1/keep-alive',
@@ -31,5 +31,9 @@ SELECT cron.schedule(
 SELECT * FROM cron.job WHERE jobname = 'keep-alive-daily';
 
 -- Comment: 
--- This creates a daily cron job that calls the keep-alive edge function
--- to prevent Supabase Free Tier database from going to sleep after inactivity
+-- This creates a cron job that runs every 12 hours (6 AM and 6 PM UTC)
+-- Calls the keep-alive edge function to prevent Supabase Free Tier database
+-- from going to sleep after inactivity.
+-- 
+-- Single Server-Side solution - more reliable than client-side pings
+-- No need for browser-based keep-alive hooks

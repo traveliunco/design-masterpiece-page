@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Auth
 import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import useSupabaseKeepAlive from "@/hooks/useSupabaseKeepAlive";
 
 // Loading Component
 const PageLoader = () => (
@@ -95,11 +94,7 @@ import MobileNav from "./components/MobileNav";
 
 const queryClient = new QueryClient();
 
-const App = () => {
-  // تفعيل Supabase Keep Alive
-  useSupabaseKeepAlive();
-  
-  return (
+const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <TooltipProvider>
@@ -195,6 +190,5 @@ const App = () => {
     </AuthProvider>
   </QueryClientProvider>
 );
-};
 
 export default App;
