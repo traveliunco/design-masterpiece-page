@@ -3,7 +3,20 @@ import { supabase } from '@/integrations/supabase/client';
 
 /**
  * Hook للحفاظ على اتصال Supabase نشط ومنع توقف قاعدة البيانات
- * يقوم بعمل ping كل 5 دقائق للـ Free Tier
+ * 
+ * النظام المتكامل للـ Keep-Alive:
+ * 
+ * 1. Client-Side (هذا الـ Hook):
+ *    - يعمل كل 5 دقائق من متصفح المستخدم
+ *    - نشط فقط عندما يكون المستخدم متصل بالموقع
+ *    - يضمن استجابة سريعة للمستخدمين النشطين
+ * 
+ * 2. Server-Side (Edge Function + Cron):
+ *    - Edge Function: supabase/functions/keep-alive/index.ts
+ *    - Cron Job: يعمل يومياً الساعة 6:00 صباحاً UTC
+ *    - يضمن عدم توقف قاعدة البيانات حتى بدون مستخدمين
+ * 
+ * لا يوجد تعارض - النظامان يكملان بعضهما للحماية الكاملة
  */
 export const useSupabaseKeepAlive = () => {
   useEffect(() => {
