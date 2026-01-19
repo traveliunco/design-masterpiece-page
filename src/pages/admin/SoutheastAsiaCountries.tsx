@@ -15,7 +15,6 @@ const AdminSoutheastAsiaCountries = () => {
   const [formData, setFormData] = useState({
     nameAr: "",
     nameEn: "",
-    flag: "",
     description: "",
     coverImage: "",
     currency: "",
@@ -31,7 +30,6 @@ const AdminSoutheastAsiaCountries = () => {
     setFormData({
       nameAr: country.nameAr,
       nameEn: country.nameEn,
-      flag: country.flag,
       description: country.description,
       coverImage: country.coverImage,
       currency: country.currency,
@@ -114,18 +112,6 @@ const AdminSoutheastAsiaCountries = () => {
                 value={formData.nameEn}
                 onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
                 placeholder="Thailand"
-              />
-            </div>
-
-            {/* العلم */}
-            <div className="space-y-2">
-              <Label htmlFor="flag">العلم (Emoji) *</Label>
-              <Input
-                id="flag"
-                value={formData.flag}
-                onChange={(e) => setFormData({ ...formData, flag: e.target.value })}
-                placeholder="🇹🇭"
-                className="text-4xl"
               />
             </div>
 
@@ -247,7 +233,6 @@ const AdminSoutheastAsiaCountries = () => {
                 alt={country.nameAr}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute top-3 right-3 text-5xl">{country.flag}</div>
             </div>
 
             <div className="p-6 space-y-4">

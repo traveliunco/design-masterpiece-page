@@ -35,12 +35,9 @@ const Malaysia = () => {
         {/* محتوى الغلاف */}
         <div className="absolute inset-0 flex items-end">
           <div className="container mx-auto px-4 pb-16">
-            <div className="flex items-center gap-4 mb-4">
-              <span className="text-7xl">{country.flag}</span>
-              <div>
-                <h1 className="text-6xl font-bold text-white mb-2">{country.nameAr}</h1>
-                <p className="text-2xl text-white/90">{country.nameEn}</p>
-              </div>
+            <div className="mb-4">
+              <h1 className="text-6xl font-bold text-white mb-2">{country.nameAr}</h1>
+              <p className="text-2xl text-white/90">{country.nameEn}</p>
             </div>
             <p className="text-xl text-white/90 max-w-3xl leading-relaxed">
               {country.description}

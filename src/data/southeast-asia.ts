@@ -18,7 +18,6 @@ export interface Country {
   id: string;
   nameAr: string;
   nameEn: string;
-  flag: string;
   description: string;
   coverImage: string;
   coordinates: { lat: number; lng: number };
@@ -38,7 +37,6 @@ export const southeastAsiaCountries: Country[] = [
     id: "thailand",
     nameAr: "تايلاند",
     nameEn: "Thailand",
-    flag: "🇹🇭",
     description: "أرض الابتسامات - جنة سياحية تجمع بين الشواطئ الخلابة والمعابد التاريخية والثقافة الغنية",
     coverImage: "https://images.unsplash.com/photo-1528181304800-259b08848526",
     coordinates: { lat: 13.7563, lng: 100.5018 },
@@ -179,7 +177,6 @@ export const southeastAsiaCountries: Country[] = [
     id: "malaysia",
     nameAr: "ماليزيا",
     nameEn: "Malaysia",
-    flag: "🇲🇾",
     description: "ماليزيا الحقيقية - تنوع ثقافي وطبيعة خلابة وتطور حضاري",
     coverImage: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07",
     coordinates: { lat: 3.139, lng: 101.6869 },
@@ -320,7 +317,6 @@ export const southeastAsiaCountries: Country[] = [
     id: "indonesia",
     nameAr: "إندونيسيا",
     nameEn: "Indonesia",
-    flag: "🇮🇩",
     description: "أرخبيل الجمال - 17,000 جزيرة من الطبيعة الساحرة والثقافة الغنية",
     coverImage: "https://images.unsplash.com/photo-1537996194471-e657df975ab4",
     coordinates: { lat: -8.3405, lng: 115.0920 },
@@ -432,7 +428,6 @@ export const southeastAsiaCountries: Country[] = [
     id: "vietnam",
     nameAr: "فيتنام",
     nameEn: "Vietnam",
-    flag: "🇻🇳",
     description: "جوهرة آسيا - تاريخ عريق وطبيعة ساحرة ومأكولات شهية",
     coverImage: "https://images.unsplash.com/photo-1528127269322-539801943592",
     coordinates: { lat: 21.0285, lng: 105.8542 },
@@ -575,7 +570,6 @@ export const southeastAsiaCountries: Country[] = [
     id: "philippines",
     nameAr: "الفلبين",
     nameEn: "Philippines",
-    flag: "🇵🇭",
     description: "أكثر من 7000 جزيرة استوائية - شواطئ بيضاء وطبيعة خلابة",
     coverImage: "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86",
     currency: "بيزو فلبيني (PHP)",
@@ -680,7 +674,6 @@ export const southeastAsiaCountries: Country[] = [
     id: "singapore",
     nameAr: "سنغافورة",
     nameEn: "Singapore",
-    flag: "🇸🇬",
     description: "مدينة الأسد - الحداثة والنظافة والتطور",
     coverImage: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd",
     currency: "دولار سنغافوري (SGD)",
@@ -745,8 +738,7 @@ export const getAllCities = () => {
       country: {
         id: country.id,
         nameAr: country.nameAr,
-        nameEn: country.nameEn,
-        flag: country.flag
+        nameEn: country.nameEn
       }
     }))
   );

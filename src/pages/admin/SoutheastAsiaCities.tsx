@@ -109,7 +109,7 @@ const AdminSoutheastAsiaCities = () => {
               <SelectItem value="all">كل الدول</SelectItem>
               {countries.map((country) => (
                 <SelectItem key={country.id} value={country.id}>
-                  {country.flag} {country.nameAr}
+                  {country.nameAr}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -354,7 +354,6 @@ const AdminSoutheastAsiaCities = () => {
                 </div>
                 {country && (
                   <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
-                    <span className="text-lg">{country.flag}</span>
                     <span className="text-xs font-medium">{country.nameAr}</span>
                   </div>
                 )}

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Leaflet CSS Import */
+@import 'leaflet/dist/leaflet.css';
+
 /* ═══════════════════════════════════════════════════════════════════════════
    TRAVELIUN ULTRA-PREMIUM DESIGN SYSTEM
    Typography: IBM Plex Sans Arabic

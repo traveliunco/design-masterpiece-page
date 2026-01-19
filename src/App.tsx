@@ -58,13 +58,18 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const MyBookings = lazy(() => import("./pages/MyBookings"));
 
 // Southeast Asia Pages
-const Thailand = lazy(() => import("./pages/Thailand"));
-const Malaysia = lazy(() => import("./pages/Malaysia"));
-const Indonesia = lazy(() => import("./pages/Indonesia"));
-const Vietnam = lazy(() => import("./pages/Vietnam"));
-const Philippines = lazy(() => import("./pages/Philippines"));
-const Singapore = lazy(() => import("./pages/Singapore"));
-const CityDetails = lazy(() => import("./pages/CityDetails"));
+const Thailand = lazy(() => import("./pages/countries/Thailand"));
+const Malaysia = lazy(() => import("./pages/countries/Malaysia"));
+const Indonesia = lazy(() => import("./pages/countries/Indonesia"));
+const Vietnam = lazy(() => import("./pages/countries/Vietnam"));
+const Philippines = lazy(() => import("./pages/countries/Philippines"));
+const Singapore = lazy(() => import("./pages/countries/Singapore"));
+
+// Middle East / Turkey
+const Turkey = lazy(() => import("./pages/countries/Turkey"));
+
+// City Template
+const CityDetails = lazy(() => import("./components/templates/CityTemplate"));
 
 // Auth Pages (Lazy loaded)
 const Login = lazy(() => import("./pages/Login"));
@@ -160,6 +165,11 @@ const App = () => (
               <Route path="/country/vietnam" element={<Vietnam />} />
               <Route path="/country/philippines" element={<Philippines />} />
               <Route path="/country/singapore" element={<Singapore />} />
+
+              {/* Turkey Route */}
+              <Route path="/country/turkey" element={<Turkey />} />
+
+              {/* City Details Route */}
               <Route path="/country/:countryId/city/:cityId" element={<CityDetails />} />
 
               {/* Auth Routes */}

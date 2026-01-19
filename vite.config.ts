@@ -9,13 +9,33 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [
+    react({
+      jsxRuntime: 'automatic'
+    }), 
+    mode === "development" && componentTagger()
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "react": path.resolve(__dirname, "./node_modules/react"),
       "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
+      "react/jsx-runtime": path.resolve(__dirname, "./node_modules/react/jsx-runtime"),
     },
-    dedupe: ['react', 'react-dom']
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime']
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react/jsx-runtime'],
+    esbuildOptions: {
+      define: {
+        global: 'globalThis'
+      }
+    }
+  },
+  build: {
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true
+    }
+  }
 }));

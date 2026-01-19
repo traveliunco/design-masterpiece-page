@@ -39,12 +39,9 @@ export default function Philippines() {
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16">
             <div className="container mx-auto">
-              <div className="flex items-center gap-4 mb-4">
-                <span className="text-6xl">{country.flag}</span>
-                <h1 className="text-4xl md:text-6xl font-bold text-white">
-                  {country.nameAr}
-                </h1>
-              </div>
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+                {country.nameAr}
+              </h1>
               <p className="text-xl text-white/90 max-w-2xl">
                 {country.description}
               </p>
