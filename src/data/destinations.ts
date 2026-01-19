@@ -175,15 +175,6 @@ export const destinations = [
       { name: "برنامج 5 أيام اقتصادي", days: 5, price: "3,799" },
     ],
   },
-    average_rating: 4.8,
-    reviewCount: 320,
-    total_reviews: 320,
-    programs: [
-      { name: "برنامج بالي الساحر", days: 7, price: "5,999" },
-      { name: "برنامج جاكرتا وبالي", days: 10, price: "6,499" },
-      { name: "برنامج شهر عسل بالي", days: 8, price: "7,499" },
-    ],
-  },
   {
     id: "maldives",
     slug: "maldives",
