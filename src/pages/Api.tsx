@@ -17,7 +17,7 @@ import {
   ChevronDown,
   Loader2,
 } from "lucide-react";
-import Header from "@/components/Header";
+import Nav3D from "@/components/Nav3D";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -89,7 +89,7 @@ const Flights = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Nav3D />
 
       {/* Hero Section */}
       <section className="relative py-24 bg-gradient-to-br from-primary via-primary/90 to-primary/80 overflow-hidden">

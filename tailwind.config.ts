@@ -71,6 +71,10 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        'chart-2': 'hsl(220, 70%, 50%)',
+        'chart-3': 'hsl(120, 70%, 50%)',
+        'chart-4': 'hsl(280, 70%, 50%)',
+        'chart-5': 'hsl(40, 70%, 50%)',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -107,6 +111,13 @@ export default {
           "0%, 100%": { boxShadow: "0 0 20px rgba(20, 184, 166, 0.4)" },
           "50%": { boxShadow: "0 0 40px rgba(20, 184, 166, 0.6)" },
         },
+        "iconBounce": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "20%": { transform: "translateY(-0.3em)" },
+          "40%": { transform: "translateY(0)" },
+          "60%": { transform: "translateY(-0.1em)" },
+          "80%": { transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -114,6 +125,7 @@ export default {
         "float": "float 6s ease-in-out infinite",
         "float-subtle": "float-subtle 8s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "iconBounce": "iconBounce 0.6s ease",
       },
     },
   },

@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Auth
 import { AuthProvider } from "@/hooks/useAuth";
+import { NavigationProvider } from "@/contexts/NavigationContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 // Loading Component
@@ -56,6 +57,7 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const MyBookings = lazy(() => import("./pages/MyBookings"));
+const MobileHomePage = lazy(() => import("./pages/MobileHomePage"));
 
 // Southeast Asia Pages
 const Thailand = lazy(() => import("./pages/countries/Thailand"));
@@ -113,15 +115,17 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <Sonner />
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <AIChat />
+      <NavigationProvider>
+        <TooltipProvider>
+          <Sonner />
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <AIChat />
           <MobileNav />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Index />} />
+              <Route path="/m" element={<MobileHomePage />} />
               <Route path="/premium" element={<IndexPremium />} />
               <Route path="/destinations" element={<Destinations />} />
               <Route path="/destinations/:id" element={<DestinationDetails />} />
@@ -219,6 +223,7 @@ const App = () => (
           </Suspense>
         </BrowserRouter>
       </TooltipProvider>
+    </NavigationProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

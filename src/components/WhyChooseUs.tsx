@@ -7,150 +7,102 @@ const WhyChooseUs = () => {
       icon: Shield,
       title: "حجز آمن ومضمون",
       description: "نظام دفع آمن 100% مع ضمان استرداد كامل",
-      gradient: "from-blue-500 to-cyan-500",
-      benefits: ["تشفير SSL", "دفع آمن", "ضمان الاسترداد"]
+      color: "text-teal-500",
+      bgColor: "bg-gradient-to-br from-teal-500/20 to-cyan-500/10",
     },
     {
       icon: Award,
       title: "15 سنة من التميز",
       description: "خبرة طويلة في تنظيم أفضل الرحلات السياحية",
-      gradient: "from-secondary to-gold",
-      benefits: ["10,000+ عميل", "98% رضا", "جوائز عالمية"]
+      color: "text-cyan-500",
+      bgColor: "bg-gradient-to-br from-cyan-500/20 to-blue-500/10",
     },
     {
       icon: HeartHandshake,
       title: "خدمة عملاء متميزة",
       description: "فريق محترف متاح 24/7 لخدمتك",
-      gradient: "from-rose-500 to-pink-500",
-      benefits: ["دعم فوري", "استشارات مجانية", "متابعة مستمرة"]
+      color: "text-blue-500",
+      bgColor: "bg-gradient-to-br from-blue-500/20 to-indigo-500/10",
     },
     {
       icon: Clock,
       title: "أسعار تنافسية",
       description: "أفضل الأسعار مع عروض حصرية طوال العام",
-      gradient: "from-green-500 to-emerald-500",
-      benefits: ["خصومات حصرية", "عروض موسمية", "لا رسوم خفية"]
+      color: "text-emerald-500",
+      bgColor: "bg-gradient-to-br from-emerald-500/20 to-teal-500/10",
     },
     {
       icon: Globe,
       title: "وجهات متنوعة",
       description: "أكثر من 50 وجهة سياحية حول العالم",
-      gradient: "from-purple-500 to-indigo-500",
-      benefits: ["50+ وجهة", "برامج مخصصة", "رحلات فاخرة"]
+      color: "text-indigo-500",
+      bgColor: "bg-gradient-to-br from-indigo-500/20 to-blue-500/10",
     },
     {
       icon: Sparkles,
       title: "تجربة استثنائية",
       description: "كل تفصيلة مصممة لراحتك وسعادتك",
-      gradient: "from-amber-500 to-orange-500",
-      benefits: ["VIP services", "مرشدين محترفين", "فنادق فاخرة"]
+      color: "text-teal-600",
+      bgColor: "bg-gradient-to-br from-teal-600/20 to-emerald-500/10",
     },
   ];
 
+  const stats = [
+    { number: "10,000+", label: "عميل سعيد" },
+    { number: "50+", label: "وجهة سياحية" },
+    { number: "98%", label: "نسبة الرضا" },
+    { number: "15+", label: "سنة خبرة" },
+  ];
+
   return (
-    <section className="py-24 bg-gradient-to-br from-muted via-background to-muted relative overflow-hidden">
-      {/* Decorative Background */}
-      <div className="absolute inset-0 opacity-5">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <circle cx="20" cy="20" r="1" fill="currentColor" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
-      </div>
-
-      {/* Floating Gradients */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-gold/20 to-accent/20 rounded-full blur-3xl animate-float [animation-delay:2s]" />
-
-      <div className="container relative">
+    <section className="py-20 md:py-32 bg-gradient-to-b from-white to-gray-50 relative">
+      <div className="container px-4 md:px-6">
         {/* Section Header */}
-        <div className="text-center mb-20 space-y-6">
-          <div className="inline-flex items-center gap-2 bg-primary/10 px-6 py-3 rounded-full">
-            <Award className="w-5 h-5 text-primary" />
-            <span className="text-sm font-medium text-primary">لماذا ترافليون؟</span>
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 bg-luxury-navy/5 px-5 py-2 rounded-full mb-6">
+            <Award className="w-4 h-4 text-luxury-gold" />
+            <span className="text-sm font-bold text-luxury-navy">لماذا ترافليون؟</span>
           </div>
-
-          <h2 className="text-4xl md:text-6xl font-bold">
-            نجعل
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-gold mx-3">
-              أحلامك
-            </span>
-            حقيقة
+          <h2 className="text-3xl md:text-5xl font-bold text-luxury-navy mb-6">
+            نجعل <span className="text-luxury-teal">أحلامك</span> حقيقة
           </h2>
-
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-600 leading-relaxed">
             نفخر بكوننا الخيار الأول للمسافرين السعوديين، بفضل التزامنا بالتميز والجودة في كل تفصيلة
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
           {features.map((feature, index) => (
             <div
               key={index}
-              className={cn("group relative animate-fade-in", index === 0 ? "[animation-delay:0s]" : index === 1 ? "[animation-delay:0.1s]" : index === 2 ? "[animation-delay:0.2s]" : index === 3 ? "[animation-delay:0.3s]" : index === 4 ? "[animation-delay:0.4s]" : "[animation-delay:0.5s]")}
+              className="group bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-luxury-teal/30 transition-all duration-500 hover:-translate-y-1"
             >
-              {/* Gradient Background on Hover */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 rounded-3xl transition-opacity duration-500`} />
-              
-              {/* Card */}
-              <div className="relative bg-card p-8 rounded-3xl border-2 border-transparent group-hover:border-primary/20 transition-all duration-500 hover:shadow-2xl h-full">
-                {/* Icon */}
-                <div className={cn("w-16 h-16 rounded-2xl bg-gradient-to-br p-0.5 mb-6 group-hover:scale-110 transition-transform duration-500", feature.gradient)}>
-                  <div className="w-full h-full bg-background rounded-2xl flex items-center justify-center">
-                    <feature.icon className={cn("w-8 h-8 text-primary group-hover:scale-110 transition-transform")} />
-                  </div>
-                </div>
-
-                {/* Content */}
-                <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-muted-foreground mb-6 leading-relaxed">
-                  {feature.description}
-                </p>
-
-                {/* Benefits List */}
-                <ul className="space-y-3">
-                  {feature.benefits.map((benefit, i) => (
-                    <li 
-                      key={i}
-                      className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors"
-                    >
-                      <CheckCircle2 className={`w-4 h-4 text-primary flex-shrink-0 group-hover:scale-110 transition-transform`} />
-                      <span>{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Decorative Element */}
-                <div className="absolute top-4 right-4 w-20 h-20 rounded-full bg-gradient-to-br from-primary/5 to-secondary/5 group-hover:scale-150 transition-transform duration-700 blur-xl" />
+              <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center mb-6", feature.bgColor)}>
+                <feature.icon className={cn("w-7 h-7", feature.color)} />
               </div>
+              <h3 className="text-xl font-bold text-luxury-navy mb-3 group-hover:text-luxury-teal transition-colors">
+                {feature.title}
+              </h3>
+              <p className="text-gray-600 leading-relaxed">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>
 
-        {/* Trust Badges */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {[
-            { number: "10,000+", label: "عميل سعيد" },
-            { number: "50+", label: "وجهة سياحية" },
-            { number: "98%", label: "نسبة الرضا" },
-            { number: "15+", label: "سنة خبرة" },
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className={cn("text-center p-6 bg-card rounded-2xl border border-border hover:border-primary/30 transition-all hover:shadow-lg animate-scale-in", index === 0 ? "[animation-delay:0s]" : index === 1 ? "[animation-delay:0.1s]" : index === 2 ? "[animation-delay:0.2s]" : "[animation-delay:0.3s]")}
-            >
-              <div className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2">
-                {stat.number}
+        {/* Stats */}
+        <div className="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 rounded-3xl p-8 md:p-12 shadow-[0_10px_50px_rgba(20,184,166,0.3)]">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-3xl md:text-5xl font-bold text-white mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-cyan-100 font-medium">{stat.label}</div>
               </div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

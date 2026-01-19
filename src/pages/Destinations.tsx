@@ -1,38 +1,47 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { MapPin, ArrowLeft, Star, Calendar, Users, Filter } from "lucide-react";
+import { MapPin, ArrowLeft, Star, Calendar, Users, Building2 } from "lucide-react";
 import PageLayout from "@/layouts/PageLayout";
 import PageHeader from "@/components/ui/PageHeader";
-import SectionTitle from "@/components/ui/SectionTitle";
-import ContentCard from "@/components/ui/ContentCard";
-import { destinations } from "@/data/destinations";
+import { allCountries } from "@/data/destinations-data";
 import { useSEO } from "@/hooks/useSEO";
 import { cn } from "@/lib/utils";
 
-const filterOptions = ["الكل", "جنوب شرق آسيا", "أوروبا وآسيا", "القوقاز", "المحيط الهندي"];
+const filterOptions = ["الكل", "جنوب شرق آسيا", "الشرق الأوسط", "أوروبا"];
 
 const DestinationsPage = () => {
   const [activeFilter, setActiveFilter] = useState("الكل");
 
   useSEO({
-    title: "الوجهات السياحية - اكتشف أجمل الوجهات حول العالم",
-    description: "اكتشف أجمل الوجهات السياحية مع ترافليون. ماليزيا، تركيا، تايلاند، إندونيسيا، المالديف، جورجيا وأذربيجان. برامج متنوعة وأسعار تناسب الجميع.",
-    keywords: "وجهات سياحية, ماليزيا, تركيا, تايلاند, إندونيسيا, المالديف, جورجيا, أذربيجان, سفر",
+    title: "الوجهات السياحية - الدول والمدن",
+    description: "استكشف الدول والمدن السياحية حول العالم. ماليزيا، تايلاند، إندونيسيا، وتركيا. تعرف على أجمل المدن والمعالم السياحية.",
+    keywords: "دول سياحية, مدن سياحية, ماليزيا, تركيا, تايلاند, إندونيسيا, مدن العالم",
   });
 
-  const filteredDestinations = useMemo(() => {
-    if (activeFilter === "الكل") return destinations;
-    return destinations.filter(d => d.region === activeFilter);
+  const filteredCountries = useMemo(() => {
+    // Basic mapping for regions since it's not explicitly in the data yet
+    // defaults to all if "الكل"
+    if (activeFilter === "الكل") return allCountries;
+    
+    return allCountries.filter(country => {
+      if (activeFilter === "جنوب شرق آسيا") {
+        return ["malaysia", "thailand", "indonesia", "philippines", "vietnam", "singapore"].includes(country.id);
+      }
+      if (activeFilter === "الشرق الأوسط" || activeFilter === "أوروبا") {
+        return ["turkey"].includes(country.id); // Placing Turkey in both for now or based on user pref
+      }
+      return true;
+    });
   }, [activeFilter]);
 
   return (
     <PageLayout>
       {/* Hero Section */}
       <PageHeader
-        badge="اكتشف العالم معنا"
+        badge="اكتشف العالم"
         badgeIcon={<MapPin className="w-4 h-4 text-luxury-gold" />}
-        title="الوجهات السياحية"
-        subtitle="اختر وجهتك المفضلة من بين أجمل الوجهات السياحية حول العالم واستمتع برحلة لا تُنسى"
+        title="الدول والمدن السياحية"
+        subtitle="تصفح قائمة الدول والمدن السياحية التي نقدم خدماتنا فيها"
       />
 
       {/* Main Content */}
@@ -60,97 +69,90 @@ const DestinationsPage = () => {
             {/* Results Count */}
             <div className="text-center mt-8">
               <p className="text-muted-foreground">
-                عرض <span className="font-bold text-luxury-teal">{filteredDestinations.length}</span> وجهة
-                {activeFilter !== "الكل" && (
-                  <span> في <span className="font-bold text-luxury-navy">{activeFilter}</span></span>
-                )}
+                عرض <span className="font-bold text-luxury-teal">{filteredCountries.length}</span> دولة
               </p>
             </div>
           </div>
 
-          {/* Destinations Grid */}
+          {/* Countries Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredDestinations.map((destination, index) => (
-              <Link
-                to={`/destinations/${destination.id}`}
-                key={destination.id}
-                className="group card-3d overflow-hidden animate-reveal"
+            {filteredCountries.map((country, index) => (
+              <div
+                key={country.id}
+                className="group card-3d overflow-hidden animate-reveal flex flex-col bg-white rounded-3xl border border-white/50 shadow-sm hover:shadow-xl transition-all duration-500"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                {/* Image */}
-                <div className="relative h-64 overflow-hidden">
+                {/* Country Image Link */}
+                <Link to={`/country/${country.id}`} className="relative h-64 overflow-hidden block">
                   <img
-                    src={destination.image}
-                    alt={destination.name}
+                    src={country.coverImage}
+                    alt={country.nameAr}
                     loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/80 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/90 via-luxury-navy/20 to-transparent" />
 
-                  {/* Region Tag */}
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-luxury-gold text-luxury-navy px-4 py-1.5 rounded-full text-xs font-bold">
-                      {destination.region}
-                    </span>
+                  {/* Top Badges */}
+                  <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+                    <MapPin className="w-3.5 h-3.5 text-luxury-gold" />
+                    <span className="text-white text-xs font-bold">{country.cities.length} مدينة</span>
                   </div>
 
-                  {/* Rating */}
-                  <div className="absolute top-4 left-4 glass-dark rounded-full px-3 py-1 flex items-center gap-1">
-                    <Star className="w-3 h-3 text-luxury-gold fill-luxury-gold" />
-                    <span className="text-white text-xs font-bold">{destination.rating}</span>
-                  </div>
-
-                  {/* Destination Info Overlay */}
+                  {/* Country Name Overlay */}
                   <div className="absolute bottom-4 right-4 left-4">
-                    <h3 className="text-2xl font-bold text-white mb-1">{destination.name}</h3>
-                    <p className="text-white/70 text-sm line-clamp-2">{destination.description}</p>
+                    <h3 className="text-3xl font-black text-white mb-1 group-hover:text-luxury-gold transition-colors">{country.nameAr}</h3>
+                    <p className="text-white/80 text-sm font-medium">{country.nameEn}</p>
                   </div>
-                </div>
+                </Link>
 
                 {/* Content */}
-                <div className="p-6 bg-white">
-                  {/* Stats */}
-                  <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>{destination.programs?.[0]?.days || 5} أيام</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4" />
-                      <span>{destination.total_reviews} تقييم</span>
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="mb-6 flex-1">
+                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2 mb-4">
+                      {country.description}
+                    </p>
+                    
+                    {/* Cities Preview */}
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-bold text-luxury-navy uppercase tracking-wider opacity-70 flex items-center gap-2">
+                        <Building2 className="w-3 h-3" />
+                        أبرز المدن
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {country.cities.slice(0, 4).map((city) => (
+                          <Link
+                            key={city.id}
+                            to={`/country/${country.id}/city/${city.id}`}
+                            className="px-3 py-1.5 bg-gray-50 hover:bg-luxury-teal/10 hover:text-luxury-teal text-gray-600 text-xs rounded-lg transition-colors border border-gray-100"
+                          >
+                            {city.nameAr}
+                          </Link>
+                        ))}
+                        {country.cities.length > 4 && (
+                          <Link 
+                            to={`/country/${country.id}`}
+                            className="px-3 py-1.5 bg-gray-50 text-gray-400 text-xs rounded-lg hover:bg-gray-100 transition-colors"
+                          >
+                            +{country.cities.length - 4}
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Price & CTA */}
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
-                    <div>
-                      <span className="text-muted-foreground text-xs">ابتداءً من</span>
-                      <div className="text-luxury-teal font-bold text-xl">{destination.startPrice || destination.starting_price} ر.س</div>
-                    </div>
-                    <div className="flex items-center gap-2 text-luxury-teal font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span>استكشف</span>
-                      <ArrowLeft className="w-4 h-4" />
-                    </div>
-                  </div>
+                  {/* Footer Actions */}
+                  <Link
+                    to={`/country/${country.id}`}
+                    className="w-full py-4 rounded-xl btn-luxury flex items-center justify-center gap-2 group/btn"
+                  >
+                    <span>استكشف {country.nameAr}</span>
+                    <ArrowLeft className="w-4 h-4 group-hover/btn:-translate-x-1 transition-transform" />
+                  </Link>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
 
-          {/* Empty State */}
-          {filteredDestinations.length === 0 && (
-            <div className="text-center py-20">
-              <MapPin className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-luxury-navy mb-2">لا توجد وجهات</h3>
-              <p className="text-muted-foreground">لم نجد وجهات في هذه المنطقة حالياً</p>
-              <button
-                onClick={() => setActiveFilter("الكل")}
-                className="mt-4 btn-outline-luxury"
-              >
-                عرض جميع الوجهات
-              </button>
-            </div>
-          )}
         </div>
       </section>
 
@@ -166,7 +168,7 @@ const DestinationsPage = () => {
             لم تجد وجهتك المفضلة؟
           </h2>
           <p className="text-white/60 text-lg mb-8 max-w-xl mx-auto">
-            تواصل معنا وسنساعدك في التخطيط لرحلة مخصصة إلى أي وجهة في العالم
+            تواصل معنا وسنساعدك في التخطيط لرحلة مخصصة إلى أي مدينة في العالم
           </p>
           <Link to="/contact" className="btn-gold inline-flex items-center gap-3 px-10 py-5 text-lg">
             تواصل معنا

@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Sparkles, MapPin, Star, Play, Shield, Clock, Users } from "lucide-react";
-import heroImage from "@/assets/hero-resort.jpg";
 import HeroSearch from "./HeroSearch";
+import { InteractiveGlobe } from "./InteractiveGlobe"; // Import InteractiveGlobe
+
 const PremiumHero = () => {
-  return <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-luxury-navy via-[#0a4b5c] to-luxury-navy">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0">
-        <img src={heroImage} alt="Luxury Resort" className="w-full h-full object-cover scale-110 animate-[pulse_20s_ease-in-out_infinite]" />
-        {/* Lighter Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-luxury-navy/50 via-luxury-navy/40 to-luxury-navy/70" />
-        <div className="absolute inset-0 bg-gradient-to-r from-luxury-navy/60 via-transparent to-[#0a4b5c]/40" />
+  return <section className="relative min-h-screen overflow-hidden bg-luxury-navy">
+      {/* Background - Interactive Globe */}
+      <div className="absolute inset-0 z-0">
+        <InteractiveGlobe className="scale-125 md:scale-110 opacity-90 transition-transform duration-1000" />
+        {/* Overlays for Text Readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-luxury-navy/40 via-transparent to-luxury-navy/90 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-luxury-navy/80 via-transparent to-luxury-navy/40 pointer-events-none" />
       </div>
 
       {/* Vibrant Light Effects */}
@@ -38,10 +39,8 @@ const PremiumHero = () => {
           
 
           {/* Headline */}
-          <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 animate-reveal delay-100 leading-tight">
-            رحلات <span className="text-gradient-gold">استثنائية</span>
-            <br />
-            <span className="text-gradient-teal">تفوق</span> التوقعات
+          <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold text-white mb-6 animate-reveal delay-100 leading-tight whitespace-nowrap">
+            رحلات <span className="text-gradient-gold">استثنائية</span> <span className="text-gradient-teal">تفوق</span> التوقعات
           </h1>
 
           {/* Description */}

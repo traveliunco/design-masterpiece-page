@@ -10,7 +10,7 @@ export interface City {
   bestTime: string;
   coordinates: { lat: number; lng: number };
   highlights: string[];
-  averageTemp: string;
+  averageTemp: string | { summer: string; winter: string };
   accommodation: string;
 }
 

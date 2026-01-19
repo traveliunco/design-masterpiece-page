@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserPlus, Mail, Lock, Eye, EyeOff, User, Phone, ArrowRight, Check } from "lucide-react";
-import Header from "@/components/Header";
+import Nav3D from "@/components/Nav3D";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -95,7 +95,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-      <Header />
+      <Nav3D />
 
       <div className="container py-12 flex items-center justify-center min-h-[80vh]">
         <Card className="w-full max-w-lg shadow-2xl border-0">

@@ -4,9 +4,11 @@ import {
   Menu, X, Phone, ChevronDown, Sparkles, 
   Plane, Hotel, MapPin, Calendar, Heart, 
   CreditCard, Shield, Users, ArrowLeft,
-  DollarSign, Globe, Search, User, Bookmark, MapPinned, Package
+  DollarSign, Globe, Search, User, MapPinned, Package,
+  Instagram, Twitter, Facebook
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigation } from "@/contexts/NavigationContext";
 
 // Mega Menu Data
 const megaMenuItems = {
@@ -30,7 +32,7 @@ const megaMenuItems = {
           { name: "بانكوك", path: "/country/thailand/city/bangkok" },
           { name: "بوكيت", path: "/country/thailand/city/phuket" },
           { name: "تشيانغ ماي", path: "/country/thailand/city/chiang-mai" },
-          { name: "باتريا", path: "/country/thailand/city/pattaya" }
+          { name: "باتايا", path: "/country/thailand/city/pattaya" }
         ]
       },
       {
@@ -67,7 +69,7 @@ const megaMenuItems = {
           { name: "مانيلا", path: "/country/philippines/city/manila" },
           { name: "سيبو", path: "/country/philippines/city/cebu" },
           { name: "بوراكاي", path: "/country/philippines/city/boracay" },
-          { name: "بالاو", path: "/country/philippines/city/palawan" }
+          { name: "بالاوان", path: "/country/philippines/city/palawan" }
         ]
       },
       {
@@ -104,7 +106,7 @@ const megaMenuItems = {
 
 const Nav3D = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isMobileMenuOpen, setIsMobileMenuOpen } = useNavigation();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [language, setLanguage] = useState<'ar' | 'en'>('ar');
   const [currency, setCurrency] = useState<'SAR' | 'USD' | 'EUR'>('SAR');
@@ -135,13 +137,11 @@ const Nav3D = () => {
 
   const navLinks = [
     { name: "الرئيسية", path: "/", hasDropdown: false },
-    { name: "الدول", path: "/destinations", hasDropdown: true, dropdownKey: "countries" },
     { name: "الخدمات", path: "/services", hasDropdown: true, dropdownKey: "services" },
-    { name: "البرامج", path: "/programs", hasDropdown: false },
+    { name: "الدول", path: "/destinations", hasDropdown: true, dropdownKey: "countries" },
     { name: "شهر العسل", path: "/honeymoon", hasDropdown: false },
+    { name: "البرامج", path: "/programs", hasDropdown: false },
     { name: "العروض", path: "/offers", hasDropdown: false },
-    { name: "الشركة", path: "/about", hasDropdown: false },
-    { name: "تواصل معنا", path: "/contact", hasDropdown: false },
   ];
 
   const handleDropdownToggle = (key: string) => {
@@ -154,7 +154,8 @@ const Nav3D = () => {
       <nav
         ref={navRef}
         className={cn(
-          "fixed top-0 left-0 right-0 z-[100] transition-all duration-500",
+          "fixed top-0 left-0 right-0 transition-all duration-500",
+          "z-[var(--z-navigation)]",
           isScrolled ? "py-2" : "py-3 md:py-4"
         )}
       >
@@ -162,10 +163,10 @@ const Nav3D = () => {
           <div
             className={cn(
               "relative flex items-center justify-between rounded-2xl md:rounded-[2rem] px-4 md:px-6 py-3 md:py-4 transition-all duration-500",
-              // Enhanced Glass Effect for better visibility
+              // Unified Glass Effect
               isScrolled
-                ? "bg-white/95 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.15),0_4px_12px_rgba(0,0,0,0.1)] border border-gray-200/50"
-                : "bg-white/30 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.12)]",
+                ? "glass-nav-scrolled"
+                : "glass-nav-default",
               // 3D Transform
               "transform-gpu"
             )}
@@ -182,25 +183,43 @@ const Nav3D = () => {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3 group relative z-10">
               <div className="relative transform-gpu transition-all duration-500 group-hover:scale-110">
-                {/* Logo Container with 3D effect */}
+                {/* 3D Animated Logo Container */}
                 <div
-                  className={cn(
-                    "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 overflow-hidden",
-                    "bg-white/95 backdrop-blur-sm",
-                    "shadow-[0_4px_20px_rgba(20,184,166,0.3)]"
-                  )}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center overflow-hidden
+                    bg-gradient-to-br from-primary via-teal-500 to-teal-600
+                    shadow-[0_8px_30px_rgba(20,184,166,0.5),0_0_60px_rgba(20,184,166,0.3)]
+                    animate-[float3d_4s_ease-in-out_infinite]
+                    group-hover:shadow-[0_12px_40px_rgba(20,184,166,0.7),0_0_80px_rgba(20,184,166,0.4)]
+                    transition-all duration-500"
                   style={{
-                    transform: "perspective(100px) rotateX(5deg) rotateY(-5deg)",
+                    transformStyle: 'preserve-3d',
+                    animation: 'float3d 4s ease-in-out infinite, rotate3d 8s linear infinite',
                   }}
                 >
+                  {/* Inner glow layer */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/30 via-transparent to-transparent rounded-2xl" />
+                  
+                  {/* Logo image */}
                   <img 
-                    src="/traveliun-logo.png" 
+                    src="/logo-white.png" 
                     alt="Traveliun Logo" 
-                    className="w-full h-full object-contain p-1.5"
+                    className="w-10 h-10 object-contain relative z-10 drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
+                    style={{
+                      filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))',
+                    }}
+                  />
+                  
+                  {/* Shine effect */}
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12 animate-[shine_3s_ease-in-out_infinite]"
+                    style={{ transform: 'translateX(-100%)' }}
                   />
                 </div>
-                {/* Glow Indicator */}
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-luxury-gold rounded-full animate-pulse shadow-[0_0_10px_rgba(234,179,8,0.6)]" />
+                
+                {/* Floating particles around logo */}
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-luxury-gold rounded-full animate-[pulse_2s_ease-in-out_infinite] shadow-[0_0_15px_rgba(234,179,8,0.8)]" />
+                <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-cyan-400 rounded-full animate-[pulse_2.5s_ease-in-out_infinite_0.5s] shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
+                <div className="absolute top-1/2 -right-2 w-1.5 h-1.5 bg-white rounded-full animate-[pulse_3s_ease-in-out_infinite_1s] shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
               </div>
               <div>
                 <span className={cn(
@@ -225,6 +244,9 @@ const Nav3D = () => {
                   {link.hasDropdown ? (
                     <button
                       onClick={() => handleDropdownToggle(link.dropdownKey!)}
+                      aria-expanded={activeDropdown === link.dropdownKey}
+                      aria-haspopup="true"
+                      aria-label={`${link.name} قائمة`}
                       className={cn(
                         "flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-300",
                         activeDropdown === link.dropdownKey
@@ -260,46 +282,69 @@ const Nav3D = () => {
                   {link.hasDropdown && activeDropdown === link.dropdownKey && (
                     <div
                       className={cn(
-                        "absolute top-full right-0 mt-3 w-96 p-6 rounded-3xl",
-                        "bg-white border border-gray-100",
-                        "shadow-[0_25px_80px_rgba(0,0,0,0.15),0_10px_30px_rgba(0,0,0,0.1)]",
-                        "animate-reveal max-h-96 overflow-y-auto"
+                        "absolute top-full mt-3 p-8 rounded-[2.5rem]",
+                        "bg-white/95 backdrop-blur-xl border border-white/20",
+                        "shadow-[0_40px_100px_rgba(0,0,0,0.15),0_15px_40px_rgba(0,0,0,0.1)]",
+                        "animate-reveal",
+                        link.dropdownKey === "countries" 
+                          ? "fixed left-0 right-0 mx-auto w-[95vw] lg:w-[1200px] max-w-[calc(100vw-2rem)]" 
+                          : "absolute right-0 w-96"
                       )}
                     >
                       {/* Arrow */}
-                      <div className="absolute -top-2 right-8 w-4 h-4 bg-white rotate-45 border-t border-l border-white/50" />
+                      <div className={cn(
+                        "absolute -top-2 w-4 h-4 bg-white rotate-45 border-t border-l border-white/20",
+                        link.dropdownKey === "countries" ? "hidden md:block right-1/2 translate-x-1/2" : "right-8"
+                      )} />
 
-                      <h3 className="text-lg font-bold text-luxury-navy mb-6 flex items-center gap-3">
-                        <div className="w-2 h-2 bg-luxury-teal rounded-full" />
-                        {megaMenuItems[link.dropdownKey as keyof typeof megaMenuItems]?.title}
-                      </h3>
+                      <div className="flex items-center justify-between mb-8">
+                        <h3 className="text-xl font-bold text-luxury-navy flex items-center gap-3">
+                          <div className="w-3 h-3 bg-luxury-teal rounded-full animate-pulse" />
+                          {megaMenuItems[link.dropdownKey as keyof typeof megaMenuItems]?.title}
+                        </h3>
+                        {link.dropdownKey === "countries" && (
+                          <Link 
+                            to="/destinations" 
+                            className="text-luxury-teal text-sm font-semibold hover:underline"
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            عرض الكل
+                          </Link>
+                        )}
+                      </div>
 
-                      <div className="space-y-4">
+                      <div className={cn(
+                        link.dropdownKey === "countries" 
+                          ? "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6" 
+                          : "space-y-4"
+                      )}>
                         {link.dropdownKey === "countries" ? (
                           megaMenuItems.countries?.countries.map((country, i) => (
-                            <div key={i} className="bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-all">
-                              {/* Country Row */}
-                              <div className="flex items-center gap-4 mb-3">
-                                <div className="w-10 h-10 rounded-xl bg-luxury-teal/10 flex items-center justify-center group-hover:bg-luxury-teal group-hover:text-white transition-all">
-                                  <MapPin className="w-5 h-5 text-luxury-teal group-hover:text-white" />
+                            <div key={i} className="flex flex-col space-y-4">
+                              {/* Country Header */}
+                              <Link
+                                to={country.path}
+                                onClick={() => setActiveDropdown(null)}
+                                className="group flex flex-col items-center gap-2 p-2 rounded-2xl hover:bg-luxury-teal/5 transition-all text-center"
+                              >
+                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-luxury-teal/10 to-luxury-teal/20 flex items-center justify-center group-hover:from-luxury-teal group-hover:to-luxury-gold transition-all duration-500 shadow-sm">
+                                  <MapPin className="w-6 h-6 text-luxury-teal group-hover:text-white" />
                                 </div>
-                                <Link
-                                  to={country.path}
-                                  className="font-bold text-lg text-luxury-navy hover:text-luxury-teal transition-colors"
-                                >
+                                <span className="font-bold text-luxury-navy group-hover:text-luxury-teal transition-colors text-base">
                                   {country.name}
-                                </Link>
-                              </div>
+                                </span>
+                              </Link>
 
-                              {/* Cities Row */}
-                              <div className="flex flex-wrap gap-2 ml-14">
+                              {/* Cities List */}
+                              <div className="flex flex-col gap-1.5">
                                 {country.cities.map((city, j) => (
                                   <Link
                                     key={j}
                                     to={city.path}
-                                    className="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 hover:bg-luxury-teal hover:text-white rounded-full text-sm transition-all"
+                                    onClick={() => setActiveDropdown(null)}
+                                    className="px-3 py-1.5 text-sm text-gray-600 hover:text-luxury-teal hover:bg-luxury-teal/5 rounded-lg transition-all flex items-center gap-2 group/city"
                                   >
-                                    <div className="w-1.5 h-1.5 rounded-full bg-luxury-teal"></div>
+                                    <div className="w-1 h-1 rounded-full bg-gray-300 group-hover/city:bg-luxury-teal transition-colors" />
                                     {city.name}
                                   </Link>
                                 ))}
@@ -311,29 +356,30 @@ const Nav3D = () => {
                             <Link
                               key={i}
                               to={item.path}
-                              className="flex items-center gap-4 p-3 rounded-xl hover:bg-luxury-teal/10 transition-all group"
+                              onClick={() => setActiveDropdown(null)}
+                              className="flex items-center gap-4 p-4 rounded-2xl hover:bg-luxury-teal/10 transition-all group border border-transparent hover:border-luxury-teal/20"
                             >
                               {typeof item.icon === "string" ? (
                                 <span className="text-2xl">{item.icon}</span>
                               ) : (
-                                <div className="w-10 h-10 rounded-xl bg-luxury-teal/10 flex items-center justify-center group-hover:bg-luxury-teal group-hover:text-white transition-all">
-                                  <item.icon className="w-5 h-5 text-luxury-teal group-hover:text-white" />
+                                <div className="w-12 h-12 rounded-xl bg-luxury-teal/10 flex items-center justify-center group-hover:bg-luxury-teal group-hover:text-white transition-all duration-500">
+                                  <item.icon className="w-6 h-6 text-luxury-teal group-hover:text-white" />
                                 </div>
                               )}
                               <div className="flex-1">
                                 <div className="flex items-center gap-2">
-                                  <span className="font-semibold text-luxury-navy group-hover:text-luxury-teal transition-colors">
+                                  <span className="font-bold text-luxury-navy group-hover:text-luxury-teal transition-colors">
                                     {item.name}
                                   </span>
                                   {"hot" in item && item.hot && (
-                                    <span className="text-[10px] bg-red-500 text-white px-2 py-0.5 rounded-full">HOT</span>
+                                    <span className="text-[10px] bg-red-500 text-white px-2 py-0.5 rounded-full animate-bounce">HOT</span>
                                   )}
                                 </div>
                                 {"desc" in item && (
                                   <span className="text-xs text-muted-foreground">{item.desc}</span>
                                 )}
                               </div>
-                              <ArrowLeft className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                              <ArrowLeft className="w-4 h-4 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                             </Link>
                           ))
                         )}
@@ -355,6 +401,7 @@ const Nav3D = () => {
                     : "text-white/90 hover:bg-white/10"
                 )}
                 title="بحث"
+                aria-label="بحث في الموقع"
               >
                 <Search className="w-5 h-5" />
               </button>
@@ -374,6 +421,7 @@ const Nav3D = () => {
                       : "text-white/90 hover:bg-white/10"
                   )}
                   title="تبديل العملة"
+                  aria-label={`تبديل العملة. الحالية: ${currency}`}
                 >
                   <DollarSign className="w-4 h-4" />
                   <span>{currency}</span>
@@ -390,6 +438,7 @@ const Nav3D = () => {
                     : "text-white/90 hover:bg-white/10"
                 )}
                 title="تبديل اللغة"
+                aria-label={`تبديل اللغة. الحالية: ${language === 'ar' ? 'العربية' : 'English'}`}
               >
                 <Globe className="w-4 h-4" />
                 <span>{language === 'ar' ? 'EN' : 'عر'}</span>
@@ -403,7 +452,8 @@ const Nav3D = () => {
                     ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal"
                     : "text-white/90 hover:bg-white/10"
                 )}
-                title="المنيات"
+                title="المفضلات"
+                aria-label="قائمة المفضلات"
               >
                 <Heart className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">3</span>
@@ -418,6 +468,7 @@ const Nav3D = () => {
                     : "text-white/90 hover:bg-white/10"
                 )}
                 title="الأماكن المحفوظة"
+                aria-label="الأماكن المحفوظة"
               >
                 <MapPinned className="w-5 h-5" />
               </button>
@@ -431,6 +482,7 @@ const Nav3D = () => {
                     : "text-white/90 hover:bg-white/10"
                 )}
                 title="البرامج المحفوظة"
+                aria-label="البرامج المحفوظة"
               >
                 <Package className="w-5 h-5" />
               </button>
@@ -444,6 +496,7 @@ const Nav3D = () => {
                     : "text-white/90 hover:bg-white/10"
                 )}
                 title="الملف الشخصي"
+                aria-label="فتح ملفك الشخصي"
               >
                 <User className="w-5 h-5" />
               </button>
@@ -459,6 +512,7 @@ const Nav3D = () => {
                   "hover:shadow-[0_8px_30px_rgba(234,179,8,0.5)] hover:scale-105",
                   "transform-gpu"
                 )}
+                aria-label="تواصل معنا عبر واتساب للحجز"
               >
                 <Phone className="w-4 h-4" />
                 <span>احجز الآن</span>
@@ -466,6 +520,8 @@ const Nav3D = () => {
 
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label={isMobileMenuOpen ? "إغلاق القائمة" : "فتح القائمة الرئيسية"}
+                aria-expanded={isMobileMenuOpen}
                 className={cn(
                   "lg:hidden w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300",
                   "transform-gpu hover:scale-105",
@@ -473,9 +529,8 @@ const Nav3D = () => {
                     ? "bg-luxury-navy text-white shadow-lg"
                     : "bg-white/20 backdrop-blur-sm text-white border border-white/30"
                 )}
-                aria-label="Toggle menu"
               >
-                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {isMobileMenuOpen ? <X className="w-5 h-5" aria-hidden="true" /> : <Menu className="w-5 h-5" aria-hidden="true" />}
               </button>
             </div>
           </div>
@@ -485,7 +540,8 @@ const Nav3D = () => {
       {/* Mobile Menu - Full Screen 3D */}
       <div
         className={cn(
-          "fixed inset-0 z-40 lg:hidden transition-all duration-500",
+          "fixed inset-0 lg:hidden transition-all duration-500",
+          "z-[var(--z-navigation-mobile)]",
           isMobileMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -500,49 +556,84 @@ const Nav3D = () => {
         {/* Menu Content */}
         <div
           className={cn(
-            "relative h-full flex flex-col items-center justify-center p-8 transition-all duration-700",
-            isMobileMenuOpen ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            "relative h-full flex flex-col pt-24 pb-12 px-8 overflow-y-auto no-scrollbar",
+            isMobileMenuOpen ? "opacity-100" : "opacity-0"
           )}
-          style={{ perspective: "1000px" }}
         >
-          <div className="space-y-4 text-center w-full max-w-sm">
+          {/* Mobile Main Links */}
+          <div className="space-y-2 mb-10">
+            <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4 px-4 text-center md:text-right">القائمة الرئيسية</p>
             {navLinks.map((link, index) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
-                  "block text-2xl font-bold text-white py-4 px-6 rounded-2xl transition-all duration-500",
-                  "hover:bg-white/10 hover:scale-105",
+                  "flex items-center gap-4 text-2xl font-black text-white py-4 px-6 rounded-2xl transition-all duration-500",
+                  "hover:bg-white/10 hover:scale-105 active:scale-95",
                   "transform-gpu"
                 )}
                 style={{
-                  animationDelay: `${index * 0.1}s`,
-                  transform: isMobileMenuOpen
-                    ? `perspective(500px) rotateX(0deg) translateZ(0)`
-                    : `perspective(500px) rotateX(-20deg) translateZ(-50px)`,
+                  transitionDelay: `${index * 50}ms`,
+                  transform: isMobileMenuOpen ? "translateX(0)" : "translateX(20px)"
                 }}
               >
-                {link.name}
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-luxury-gold">
+                  {link.dropdownKey === 'services' ? <Sparkles className="w-5 h-5" /> : link.dropdownKey === 'countries' ? <MapPin className="w-5 h-5" /> : link.name === 'الرئيسية' ? <Plane className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                </div>
+                <span>{link.name}</span>
               </Link>
             ))}
           </div>
 
-          {/* Mobile CTA */}
-          <a
-            href="https://api.whatsapp.com/send?phone=966569222111"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              "mt-12 flex items-center gap-3 px-10 py-5 rounded-full font-bold text-lg transition-all",
-              "bg-gradient-to-r from-luxury-gold to-amber-500 text-luxury-navy",
-              "shadow-[0_8px_30px_rgba(234,179,8,0.5)]",
-              "hover:scale-105 transform-gpu"
-            )}
-          >
-            <Phone className="w-5 h-5" />
-            احجز رحلتك الآن
-          </a>
+          {/* Featured Destinations Quick Access */}
+          <div className="mb-10">
+            <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4 px-4 text-center md:text-right">وجهات مختارة</p>
+            <div className="grid grid-cols-2 gap-3">
+              {['ماليزيا', 'تايلاند', 'إندونيسيا', 'تركيا'].map((country, idx) => (
+                <Link
+                  key={country}
+                  to={`/country/${country === 'ماليزيا' ? 'malaysia' : country === 'تايلاند' ? 'thailand' : country === 'إندونيسيا' ? 'indonesia' : 'turkey'}`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-2 hover:bg-white/10 transition-all active:scale-95"
+                  style={{ transitionDelay: `${(navLinks.length + idx) * 50}ms` }}
+                >
+                  <span className="text-2xl">{country === 'ماليزيا' ? '🇲🇾' : country === 'تايلاند' ? '🇹🇭' : country === 'إندونيسيا' ? '🇮🇩' : '🇹🇷'}</span>
+                  <span className="text-white text-sm font-bold">{country}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-auto space-y-6">
+            <a
+              href="https://api.whatsapp.com/send?phone=966569222111"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "flex items-center justify-center gap-3 w-full py-5 rounded-3xl font-black text-lg transition-all",
+                "bg-gradient-to-r from-luxury-gold to-amber-500 text-luxury-navy",
+                "shadow-[0_8px_30px_rgba(234,179,8,0.5)]",
+                "hover:scale-105 active:scale-95 transform-gpu"
+              )}
+            >
+              <Phone className="w-6 h-6" />
+              تحدث مع مستشار السفر
+            </a>
+
+            {/* Social Icons */}
+            <div className="flex justify-center gap-4">
+              {[Instagram, Twitter, Facebook].map((Icon, i) => (
+                <a key={i} href="#" className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-all">
+                  <Icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
+
+            <p className="text-center text-white/30 text-[10px] tracking-widest font-medium">
+              © {new Date().getFullYear()} TRAVELIUN. ALL RIGHTS RESERVED.
+            </p>
+          </div>
         </div>
       </div>
     </>

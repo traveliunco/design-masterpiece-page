@@ -6,6 +6,7 @@ import PageLayout from "@/layouts/PageLayout";
 import FlightSearchForm, { SearchFormData } from "@/components/flights/FlightSearchForm";
 import FlightResultCard from "@/components/flights/FlightResultCard";
 import BookingWizard from "@/components/flights/BookingWizard";
+import InteractiveDestinations from "@/components/InteractiveDestinations";
 import { searchFlights, FlightOffer } from "@/services/amadeusService";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -226,6 +227,9 @@ const AmadeusFlights = () => {
           </div>
         </section>
       )}
+
+      {/* Interactive Destinations Section */}
+      <InteractiveDestinations />
 
       {/* Booking Wizard Modal */}
       {showBooking && selectedFlight && searchData && (

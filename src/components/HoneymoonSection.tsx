@@ -1,71 +1,74 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Heart, Sparkles } from "lucide-react";
+import { ArrowLeft, Heart, Sparkles, CheckCircle } from "lucide-react";
 import honeymoonImg from "@/assets/honeymoon.jpg";
 
 const HoneymoonSection = () => {
+  const features = [
+    "جناح ملكي VIP",
+    "عشاء رومانسي خاص",
+    "خدمات الكونسيرج",
+    "جولات سياحية خاصة",
+  ];
+
   return (
-    <section className="relative overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
-          {/* Visual Showcase (App Style) */}
-          <div className="relative group animate-reveal">
-            <div className="relative p-2 bg-gradient-to-tr from-aurora-rose/40 via-aurora-indigo/20 to-aurora-mint/40 rounded-[4rem] shadow-2xl">
+    <section className="py-20 md:py-32 bg-gradient-to-br from-teal-900 via-cyan-900 to-blue-900 relative overflow-hidden">
+      {/* Subtle Background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-teal-500/20 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-cyan-500/20 rounded-full blur-[150px]" />
+      </div>
+
+      <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Image */}
+          <div className="relative order-2 lg:order-1">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <img
                 src={honeymoonImg}
                 alt="Romantic Getaway"
                 loading="lazy"
-                className="w-full h-[600px] object-cover rounded-[3.5rem] transition-transform duration-1000 group-hover:scale-105"
+                className="w-full h-[400px] md:h-[500px] object-cover"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-teal-900/60 to-transparent" />
               
-              {/* Premium Floating Badge */}
-              <div className="absolute -bottom-10 -right-10 bg-charcoal/95 backdrop-blur-2xl p-10 rounded-[3rem] border border-white/10 shadow-2xl animate-float">
-                <div className="text-aurora-rose text-xs font-black uppercase tracking-[0.3em] mb-2">رحلة العمر</div>
-                <div className="text-4xl font-black text-white mb-1">4,999 <span className="text-sm">ر.س</span></div>
-                <div className="text-[10px] text-white/40 font-bold">باقة شاملة للنخبة</div>
+              {/* Price Badge */}
+              <div className="absolute bottom-6 right-6 bg-white/95 backdrop-blur-sm px-6 py-4 rounded-2xl shadow-xl">
+                <div className="text-teal-600 text-xs font-bold mb-1">ابتداءً من</div>
+                <div className="text-2xl font-bold text-gray-900">4,999 <span className="text-sm">ر.س</span></div>
               </div>
-
-              {/* Decorative Hearts */}
-              <div className="absolute top-10 left-10 w-20 h-20 bg-aurora-rose/20 rounded-full blur-3xl animate-pulse" />
             </div>
           </div>
 
-          {/* Luxury Content Section */}
-          <div className="space-y-12 animate-reveal reveal-delay-2">
-            <div className="inline-flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-3 rounded-full">
-              <Heart className="w-5 h-5 text-aurora-rose fill-aurora-rose" />
-              <span className="text-white text-sm font-black tracking-widest uppercase">ملاذ العشاق الحصري</span>
+          {/* Content */}
+          <div className="space-y-8 order-1 lg:order-2">
+            <div className="inline-flex items-center gap-2 bg-white/10 px-5 py-2 rounded-full">
+              <Heart className="w-4 h-4 text-cyan-400 fill-cyan-400" />
+              <span className="text-white/90 text-sm font-bold">شهر العسل</span>
             </div>
 
-            <h2 className="font-editorial text-6xl md:text-8xl text-white leading-tight">
-              بداية <br /> <span className="text-aurora-rose italic">قصة حب</span> لا تنتهي
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+              بداية <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">قصة حب</span> لا تنتهي
             </h2>
 
-            <p className="text-white/60 text-xl font-modern font-medium leading-[2] max-w-xl">
-              نصمم لكم ذكرياتٍ تليق ببداية رحلتكم معاً، في أكثر الوجهات سحراً ورومانسية تحت النجوم، حيث الفخامة هي لغتكم الوحيدة.
+            <p className="text-white/70 text-lg leading-relaxed">
+              نصمم لكم ذكرياتٍ تليق ببداية رحلتكم معاً، في أكثر الوجهات سحراً ورومانسية تحت النجوم.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                "جناح ملكي VIP",
-                "عشاء رومانسي خاص",
-                "خدمات الكونسيرج",
-                "جولات سياحية خاصة",
-              ].map((feature, index) => (
-                <div key={index} className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/5 group hover:border-aurora-rose/40 transition-colors">
-                  <div className="w-8 h-8 rounded-lg bg-aurora-rose/20 flex items-center justify-center text-aurora-rose">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                  <span className="text-white font-bold">{feature}</span>
+            <div className="grid grid-cols-2 gap-4">
+              {features.map((feature, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+                  <span className="text-white/90 font-medium text-sm">{feature}</span>
                 </div>
               ))}
             </div>
 
             <Link
               to="/honeymoon"
-              className="group relative inline-flex items-center gap-6 bg-aurora-rose text-white px-16 py-8 rounded-[2.5rem] font-black text-2xl transition-all duration-500 hover:scale-105 shadow-2xl mt-8"
+              className="group inline-flex items-center gap-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:from-teal-400 hover:to-cyan-400 transition-all duration-300 shadow-[0_8px_30px_rgba(20,184,166,0.4)]"
             >
               خطط لشهر العسل
-              <ArrowLeft className="w-8 h-8 group-hover:-translate-x-4 transition-transform" />
+              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>

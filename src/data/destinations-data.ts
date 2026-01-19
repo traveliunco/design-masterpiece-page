@@ -115,7 +115,7 @@ export const southeastAsiaCountries: Country[] = [
         ]
       },
       {
-        id: "chiangmai",
+        id: "chiang-mai",
         nameAr: "شيانغ ماي",
         nameEn: "Chiang Mai",
         description: "وردة الشمال - مدينة المعابد والطبيعة الساحرة",
@@ -199,7 +199,7 @@ export const southeastAsiaCountries: Country[] = [
     ],
     cities: [
       {
-        id: "kualalumpur",
+        id: "kuala-lumpur",
         nameAr: "كوالالمبور",
         nameEn: "Kuala Lumpur",
         description: "العاصمة الحديثة - مدينة الأبراج والتسوق الفاخر",
@@ -312,6 +312,35 @@ export const southeastAsiaCountries: Country[] = [
           "المطاعم العالمية المتنوعة",
           "الفنادق الفخمة",
           "قرب من كوالالمبور (ساعة)"
+        ]
+      },
+      {
+        id: "kota-kinabalu",
+        nameAr: "كوتا كينابالو",
+        nameEn: "Kota Kinabalu",
+        description: "بوابة بورنيو - طبيعة خلابة وجبل كينابالو الشاهق",
+        image: "https://images.unsplash.com/photo-1540202404-a67b3602925d",
+        coordinates: { lat: 5.9804, lng: 116.0735 },
+        bestTime: "فبراير - أبريل",
+        averageTemp: "25-32°C",
+        accommodation: "منتجعات شاطئية 80-200 دولار",
+        attractions: [
+          "جبل كينابالو (أعلى قمة في ماليزيا)",
+          "منتزه تونكو عبد الرحمن البحري",
+          "مسجد كوتا كينابالو العائم",
+          "شاطئ تانجونج أرو (أجمل غروب)",
+          "سوق الحرف اليدوية (السوق الفلبيني)",
+          "متحف صباح",
+          "قرية ماري ماري الثقافية",
+          "الينابيع الساخنة بورينج"
+        ],
+        highlights: [
+          "تسلق جبل كينابالو",
+          "الجزر الاستوائية والشواطئ",
+          "الثقافة القبلية الفريدة",
+          "أجمل غروب شمس في العالم",
+          "المأكولات البحرية الطازجة",
+          "رحلات الغابات النهرية"
         ]
       }
     ]
@@ -426,6 +455,35 @@ export const southeastAsiaCountries: Country[] = [
           "المأكولات الجاوية",
           "التاريخ السلطاني"
         ]
+      },
+      {
+        id: "medan",
+        nameAr: "ميدان",
+        nameEn: "Medan",
+        description: "بوابة سومطرة - تنوع ثقافي وطهي مذهل وبحيرة توبا",
+        image: "https://images.unsplash.com/photo-1598889982488-842e46b97645",
+        coordinates: { lat: 3.5952, lng: 98.6722 },
+        bestTime: "فبراير - أبريل",
+        averageTemp: "26-32°C",
+        accommodation: "فنادق حديثة 40-100 دولار",
+        attractions: [
+          "بحيرة توبا (أكبر بحيرة بركانية)",
+          "جزيرة ساموسير",
+          "قصر ميمون التاريخي",
+          "المسجد الكبير (مسجد رايا)",
+          "شلالات سيبيسو",
+          "منطقة ميرديكا ووك",
+          "متحف شمال سومطرة",
+          "قرية بيراستاجي الجبلية"
+        ],
+        highlights: [
+          "بحيرة توبا الأعجوبة الطبيعية",
+          "التنوع العرقي والثقافي",
+          "المأكولات المتنوعة والشهية",
+          "العمارة التاريخية المختلطة",
+          "الطبيعة البركانية الخلابة",
+          "الأسواق الشعبية"
+        ]
       }
     ]
   },
@@ -483,7 +541,7 @@ export const southeastAsiaCountries: Country[] = [
         ]
       },
       {
-        id: "hochiminh",
+        id: "ho-chi-minh",
         nameAr: "هو تشي منه",
         nameEn: "Ho Chi Minh City",
         description: "سايغون سابقاً - المدينة الاقتصادية النابضة بالحياة",
@@ -512,7 +570,7 @@ export const southeastAsiaCountries: Country[] = [
         ]
       },
       {
-        id: "danang",
+        id: "da-nang",
         nameAr: "دا نانغ",
         nameEn: "Da Nang",
         description: "مدينة الجسور - شواطئ ذهبية وجبال رخامية",
@@ -541,7 +599,7 @@ export const southeastAsiaCountries: Country[] = [
         ]
       },
       {
-        id: "halong",
+        id: "ha-long",
         nameAr: "خليج ها لونج",
         nameEn: "Ha Long Bay",
         description: "أحد عجائب الطبيعة - 2000 جزيرة كارستية في البحر",
@@ -622,6 +680,35 @@ export const southeastAsiaCountries: Country[] = [
           "المطاعم الفلبينية الأصيلة",
           "الحياة الليلية النابضة",
           "سهولة التواصل بالإنجليزية"
+        ]
+      },
+      {
+        id: "cebu",
+        nameAr: "سيبو",
+        nameEn: "Cebu",
+        description: "ملكة الجنوب - شلالات زرقاء وغوص مع حيتان القرش",
+        image: "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86",
+        coordinates: { lat: 10.3157, lng: 123.8854 },
+        bestTime: "يناير - أبريل",
+        averageTemp: "26-32°C",
+        accommodation: "منتجعات متنوعة 50-200 دولار",
+        attractions: [
+          "شلالات كواسان الزرقاء",
+          "السباحة مع الحيتان في أوسلوب",
+          "صليب ماجلان التاريخي",
+          "جزيرة بانتايان الساحرة",
+          "ذروة أوسينا (Osmeña Peak)",
+          "معبد ليا (تاج محل سيبو)",
+          "جزيرة مالباسكوا للغوص",
+          "حصن سان بيدرو"
+        ],
+        highlights: [
+          "المغامرات والشلالات الطبيعية",
+          "تجربة الحيتان الفريدة",
+          "المواقع التاريخية الإسبانية",
+          "أفضل الليشون (Lechon) في الفلبين",
+          "الشواطئ والجزر المحيطة",
+          "مراكز التسوق الحديثة"
         ]
       },
       {
@@ -709,7 +796,7 @@ export const southeastAsiaCountries: Country[] = [
     ],
     cities: [
       {
-        id: "singapore-city",
+        id: "singapore",
         nameAr: "مدينة سنغافورة",
         nameEn: "Singapore City",
         description: "مدينة حديثة نظيفة - مركز مالي وسياحي عالمي",

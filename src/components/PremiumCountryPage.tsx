@@ -372,110 +372,33 @@ const PremiumCountryPage = ({ country }: PremiumCountryPageProps) => {
                   </div>
                 </div>
 
-                {/* Cities Quick Nav */}
-                <div className="mt-6 flex flex-wrap gap-3 justify-center">
-                  {country.cities.map((city) => (
-                    <Button
-                      key={city.id}
-                      variant={activeCity === city.id ? "default" : "outline"}
-                      className={`rounded-full transition-all duration-300 ${
-                        activeCity === city.id 
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white border-none shadow-lg shadow-orange-500/30' 
-                          : 'border-white/20 text-white/70 hover:bg-white/10 hover:text-white'
-                      }`}
-                      onClick={() => {
-                        setActiveCity(city.id);
-                        navigate(`/country/${country.id}/city/${city.id}`);
-                      }}
-                    >
-                      <MapPin className="w-4 h-4 ml-2" />
-                      {city.nameAr}
-                    </Button>
-                  ))}
+                {/* Cities Quick Nav - Single Row Extended */}
+                <div className="mt-8 w-full">
+                  <div className="flex flex-row gap-4 overflow-x-auto pb-4 px-2 scrollbar-hide">
+                    {country.cities.map((city, index) => (
+                      <Button
+                        key={city.id}
+                        variant={activeCity === city.id ? "default" : "outline"}
+                        className={`rounded-full transition-all duration-300 flex-shrink-0 min-w-[140px] py-3 px-4 text-sm font-semibold whitespace-nowrap ${
+                          activeCity === city.id
+                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white border-none shadow-lg shadow-orange-500/30 scale-105'
+                            : 'border-2 border-white/20 text-white/80 hover:bg-white/10 hover:text-white hover:border-white/40 hover:scale-105'
+                        }`}
+                        onClick={() => {
+                          setActiveCity(city.id);
+                          navigate(`/country/${country.id}/city/${city.id}`);
+                        }}
+                      >
+                        <MapPin className="w-4 h-4 ml-2 flex-shrink-0" />
+                        <span className="truncate">{city.nameAr}</span>
+                      </Button>
+                    ))}
+                  </div>
+                  <p className="text-white/50 text-xs mt-4 text-center">
+                    {country.cities.length} مدينة متاحة للاستكشاف - مرر أفقياً لرؤية المزيد
+                  </p>
                 </div>
               </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Cities Showcase */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 px-4 py-2 mb-4">
-                <Building className="w-4 h-4 mr-2" />
-                المدن السياحية
-              </Badge>
-              <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-                أفضل المدن في <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-500">{country.nameAr}</span>
-              </h2>
-              <p className="text-xl text-white/60 max-w-2xl mx-auto">
-                اكتشف {country.cities.length} مدن سياحية رائعة مع معالم لا تُنسى
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {country.cities.map((city, index) => (
-                <Card 
-                  key={city.id}
-                  className="bg-white/5 backdrop-blur-xl border border-white/10 overflow-hidden group hover:bg-white/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
-                  onClick={() => navigate(`/country/${country.id}/city/${city.id}`)}
-                >
-                  <div className="relative h-64 overflow-hidden">
-                    <img 
-                      src={city.image} 
-                      alt={city.nameAr}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
-                    
-                    {/* Index Badge */}
-                    <div className="absolute top-4 right-4 w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg">
-                      {index + 1}
-                    </div>
-
-                    {/* City Name */}
-                    <div className="absolute bottom-4 right-4 left-4">
-                      <h3 className="text-2xl font-bold text-white mb-1">{city.nameAr}</h3>
-                      <p className="text-white/70 text-sm">{city.nameEn}</p>
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <p className="text-white/80 mb-4 line-clamp-2">{city.description}</p>
-                    
-                    {/* Highlights */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {city.highlights.slice(0, 3).map((highlight, i) => (
-                        <Badge key={i} variant="outline" className="border-white/20 text-white/70 text-xs">
-                          {highlight}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    {/* Stats Row */}
-                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1 text-white/60 text-sm">
-                          <Sun className="w-4 h-4 text-amber-400" />
-                          <span>{city.averageTemp}</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-white/60 text-sm">
-                          <Calendar className="w-4 h-4 text-blue-400" />
-                          <span>{city.bestTime}</span>
-                        </div>
-                      </div>
-                      <Button 
-                        size="sm" 
-                        className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full group-hover:shadow-lg group-hover:shadow-orange-500/30 transition-all"
-                      >
-                        استكشف
-                        <ArrowRight className="w-4 h-4 mr-1" />
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))}
             </div>
           </div>
         </section>
@@ -599,6 +522,13 @@ const PremiumCountryPage = ({ country }: PremiumCountryPageProps) => {
         }
         .animate-fade-in {
           animation: fade-in 0.3s ease-out forwards;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
     </>
