@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Nav3D from "@/components/Nav3D";
 import PremiumHeroSection from "@/components/PremiumHeroSection";
 import MarqueeBanner from "@/components/MarqueeBanner";
 import WhyChooseUs from "@/components/WhyChooseUs";
@@ -6,7 +6,8 @@ import InteractiveDestinations from "@/components/InteractiveDestinations";
 import HoneymoonSection from "@/components/HoneymoonSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
+import PremiumFooter from "@/components/PremiumFooter";
+import MobileNav from "@/components/MobileNav";
 import { useSEO } from "@/hooks/useSEO";
 
 const IndexPremium = () => {
@@ -18,9 +19,9 @@ const IndexPremium = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Nav3D />
       
-      <main className="overflow-hidden">
+      <main className="overflow-hidden pb-20 md:pb-0">
         {/* Hero Section - Full Screen Premium */}
         <PremiumHeroSection />
 
@@ -50,7 +51,8 @@ const IndexPremium = () => {
         <CTASection />
       </main>
 
-      <Footer />
+      <PremiumFooter />
+      <MobileNav />
     </div>
   );
 };

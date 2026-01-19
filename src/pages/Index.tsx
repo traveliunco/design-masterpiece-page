@@ -1,12 +1,13 @@
-import Header from "@/components/Header";
-import PremiumHeroSection from "@/components/PremiumHeroSection";
+import Nav3D from "@/components/Nav3D";
+import PremiumHero from "@/components/PremiumHero";
 import MarqueeBanner from "@/components/MarqueeBanner";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import InteractiveDestinations from "@/components/InteractiveDestinations";
 import HoneymoonSection from "@/components/HoneymoonSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
+import PremiumFooter from "@/components/PremiumFooter";
+import MobileNav from "@/components/MobileNav";
 import { useSEO } from "@/hooks/useSEO";
 
 const Index = () => {
@@ -18,11 +19,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Nav3D />
       
-      <main className="overflow-hidden">
+      <main className="overflow-hidden pb-20 md:pb-0">
         {/* Hero Section - Full Screen Premium */}
-        <PremiumHeroSection />
+        <PremiumHero />
 
         {/* Animated Marquee Banner - Gold Theme */}
         <MarqueeBanner speed="normal" direction="left" />
@@ -50,7 +51,8 @@ const Index = () => {
         <CTASection />
       </main>
 
-      <Footer />
+      <PremiumFooter />
+      <MobileNav />
     </div>
   );
 };

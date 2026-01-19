@@ -80,6 +80,15 @@ const DestinationDetails = () => {
               <span className="bg-luxury-gold text-luxury-navy px-5 py-2 rounded-full text-sm font-bold shadow-glow-gold">
                 {destination.tag}
               </span>
+              {destination.countryId && (
+                <Link to={`/country/${destination.countryId}`}>
+                  <Button className="bg-luxury-teal hover:bg-luxury-teal/90 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition-all">
+                    <MapPin className="w-5 h-5" />
+                    استكشف المدن والمعالم
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

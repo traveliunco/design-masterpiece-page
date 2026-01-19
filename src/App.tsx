@@ -57,6 +57,15 @@ const BlogPost = lazy(() => import("./pages/BlogPost"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const MyBookings = lazy(() => import("./pages/MyBookings"));
 
+// Southeast Asia Pages
+const Thailand = lazy(() => import("./pages/Thailand"));
+const Malaysia = lazy(() => import("./pages/Malaysia"));
+const Indonesia = lazy(() => import("./pages/Indonesia"));
+const Vietnam = lazy(() => import("./pages/Vietnam"));
+const Philippines = lazy(() => import("./pages/Philippines"));
+const Singapore = lazy(() => import("./pages/Singapore"));
+const CityDetails = lazy(() => import("./pages/CityDetails"));
+
 // Auth Pages (Lazy loaded)
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -87,6 +96,8 @@ const AdminAISettings = lazy(() => import("./pages/admin/AISettings"));
 const AdminDestinationEdit = lazy(() => import("./pages/admin/DestinationEdit"));
 const AdminProgramEdit = lazy(() => import("./pages/admin/ProgramEdit"));
 const AdminOfferEdit = lazy(() => import("./pages/admin/OfferEdit"));
+const AdminSoutheastAsiaCountries = lazy(() => import("./pages/admin/SoutheastAsiaCountries"));
+const AdminSoutheastAsiaCities = lazy(() => import("./pages/admin/SoutheastAsiaCities"));
 
 // Components
 import AIChat from "./components/AIChat";
@@ -142,6 +153,15 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
 
+              {/* Southeast Asia Routes */}
+              <Route path="/country/thailand" element={<Thailand />} />
+              <Route path="/country/malaysia" element={<Malaysia />} />
+              <Route path="/country/indonesia" element={<Indonesia />} />
+              <Route path="/country/vietnam" element={<Vietnam />} />
+              <Route path="/country/philippines" element={<Philippines />} />
+              <Route path="/country/singapore" element={<Singapore />} />
+              <Route path="/country/:countryId/city/:cityId" element={<CityDetails />} />
+
               {/* Auth Routes */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -179,6 +199,8 @@ const App = () => (
                 <Route path="articles" element={<AdminArticles />} />
                 <Route path="settings" element={<AdminSettings />} />
                 <Route path="ai-settings" element={<AdminAISettings />} />
+                <Route path="southeast-asia-countries" element={<AdminSoutheastAsiaCountries />} />
+                <Route path="southeast-asia-cities" element={<AdminSoutheastAsiaCities />} />
               </Route>
 
               {/* 404 */}

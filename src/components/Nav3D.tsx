@@ -12,10 +12,13 @@ const megaMenuItems = {
   destinations: {
     title: "الوجهات السياحية",
     items: [
-      { name: "ماليزيا", icon: "🇲🇾", path: "/destinations/malaysia", hot: true },
-      { name: "تايلاند", icon: "🇹🇭", path: "/destinations/thailand" },
-      { name: "تركيا", icon: "🇹🇷", path: "/destinations/turkey", hot: true },
-      { name: "إندونيسيا", icon: "🇮🇩", path: "/destinations/indonesia" },
+      { name: "ماليزيا", icon: "🇲🇾", path: "/country/malaysia", hot: true },
+      { name: "تايلاند", icon: "🇹🇭", path: "/country/thailand", hot: true },
+      { name: "إندونيسيا", icon: "🇮🇩", path: "/country/indonesia" },
+      { name: "سنغافورة", icon: "🇸🇬", path: "/country/singapore" },
+      { name: "فيتنام", icon: "🇻🇳", path: "/country/vietnam" },
+      { name: "الفلبين", icon: "🇵🇭", path: "/country/philippines" },
+      { name: "تركيا", icon: "🇹🇷", path: "/destinations/turkey" },
       { name: "المالديف", icon: "🇲🇻", path: "/destinations/maldives" },
       { name: "جورجيا", icon: "🇬🇪", path: "/destinations/georgia" },
     ]
