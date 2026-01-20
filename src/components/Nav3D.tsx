@@ -96,10 +96,21 @@ const megaMenuItems = {
   more: {
     title: "المزيد",
     items: [
-      { name: "المدونة", icon: "📝", path: "/blog" },
-      { name: "تقسيط تابي", icon: CreditCard, path: "/tabby" },
-      { name: "ضمان الجودة", icon: Shield, path: "/service-guarantee" },
-      { name: "من نحن", icon: Users, path: "/about" },
+      { name: "الكرة الأرضية", icon: Globe, path: "/globe", desc: "استكشف العالم ثلاثي الأبعاد" },
+      { name: "المدونة", icon: "📝", path: "/blog", desc: "مقالات ونصائح السفر" },
+      { name: "حجز الطيران", icon: Plane, path: "/amadeus-flights", desc: "ابحث عن أفضل الرحلات" },
+      { name: "تأجير السيارات", icon: "🚗", path: "/car-rental", desc: "سيارات فاخرة" },
+      { name: "التأشيرات", icon: "🛂", path: "/visas", desc: "خدمات الفيزا" },
+      { name: "التأمين", icon: Shield, path: "/insurance", desc: "تأمين السفر" },
+      { name: "تقسيط تابي", icon: CreditCard, path: "/tabby", desc: "ادفع على 4 دفعات" },
+      { name: "تقسيط تمارا", icon: CreditCard, path: "/tamara", desc: "قسّط مشترياتك" },
+      { name: "برنامج الولاء", icon: Heart, path: "/loyalty", desc: "اكسب النقاط" },
+      { name: "دعم العملاء", icon: Phone, path: "/customer-support", desc: "نحن هنا لمساعدتك" },
+      { name: "ضمان الخدمة", icon: Shield, path: "/service-guarantee", desc: "جودة مضمونة" },
+      { name: "الوظائف", icon: Users, path: "/careers", desc: "انضم لفريقنا" },
+      { name: "من نحن", icon: Users, path: "/about", desc: "تعرف علينا" },
+      { name: "تواصل معنا", icon: Phone, path: "/contact", desc: "راسلنا" },
+      { name: "خريطة الموقع", icon: MapPin, path: "/sitemap", desc: "جميع الصفحات" },
     ]
   }
 };
@@ -142,6 +153,7 @@ const Nav3D = () => {
     { name: "شهر العسل", path: "/honeymoon", hasDropdown: false },
     { name: "البرامج", path: "/programs", hasDropdown: false },
     { name: "العروض", path: "/offers", hasDropdown: false },
+    { name: "المزيد", path: "#", hasDropdown: true, dropdownKey: "more" },
   ];
 
   const handleDropdownToggle = (key: string) => {
@@ -287,7 +299,9 @@ const Nav3D = () => {
                         "animate-reveal",
                         link.dropdownKey === "countries" 
                           ? "fixed left-0 right-0 mx-auto w-[95vw] lg:w-[1200px] max-w-[calc(100vw-2rem)]" 
-                          : "absolute right-0 w-96"
+                          : link.dropdownKey === "more"
+                            ? "fixed left-0 right-0 mx-auto w-[95vw] lg:w-[900px] max-w-[calc(100vw-2rem)]"
+                            : "absolute right-0 w-96"
                       )}
                     >
                       {/* Arrow */}
@@ -315,7 +329,9 @@ const Nav3D = () => {
                       <div className={cn(
                         link.dropdownKey === "countries" 
                           ? "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6" 
-                          : "space-y-4"
+                          : link.dropdownKey === "more"
+                            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
+                            : "space-y-4"
                       )}>
                         {link.dropdownKey === "countries" ? (
                           megaMenuItems.countries?.countries.map((country, i) => (
@@ -560,9 +576,9 @@ const Nav3D = () => {
           )}
         >
           {/* Mobile Main Links */}
-          <div className="space-y-2 mb-10">
+          <div className="space-y-2 mb-6">
             <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4 px-4 text-center md:text-right">القائمة الرئيسية</p>
-            {navLinks.map((link, index) => (
+            {navLinks.filter(link => link.path !== "#").map((link, index) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -583,6 +599,35 @@ const Nav3D = () => {
                 <span>{link.name}</span>
               </Link>
             ))}
+          </div>
+
+          {/* More Services Section */}
+          <div className="mb-6">
+            <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4 px-4 text-center md:text-right">المزيد من الخدمات</p>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { name: "الكرة الأرضية", path: "/globe", icon: "🌍" },
+                { name: "المدونة", path: "/blog", icon: "📝" },
+                { name: "الطيران", path: "/amadeus-flights", icon: "✈️" },
+                { name: "السيارات", path: "/car-rental", icon: "🚗" },
+                { name: "التأشيرات", path: "/visas", icon: "🛂" },
+                { name: "التأمين", path: "/insurance", icon: "🛡️" },
+                { name: "تابي", path: "/tabby", icon: "💳" },
+                { name: "الولاء", path: "/loyalty", icon: "💎" },
+                { name: "الدعم", path: "/customer-support", icon: "🎧" },
+              ].map((item, idx) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="bg-white/5 border border-white/10 rounded-xl p-3 flex flex-col items-center gap-1 hover:bg-white/10 transition-all active:scale-95"
+                  style={{ transitionDelay: `${(navLinks.length + idx) * 30}ms` }}
+                >
+                  <span className="text-xl">{item.icon}</span>
+                  <span className="text-white text-[10px] font-bold text-center">{item.name}</span>
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* Featured Destinations Quick Access */}
