@@ -58,6 +58,7 @@ const BlogPost = lazy(() => import("./pages/BlogPost"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const MyBookings = lazy(() => import("./pages/MyBookings"));
 const MobileHomePage = lazy(() => import("./pages/MobileHomePage"));
+const GlobePage = lazy(() => import("./pages/GlobePage"));
 
 // Southeast Asia Pages
 const Thailand = lazy(() => import("./pages/countries/Thailand"));
@@ -161,6 +162,7 @@ const App = () => (
               <Route path="/services" element={<Services />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/globe" element={<GlobePage />} />
 
               {/* Southeast Asia Routes */}
               <Route path="/country/thailand" element={<Thailand />} />

@@ -53,7 +53,7 @@ const InteractiveDestinations = () => {
         </div>
 
         {/* Active Country Info */}
-        <div className="bg-luxury-navy rounded-2xl p-6 md:p-8 mb-8">
+        <div className="bg-gradient-to-r from-teal-800 via-cyan-800 to-blue-800 rounded-2xl p-6 md:p-8 mb-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
@@ -67,7 +67,7 @@ const InteractiveDestinations = () => {
             </div>
             <Link 
               to={`/country/${activeCountryId}`}
-              className="inline-flex items-center gap-2 bg-luxury-gold text-luxury-navy px-6 py-3 rounded-full font-bold hover:bg-luxury-gold/90 transition-colors"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-400 to-cyan-400 text-teal-900 px-6 py-3 rounded-full font-bold hover:from-teal-300 hover:to-cyan-300 transition-colors"
             >
               عرض الكل
               <ArrowLeft className="w-4 h-4" />
@@ -92,13 +92,13 @@ const InteractiveDestinations = () => {
                 />
                 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy via-luxury-navy/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-teal-900 via-teal-900/50 to-transparent" />
                 
                 {/* Rating Badge */}
                 <div className="absolute top-4 left-4 z-10">
                   <div className="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full shadow-md">
-                    <Star className="w-3.5 h-3.5 text-luxury-gold fill-luxury-gold" />
-                    <span className="text-luxury-navy font-bold text-sm">4.9</span>
+                    <Star className="w-3.5 h-3.5 text-teal-500 fill-teal-500" />
+                    <span className="text-teal-800 font-bold text-sm">4.9</span>
                   </div>
                 </div>
 
@@ -119,7 +119,7 @@ const InteractiveDestinations = () => {
         <div className="text-center mt-12">
           <Link 
             to="/destinations"
-            className="inline-flex items-center gap-3 bg-luxury-navy text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-luxury-navy/90 transition-colors shadow-lg"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:from-teal-500 hover:to-cyan-500 transition-all shadow-[0_8px_30px_rgba(20,184,166,0.4)]"
           >
             <Globe className="w-5 h-5" />
             اكتشف كافة الوجهات السياحية

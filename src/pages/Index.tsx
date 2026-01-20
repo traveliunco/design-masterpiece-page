@@ -21,7 +21,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Nav3D />
       
-      <main className="overflow-hidden pb-20 md:pb-0">
+      <main className="overflow-hidden pb-24 md:pb-0">
         {/* Hero Section - Full Screen Premium */}
         <PremiumHero />
 

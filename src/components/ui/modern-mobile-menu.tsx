@@ -12,6 +12,7 @@ export interface InteractiveMenuProps {
   items?: InteractiveMenuItem[];
   accentColor?: string;
   activeIndex?: number;
+  className?: string;
 }
 
 const defaultItems: InteractiveMenuItem[] = [
@@ -24,7 +25,7 @@ const defaultItems: InteractiveMenuItem[] = [
 
 const defaultAccentColor = 'var(--component-active-color-default)';
 
-const InteractiveMenu: React.FC<InteractiveMenuProps> = ({ items, accentColor, activeIndex: propActiveIndex }) => {
+const InteractiveMenu: React.FC<InteractiveMenuProps> = ({ items, accentColor, activeIndex: propActiveIndex, className }) => {
 
   const finalItems = useMemo(() => {
      const isValid = items && Array.isArray(items) && items.length >= 2 && items.length <= 5;
@@ -86,7 +87,7 @@ const InteractiveMenu: React.FC<InteractiveMenuProps> = ({ items, accentColor, a
 
   return (
     <nav
-      className="menu"
+      className={`menu ${className || ''}`}
       role="navigation"
       style={navStyle}
     >

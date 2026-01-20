@@ -2,7 +2,7 @@ import { Phone, MessageCircle } from "lucide-react";
 
 const CTASection = () => {
   return (
-    <section className="py-20 md:py-32 bg-gradient-to-br from-luxury-navy to-luxury-navy/95 relative overflow-hidden">
+    <section className="py-20 md:py-32 bg-gradient-to-br from-teal-900 via-cyan-900 to-blue-900 relative overflow-hidden">
       {/* Subtle Background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-luxury-teal/10 rounded-full blur-[150px]" />
@@ -11,7 +11,7 @@ const CTASection = () => {
       <div className="container relative text-center px-4 md:px-6">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-            جاهز تبدأ <span className="text-luxury-gold">رحلتك</span>؟
+            جاهز تبدأ <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">رحلتك</span>؟
           </h2>
           <p className="text-white/70 text-lg mb-10 leading-relaxed">
             فريقنا جاهز لمساعدتك في التخطيط لرحلة أحلامك. تواصل معنا الآن واحصل على استشارة مجانية.

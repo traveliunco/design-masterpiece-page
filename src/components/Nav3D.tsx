@@ -155,18 +155,17 @@ const Nav3D = () => {
         ref={navRef}
         className={cn(
           "fixed top-0 left-0 right-0 transition-all duration-500",
-          "z-[var(--z-navigation)]",
-          isScrolled ? "py-2" : "py-3 md:py-4"
+          "z-[var(--z-navigation)]"
         )}
       >
-        <div className="container px-3 md:px-4">
+        <div className="w-full">
           <div
             className={cn(
-              "relative flex items-center justify-between rounded-2xl md:rounded-[2rem] px-4 md:px-6 py-3 md:py-4 transition-all duration-500",
+              "relative flex items-center justify-between px-6 py-3 transition-all duration-500",
               // Unified Glass Effect
               isScrolled
-                ? "glass-nav-scrolled"
-                : "glass-nav-default",
+                ? "bg-white/95 backdrop-blur-md shadow-lg"
+                : "bg-gradient-to-r from-luxury-navy/90 via-luxury-navy/80 to-luxury-navy/90 backdrop-blur-sm",
               // 3D Transform
               "transform-gpu"
             )}
@@ -174,8 +173,8 @@ const Nav3D = () => {
             {/* 3D Bottom Shadow Layer */}
             <div
               className={cn(
-                "absolute inset-x-4 -bottom-2 h-8 rounded-[2rem] blur-xl transition-opacity duration-500",
-                isScrolled ? "bg-luxury-navy/10 opacity-60" : "bg-black/20 opacity-40"
+                "absolute inset-x-6 -bottom-4 h-12 rounded-[2rem] blur-2xl transition-opacity duration-500",
+                isScrolled ? "bg-luxury-navy/5 opacity-40" : "bg-black/20 opacity-0"
               )}
               style={{ transform: "translateZ(-20px)" }}
             />
@@ -507,9 +506,9 @@ const Nav3D = () => {
                 rel="noopener noreferrer"
                 className={cn(
                   "hidden sm:flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300",
-                  "bg-gradient-to-r from-luxury-gold to-amber-500 text-luxury-navy",
-                  "shadow-[0_4px_20px_rgba(234,179,8,0.4),inset_0_1px_0_rgba(255,255,255,0.3)]",
-                  "hover:shadow-[0_8px_30px_rgba(234,179,8,0.5)] hover:scale-105",
+                  "bg-gradient-to-r from-teal-500 to-cyan-500 text-white",
+                  "shadow-[0_4px_20px_rgba(20,184,166,0.4),inset_0_1px_0_rgba(255,255,255,0.3)]",
+                  "hover:shadow-[0_8px_30px_rgba(20,184,166,0.5)] hover:scale-105",
                   "transform-gpu"
                 )}
                 aria-label="تواصل معنا عبر واتساب للحجز"
@@ -578,7 +577,7 @@ const Nav3D = () => {
                   transform: isMobileMenuOpen ? "translateX(0)" : "translateX(20px)"
                 }}
               >
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-luxury-gold">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-400">
                   {link.dropdownKey === 'services' ? <Sparkles className="w-5 h-5" /> : link.dropdownKey === 'countries' ? <MapPin className="w-5 h-5" /> : link.name === 'الرئيسية' ? <Plane className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 </div>
                 <span>{link.name}</span>
@@ -612,8 +611,8 @@ const Nav3D = () => {
               rel="noopener noreferrer"
               className={cn(
                 "flex items-center justify-center gap-3 w-full py-5 rounded-3xl font-black text-lg transition-all",
-                "bg-gradient-to-r from-luxury-gold to-amber-500 text-luxury-navy",
-                "shadow-[0_8px_30px_rgba(234,179,8,0.5)]",
+                "bg-gradient-to-r from-teal-500 to-cyan-500 text-white",
+                "shadow-[0_8px_30px_rgba(20,184,166,0.5)]",
                 "hover:scale-105 active:scale-95 transform-gpu"
               )}
             >
