@@ -68,12 +68,11 @@ const Footer = () => {
             <h3 className="text-xl font-black text-white mb-8 font-modern">خدماتنا</h3>
             <ul className="space-y-4">
               {[
-                { name: "رحلات الطيران", path: "/amadeus-flights" },
-                { name: "حجز الفنادق", path: "/hotels" },
                 { name: "البرامج السياحية", path: "/programs" },
-                { name: "تأجير السيارات", path: "/car-rental" },
-                { name: "التأشيرات", path: "/visas" },
-                { name: "تأمين السفر", path: "/insurance" },
+                { name: "شهر العسل", path: "/honeymoon" },
+                // { name: "تأجير السيارات", path: "/car-rental" }, /* HIDDEN */
+                // { name: "التأشيرات", path: "/visas" }, /* HIDDEN */
+                // { name: "تأمين السفر", path: "/insurance" }, /* HIDDEN */
               ].map((link) => (
                 <li key={link.path}>
                   <Link

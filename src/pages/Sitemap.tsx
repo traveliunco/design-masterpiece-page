@@ -20,14 +20,11 @@ const allRoutes = {
   ],
   services: [
     { name: "جميع الخدمات", path: "/services", icon: Star },
-    { name: "حجز الطيران", path: "/flights", icon: Plane },
-    { name: "حجز الطيران (أماديوس)", path: "/amadeus-flights", icon: Plane },
-    { name: "حجز الفنادق", path: "/hotels", icon: Hotel },
     { name: "البرامج السياحية", path: "/programs", icon: MapPin },
     { name: "برامج شهر العسل", path: "/honeymoon", icon: Heart },
-    { name: "تأجير السيارات", path: "/car-rental", icon: Briefcase },
-    { name: "التأشيرات", path: "/visas", icon: FileText },
-    { name: "تأمين السفر", path: "/insurance", icon: Shield },
+    // { name: "تأجير السيارات", path: "/car-rental", icon: Briefcase }, /* HIDDEN */
+    // { name: "التأشيرات", path: "/visas", icon: FileText }, /* HIDDEN */
+    // { name: "تأمين السفر", path: "/insurance", icon: Shield }, /* HIDDEN */
   ],
   destinations: [
     { name: "جميع الوجهات", path: "/destinations", icon: Globe },

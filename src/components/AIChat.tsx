@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
   MessageCircle,
   X,
@@ -45,20 +46,71 @@ const AIChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [settings, setSettings] = useState<AISettings | null>(null);
+  const [settings, setSettings] = useState<AISettings | null>({
+    id: "default",
+    is_enabled: true,
+    welcome_message: "مرحباً! أنا مساعد ترافليون الذكي. كيف يمكنني مساعدتك؟",
+    system_prompt: "",
+    model: "deepseek-chat",
+    temperature: 0.7,
+    max_tokens: 2048,
+    widget_position: "bottom-right",
+    widget_color: "#7C3AED",
+    avatar_url: "",
+  });
   const [sessionId] = useState(getSessionId);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Load settings
+  // Load settings (with fallback) - always keep widget enabled
   useEffect(() => {
     const loadSettings = async () => {
-      const data = await getAISettings();
-      if (data) {
-        setSettings(data);
+      try {
+        const data = await getAISettings();
+        if (data) {
+          setSettings({ ...data, is_enabled: true });
+        }
+      } catch (err) {
+        console.log("AI settings not available, using defaults");
       }
     };
     loadSettings();
+  }, []);
+
+  // Listen for context events from program/offer cards
+  useEffect(() => {
+    const handleContextOpen = (e: CustomEvent<{ context: string; question: string }>) => {
+      const { context, question } = e.detail;
+      setIsOpen(true);
+      // Hide the HTML float button
+      const floatBtn = document.getElementById("ai-float-btn");
+      if (floatBtn) floatBtn.style.display = "none";
+      // Reset messages and add context
+      setMessages([
+        {
+          id: "context_intro",
+          role: "assistant",
+          content: context,
+          timestamp: new Date(),
+        },
+      ]);
+      // Auto-fill the question
+      setTimeout(() => {
+        setInputValue(question);
+      }, 300);
+    };
+
+    // Listen for direct open from HTML button
+    const handleDirectOpen = () => {
+      setIsOpen(true);
+    };
+
+    window.addEventListener("openAIChatWithContext", handleContextOpen as EventListener);
+    window.addEventListener("openAIChatDirect", handleDirectOpen);
+    return () => {
+      window.removeEventListener("openAIChatWithContext", handleContextOpen as EventListener);
+      window.removeEventListener("openAIChatDirect", handleDirectOpen);
+    };
   }, []);
 
   // Auto-scroll to bottom
@@ -178,42 +230,74 @@ const AIChat = () => {
     "كيف يمكنني التواصل معكم؟",
   ];
 
-  if (!settings?.is_enabled) return null;
+  // Show widget even without settings (fallback defaults)
 
-  return (
+  return createPortal(
     <>
-      {/* Chat Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className={`fixed z-50 transition-all duration-300 ${
-          isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
-        }`}
-        style={{
-          bottom: "24px",
-          right: "24px",
-          backgroundColor: settings?.widget_color || "#0B4D3C",
-        }}
-        aria-label="فتح المساعد الذكي"
-      >
-        <div className="relative">
-          <div className="w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-shadow">
-            <MessageCircle className="w-6 h-6" />
-          </div>
-          {/* Pulse animation */}
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-secondary rounded-full animate-ping" />
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-secondary rounded-full" />
+      {/* Floating AI Button - أسفل يمين الشاشة ثابت */}
+      {!isOpen && (
+        <div
+          id="ai-chat-widget"
+          style={{
+            position: "fixed",
+            bottom: "28px",
+            right: "20px",
+            zIndex: 999999,
+          }}
+        >
+          <button
+            onClick={() => setIsOpen(true)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              background: "linear-gradient(135deg, #7C3AED, #4F46E5)",
+              color: "white",
+              border: "none",
+              borderRadius: "50px",
+              padding: "14px 22px",
+              cursor: "pointer",
+              boxShadow: "0 8px 32px rgba(124,58,237,0.45)",
+              fontSize: "14px",
+              fontWeight: "700",
+              transition: "transform 0.2s, box-shadow 0.2s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.08)")}
+            onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+            aria-label="فتح المساعد الذكي"
+          >
+            <Bot style={{ width: 20, height: 20 }} />
+            <span>مساعد ذكي</span>
+            <span style={{ position: "relative", display: "flex", width: 10, height: 10 }}>
+              <span style={{
+                position: "absolute", display: "inline-flex", borderRadius: "50%",
+                width: "100%", height: "100%", background: "#4ade80",
+                opacity: 0.75, animation: "ping 1.5s cubic-bezier(0,0,0.2,1) infinite"
+              }} />
+              <span style={{
+                position: "relative", display: "inline-flex", borderRadius: "50%",
+                width: 10, height: 10, background: "#4ade80"
+              }} />
+            </span>
+          </button>
         </div>
-      </button>
+      )}
 
-      {/* Chat Window */}
+      {/* Chat Window - أسفل يمين الشاشة */}
       <div
-        className={`fixed z-50 transition-all duration-300 ${
+        className={`transition-all duration-300 ${
           isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
         } ${
           isExpanded
             ? "inset-4 md:inset-8"
-            : "bottom-4 right-4 w-[380px] h-[600px] max-h-[80vh]"
+            : "w-[400px] h-[80vh] max-h-[680px]"
         }`}
+        style={{ 
+          position: "fixed",
+          bottom: "1.5rem",
+          right: "1.5rem",
+          zIndex: 999999
+        }}
       >
         <div className="bg-background rounded-2xl shadow-2xl border flex flex-col h-full overflow-hidden">
           {/* Header */}
@@ -250,7 +334,12 @@ const AIChat = () => {
                 )}
               </button>
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  // Re-show the HTML float button
+                  const floatBtn = document.getElementById("ai-float-btn");
+                  if (floatBtn) floatBtn.style.display = "block";
+                }}
                 className="p-2 hover:bg-white/20 rounded-lg transition-colors"
                 title="إغلاق"
               >
@@ -368,7 +457,7 @@ const AIChat = () => {
         </div>
       </div>
     </>
-  );
+  , document.body);
 };
 
 export default AIChat;

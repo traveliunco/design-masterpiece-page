@@ -106,10 +106,12 @@ const AdminProgramEdit = lazy(() => import("./pages/admin/ProgramEdit"));
 const AdminOfferEdit = lazy(() => import("./pages/admin/OfferEdit"));
 const AdminSoutheastAsiaCountries = lazy(() => import("./pages/admin/SoutheastAsiaCountries"));
 const AdminSoutheastAsiaCities = lazy(() => import("./pages/admin/SoutheastAsiaCities"));
+const AdminSeedPrograms = lazy(() => import("./pages/admin/SeedPrograms"));
 
 // Components
 import AIChat from "./components/AIChat";
 import MobileNav from "./components/MobileNav";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -120,6 +122,7 @@ const App = () => (
         <TooltipProvider>
           <Sonner />
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <ScrollToTop />
             <AIChat />
           <MobileNav />
           <Suspense fallback={<PageLoader />}>
@@ -145,9 +148,9 @@ const App = () => (
               <Route path="/flights" element={<Flights />} />
               <Route path="/hotels" element={<Hotels />} />
               <Route path="/programs" element={<Programs />} />
-              <Route path="/car-rental" element={<CarRental />} />
-              <Route path="/visas" element={<Visas />} />
-              <Route path="/insurance" element={<Insurance />} />
+              {/* <Route path="/car-rental" element={<CarRental />} /> HIDDEN */}
+              {/* <Route path="/visas" element={<Visas />} /> HIDDEN */}
+              {/* <Route path="/insurance" element={<Insurance />} /> HIDDEN */}
               <Route path="/search" element={<SearchPage />} />
               <Route path="/flight-booking" element={<FlightBooking />} />
               <Route path="/careers" element={<Careers />} />
@@ -216,6 +219,7 @@ const App = () => (
                 <Route path="settings" element={<AdminSettings />} />
                 <Route path="ai-settings" element={<AdminAISettings />} />
                 <Route path="southeast-asia-countries" element={<AdminSoutheastAsiaCountries />} />
+                <Route path="seed-programs" element={<AdminSeedPrograms />} />
                 <Route path="southeast-asia-cities" element={<AdminSoutheastAsiaCities />} />
               </Route>
 

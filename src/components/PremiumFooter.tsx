@@ -9,9 +9,9 @@ const PremiumFooter = () => {
       { name: "حجز طيران", path: "/amadeus-flights" },
       { name: "فنادق ومنتجعات", path: "/hotels" },
       { name: "برامج سياحية", path: "/programs" },
-      { name: "تأجير سيارات", path: "/car-rental" },
-      { name: "تأشيرات", path: "/visas" },
-      { name: "تأمين سفر", path: "/insurance" },
+      // { name: "تأجير سيارات", path: "/car-rental" }, /* HIDDEN */
+      // { name: "تأشيرات", path: "/visas" }, /* HIDDEN */
+      // { name: "تأمين سفر", path: "/insurance" }, /* HIDDEN */
     ],
     company: [
       { name: "من نحن", path: "/about" },

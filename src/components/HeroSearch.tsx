@@ -32,8 +32,6 @@ const HeroSearch = () => {
     { id: "all" as SearchTab, label: "الكل", icon: Search, color: "from-purple-500 to-pink-500" },
     { id: "destinations" as SearchTab, label: "الوجهات", icon: MapPin, color: "from-luxury-teal to-emerald-500" },
     { id: "programs" as SearchTab, label: "البرامج", icon: Package, color: "from-blue-500 to-cyan-500" },
-    { id: "hotels" as SearchTab, label: "الفنادق", icon: Hotel, color: "from-orange-500 to-red-500" },
-    { id: "flights" as SearchTab, label: "الطيران", icon: Plane, color: "from-sky-500 to-blue-600" },
     { id: "offers" as SearchTab, label: "العروض", icon: Tag, color: "from-luxury-gold to-yellow-500" },
   ];
 
@@ -99,30 +97,6 @@ const HeroSearch = () => {
               image: p.cover_image,
               url: `/programs/${p.id}`,
               badge: p.is_featured ? "مميز" : undefined,
-            }))
-          );
-        }
-      }
-
-      // Search hotels
-      if (tab === "all" || tab === "hotels") {
-        const { data: hotels } = await supabase
-          .from("hotels")
-          .select("*")
-          .or(`name_ar.ilike.%${query}%,name_en.ilike.%${query}%,description_ar.ilike.%${query}%`)
-          .limit(5);
-
-        if (hotels) {
-          allResults.push(
-            ...hotels.map((h: any) => ({
-              id: h.id,
-              type: "hotel" as const,
-              title: h.name_ar || h.name_en,
-              subtitle: h.city_ar || h.city_en,
-              price: h.price_per_night ? `${h.price_per_night} ر.س / ليلة` : undefined,
-              image: h.main_image || h.cover_image,
-              url: `/hotels/${h.id}`,
-              badge: h.rating ? `⭐ ${h.rating}` : undefined,
             }))
           );
         }
@@ -283,7 +257,7 @@ const HeroSearch = () => {
                 setIsFocused(true);
               }}
               onBlur={() => setIsFocused(false)}
-              placeholder={`ابحث عن ${activeTab === "all" ? "الوجهات، البرامج، الفنادق..." : activeTabData?.label || ""}`}
+              placeholder={`ابحث عن ${activeTab === "all" ? "الوجهات، البرامج، العروض..." : activeTabData?.label || ""}`}
               className={cn(
                 "w-full px-5 pr-14 pl-14 py-4 text-base rounded-2xl transition-all duration-300",
                 "bg-white/80 backdrop-blur-md",

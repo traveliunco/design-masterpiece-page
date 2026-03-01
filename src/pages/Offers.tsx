@@ -1,28 +1,108 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Tag, Clock, MapPin, Phone, Percent, Calendar, Flame, Zap, ArrowLeft } from "lucide-react";
+import {
+  Tag, Clock, MapPin, Phone, Percent, Calendar, Flame, Zap, ArrowLeft,
+  Loader2, Globe, Heart, Sparkles, Users, Timer, Star, Gift,
+  ChevronLeft, Bot
+} from "lucide-react";
 import PageLayout from "@/layouts/PageLayout";
 import PageHeader from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/button";
-import malaysiaImg from "@/assets/malaysia.jpg";
-import thailandImg from "@/assets/thailand.jpg";
-import turkeyImg from "@/assets/turkey.jpg";
-import georgiaImg from "@/assets/georgia.jpg";
-import indonesiaImg from "@/assets/indonesia.jpg";
+import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
 
-const offers = [
-  { id: "summer-malaysia", title: "عرض ماليزيا الصيفي", destination: "ماليزيا", image: malaysiaImg, originalPrice: "5,999", discountedPrice: "4,499", discount: "25%", duration: "7 أيام / 6 ليالي", includes: ["الإقامة", "المواصلات", "الإفطار", "الجولات"], validUntil: "31 يناير 2026", isHot: true },
-  { id: "turkey-winter", title: "تركيا الشتوية", destination: "طرابزون - تركيا", image: turkeyImg, originalPrice: "4,999", discountedPrice: "3,999", discount: "20%", duration: "5 أيام / 4 ليالي", includes: ["الإقامة", "المواصلات", "الإفطار", "مرشد"], validUntil: "15 فبراير 2026", isHot: true },
-  { id: "georgia-special", title: "جورجيا الاقتصادية", destination: "تبليسي - جورجيا", image: georgiaImg, originalPrice: "3,999", discountedPrice: "2,999", discount: "25%", duration: "6 أيام / 5 ليالي", includes: ["الإقامة", "المواصلات", "الإفطار", "الجولات"], validUntil: "28 فبراير 2026", isHot: false },
-  { id: "thailand-romantic", title: "تايلاند الرومانسية", destination: "بوكيت - تايلاند", image: thailandImg, originalPrice: "7,499", discountedPrice: "5,999", discount: "20%", duration: "8 أيام / 7 ليالي", includes: ["الإقامة", "المواصلات", "الإفطار", "سبا"], validUntil: "10 فبراير 2026", isHot: true },
-  { id: "bali-adventure", title: "مغامرة بالي", destination: "بالي - إندونيسيا", image: indonesiaImg, originalPrice: "6,999", discountedPrice: "5,499", discount: "21%", duration: "7 أيام / 6 ليالي", includes: ["الإقامة", "المواصلات", "الإفطار", "جولات"], validUntil: "20 فبراير 2026", isHot: false },
+interface OfferFromDB {
+  id: string;
+  title_ar: string;
+  title_en: string | null;
+  slug: string;
+  offer_type: string;
+  destination: string;
+  cover_image: string | null;
+  description_ar: string | null;
+  original_price: number;
+  discounted_price: number;
+  discount_percentage: number;
+  duration: string | null;
+  includes: string[] | null;
+  valid_until: string | null;
+  is_hot: boolean;
+  is_active: boolean;
+  is_featured: boolean;
+  countries: string[] | null;
+  highlights: string[] | null;
+  terms: string | null;
+}
+
+const offerTypes = [
+  { id: "all", name: "الكل", icon: "🎯", color: "from-slate-500 to-slate-600" },
+  { id: "seasonal", name: "موسمي", icon: "🌤️", color: "from-amber-500 to-orange-500" },
+  { id: "flash", name: "فلاش", icon: "⚡", color: "from-red-500 to-rose-500" },
+  { id: "honeymoon", name: "شهر عسل", icon: "💕", color: "from-pink-500 to-rose-400" },
+  { id: "family", name: "عائلي", icon: "👨‍👩‍👧‍👦", color: "from-blue-500 to-cyan-500" },
+  { id: "lastminute", name: "لحظة أخيرة", icon: "⏰", color: "from-red-600 to-red-500" },
+  { id: "earlybird", name: "حجز مبكر", icon: "🐣", color: "from-green-500 to-emerald-500" },
+  { id: "group", name: "مجموعات", icon: "👥", color: "from-violet-500 to-purple-500" },
+  { id: "weekend", name: "نهاية أسبوع", icon: "🏖️", color: "from-teal-500 to-cyan-500" },
 ];
 
+const getOfferTypeInfo = (type: string) => {
+  return offerTypes.find(t => t.id === type) || offerTypes[0];
+};
+
+const getTimeRemaining = (validUntil: string | null) => {
+  if (!validUntil) return null;
+  const now = new Date();
+  const end = new Date(validUntil);
+  const diff = end.getTime() - now.getTime();
+  if (diff <= 0) return null;
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  if (days > 30) return `${Math.floor(days / 30)} شهر`;
+  if (days > 0) return `${days} يوم`;
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  return `${hours} ساعة`;
+};
+
 const Offers = () => {
+  const [selectedType, setSelectedType] = useState("all");
+  const [offers, setOffers] = useState<OfferFromDB[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+
   useSEO({
-    title: "عروض السفر - خصومات تصل إلى 25%",
-    description: "أقوى عروض السفر والسياحة من ترافليون. خصومات تصل إلى 25% على رحلات ماليزيا، تركيا، تايلاند وغيرها.",
-    keywords: "عروض سياحية, خصومات سفر, عروض ماليزيا, عروض تركيا, عروض تايلاند",
+    title: "عروض السفر الحصرية - خصومات تصل إلى 38%",
+    description: "أقوى عروض السفر والسياحة من ترافليون. خصومات حصرية على أفضل الوجهات السياحية حول العالم.",
+    keywords: "عروض سياحية, خصومات سفر, عروض ماليزيا, عروض تركيا, عروض تايلاند, عروض المالديف",
+  });
+
+  useEffect(() => {
+    loadOffers();
+  }, []);
+
+  const loadOffers = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("special_offers")
+        .select("*")
+        .eq("is_active", true)
+        .order("is_featured", { ascending: false })
+        .order("is_hot", { ascending: false })
+        .order("discount_percentage", { ascending: false });
+
+      if (error) throw error;
+      setOffers((data || []) as unknown as OfferFromDB[]);
+    } catch (error) {
+      console.error("Error loading offers:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredOffers = offers.filter((offer) => {
+    if (selectedType !== "all" && offer.offer_type !== selectedType) return false;
+    return true;
   });
 
   return (
@@ -31,74 +111,275 @@ const Offers = () => {
         badge="عروض حصرية لفترة محدودة"
         badgeIcon={<Zap className="w-4 h-4 text-luxury-gold" />}
         title="أقوى العروض"
-        subtitle="استفد من خصومات تصل إلى 25% على أفضل الوجهات السياحية - العروض محدودة!"
+        subtitle="استفد من خصومات تصل إلى 38% على أفضل الوجهات السياحية - العروض محدودة!"
       />
 
-      {/* Flash Sale Banner */}
-      <section className="bg-luxury-gold py-4">
+      {/* Animated Flash Sale Banner */}
+      <section className="relative overflow-hidden">
+        <div className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 py-4">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+PC9zdmc+')] opacity-30" />
+          <div className="container px-4 relative">
+            <div className="flex flex-wrap items-center justify-center gap-4 text-white">
+              <Flame className="w-6 h-6 animate-bounce" />
+              <span className="font-bold text-lg">🔥 عرض اليوم الحصري</span>
+              <span className="bg-white/20 backdrop-blur-sm px-5 py-1.5 rounded-full font-bold text-sm border border-white/30">خصم إضافي 5% عند الحجز اليوم</span>
+              <Flame className="w-6 h-6 animate-bounce" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Filter Tabs */}
+      <section className="py-8 bg-gradient-to-b from-luxury-cream/50 to-transparent">
         <div className="container px-4">
-          <div className="flex flex-wrap items-center justify-center gap-4 text-luxury-navy">
-            <Flame className="w-6 h-6 animate-pulse" />
-            <span className="font-bold text-lg">عرض اليوم الحصري</span>
-            <span className="bg-luxury-navy/10 px-4 py-1 rounded-full">خصم إضافي 5% عند الحجز اليوم</span>
-            <Flame className="w-6 h-6 animate-pulse" />
+          <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
+            {offerTypes.map((type) => (
+              <button
+                key={type.id}
+                onClick={() => setSelectedType(type.id)}
+                className={cn(
+                  "flex items-center gap-2 px-5 py-3 rounded-2xl transition-all duration-300 whitespace-nowrap font-medium text-sm",
+                  selectedType === type.id
+                    ? `bg-gradient-to-r ${type.color} text-white shadow-lg shadow-luxury-teal/20 scale-105`
+                    : "bg-white/80 backdrop-blur-sm text-gray-600 hover:bg-white hover:shadow-md border border-gray-100"
+                )}
+              >
+                <span className="text-lg">{type.icon}</span>
+                {type.name}
+                {selectedType === type.id && type.id !== "all" && (
+                  <span className="bg-white/25 w-6 h-6 rounded-full flex items-center justify-center text-xs">
+                    {offers.filter(o => o.offer_type === type.id).length}
+                  </span>
+                )}
+              </button>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Offers Grid */}
-      <section className="py-20 bg-gradient-to-b from-background via-luxury-cream/30 to-background">
+      <section className="py-12 bg-gradient-to-b from-background via-luxury-cream/20 to-background">
         <div className="container px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offers.map((offer) => (
-              <div key={offer.id} className="group card-3d overflow-hidden">
-                <div className="relative h-56 overflow-hidden">
-                  <img src={offer.image} alt={offer.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/80 to-transparent" />
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <Loader2 className="w-12 h-12 animate-spin text-luxury-teal mb-4" />
+              <p className="text-muted-foreground">جاري تحميل العروض...</p>
+            </div>
+          ) : filteredOffers.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <Gift className="w-20 h-20 text-muted-foreground/30 mb-6" />
+              <h3 className="text-2xl font-bold text-luxury-navy mb-2">لا توجد عروض حالياً</h3>
+              <p className="text-muted-foreground">تابعنا للحصول على أحدث العروض</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredOffers.map((offer, index) => {
+                const typeInfo = getOfferTypeInfo(offer.offer_type);
+                const timeLeft = getTimeRemaining(offer.valid_until);
+                const highlights = (offer.highlights as string[]) || [];
+                const includes = (offer.includes as string[]) || [];
 
-                  {offer.isHot && (
-                    <div className="absolute top-4 right-4 flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
-                      <Flame className="w-3 h-3" />عرض ساخن
+                return (
+                  <div
+                    key={offer.id}
+                    className="group relative rounded-3xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 animate-reveal"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                    onMouseEnter={() => setHoveredCard(offer.id)}
+                    onMouseLeave={() => setHoveredCard(null)}
+                  >
+                    {/* Image Section */}
+                    <div className="relative h-64 overflow-hidden">
+                      {offer.cover_image ? (
+                        <img
+                          src={offer.cover_image}
+                          alt={offer.title_ar}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-luxury-teal/20 to-luxury-gold/20 flex items-center justify-center text-6xl">
+                          🏷️
+                        </div>
+                      )}
+                      
+                      {/* Dark Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+                      {/* ====== Glassmorphism Type Badge ====== */}
+                      <div className={cn(
+                        "absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-2xl",
+                        "bg-white/15 backdrop-blur-xl border border-white/25",
+                        "shadow-[0_8px_32px_rgba(0,0,0,0.15)]",
+                        "transition-all duration-300 group-hover:bg-white/25 group-hover:scale-105"
+                      )}>
+                        <span className="text-lg drop-shadow-lg">{typeInfo.icon}</span>
+                        <span className="text-white font-bold text-sm drop-shadow-md">{typeInfo.name}</span>
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+                      </div>
+
+                      {/* Hot Badge */}
+                      {offer.is_hot && (
+                        <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-2xl text-xs font-bold shadow-lg shadow-red-500/30 animate-pulse">
+                          <Flame className="w-3.5 h-3.5" />عرض ساخن 🔥
+                        </div>
+                      )}
+
+                      {/* Discount Circle */}
+                      <div className="absolute -bottom-6 left-6 w-16 h-16 bg-gradient-to-br from-luxury-gold to-yellow-400 rounded-full flex flex-col items-center justify-center shadow-xl shadow-luxury-gold/30 border-4 border-white z-10">
+                        <span className="text-luxury-navy font-black text-lg leading-none">{offer.discount_percentage}%</span>
+                        <span className="text-luxury-navy text-[8px] font-bold">خصم</span>
+                      </div>
+
+                      {/* Destination */}
+                      <div className="absolute bottom-4 right-4 flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20">
+                        <MapPin className="w-3.5 h-3.5 text-white" />
+                        <span className="text-white text-sm font-medium">{offer.destination}</span>
+                      </div>
+
+                      {/* Time Remaining */}
+                      {timeLeft && (
+                        <div className="absolute bottom-4 left-24 flex items-center gap-1.5 bg-red-500/80 backdrop-blur-sm px-3 py-1.5 rounded-xl">
+                          <Timer className="w-3 h-3 text-white" />
+                          <span className="text-white text-xs font-bold">متبقي {timeLeft}</span>
+                        </div>
+                      )}
                     </div>
-                  )}
 
-                  <div className="absolute top-4 left-4 bg-luxury-gold text-luxury-navy px-3 py-1 rounded-full text-sm font-bold">
-                    <Percent className="w-3 h-3 inline ml-1" />خصم {offer.discount}
+                    {/* Content Section */}
+                    <div className="p-6 pt-10">
+                      {/* Title & Duration */}
+                      <div className="flex items-start justify-between mb-3">
+                        <h3 className="font-bold text-xl text-luxury-navy group-hover:text-luxury-teal transition-colors leading-tight">
+                          {offer.title_ar}
+                        </h3>
+                      </div>
+
+                      {offer.duration && (
+                        <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
+                          <Clock className="w-4 h-4" />
+                          <span>{offer.duration}</span>
+                        </div>
+                      )}
+
+                      {/* Description */}
+                      {offer.description_ar && (
+                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">
+                          {offer.description_ar}
+                        </p>
+                      )}
+
+                      {/* Highlights */}
+                      {highlights.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {highlights.slice(0, 3).map((h, idx) => (
+                            <span key={idx} className="bg-luxury-teal/8 text-luxury-teal px-3 py-1 rounded-xl text-xs font-medium border border-luxury-teal/15">
+                              {h}
+                            </span>
+                          ))}
+                          {highlights.length > 3 && (
+                            <span className="text-xs text-muted-foreground flex items-center">
+                              +{highlights.length - 3}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Includes */}
+                      {includes.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-5">
+                          {includes.slice(0, 4).map((item, idx) => (
+                            <span key={idx} className="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg text-[11px] font-medium">
+                              ✓ {item}
+                            </span>
+                          ))}
+                          {includes.length > 4 && (
+                            <span className="text-[11px] text-muted-foreground flex items-center px-2">
+                              +{includes.length - 4} المزيد
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Valid Until */}
+                      {offer.valid_until && (
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-5 bg-amber-50 px-3 py-2 rounded-xl border border-amber-100">
+                          <Calendar className="w-3.5 h-3.5 text-amber-600" />
+                          <span>صالح حتى: <strong className="text-amber-700">{new Date(offer.valid_until).toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" })}</strong></span>
+                        </div>
+                      )}
+
+                      {/* Price + Buttons Section */}
+                      <div className="border-t pt-5">
+                        <div className="flex items-end justify-between mb-4">
+                          <div>
+                            <span className="text-muted-foreground line-through text-sm block">{offer.original_price.toLocaleString()} ر.س</span>
+                            <div className="flex items-baseline gap-1">
+                              <span className="text-3xl font-black text-luxury-teal">{offer.discounted_price.toLocaleString()}</span>
+                              <span className="text-sm text-muted-foreground">ر.س</span>
+                            </div>
+                          </div>
+                          <div className="bg-luxury-gold/10 px-3 py-1 rounded-full">
+                            <span className="text-luxury-gold font-bold text-sm">وفر {(offer.original_price - offer.discounted_price).toLocaleString()} ر.س</span>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              const typeInfo = getOfferTypeInfo(offer.offer_type);
+                              const context = `أهلاً! أنا أساعدك في عرض "${offer.title_ar}" ${typeInfo.icon}\n\n🏷️ تفاصيل العرض:\n• النوع: ${typeInfo.name}\n• الوجهة: ${offer.destination}\n• المدة: ${offer.duration || 'غير محددة'}\n• السعر الأصلي: ${offer.original_price.toLocaleString()} ر.س\n• سعر العرض: ${offer.discounted_price.toLocaleString()} ر.س (خصم ${offer.discount_percentage}%)\n${offer.description_ar ? `\n📝 ${offer.description_ar.slice(0, 200)}` : ''}\n\nاسألني أي سؤال عن هذا العرض!`;
+                              window.dispatchEvent(new CustomEvent("openAIChatWithContext", {
+                                detail: { context, question: `أخبرني بالمزيد عن عرض ${offer.title_ar}` }
+                              }));
+                            }}
+                            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 hover:from-purple-500/20 hover:to-blue-500/20 text-purple-700 font-bold text-sm transition-all border border-purple-200/50 hover:border-purple-300 hover:shadow-md"
+                            title="اسأل الذكاء الاصطناعي عن هذا العرض"
+                          >
+                            <Bot className="w-4 h-4" />
+                            <span>اسأل الذكاء</span>
+                          </button>
+                          <a
+                            href={`https://api.whatsapp.com/send?phone=966569222111&text=أريد حجز عرض: ${offer.title_ar} - ${offer.destination} - ${offer.discounted_price.toLocaleString()} ر.س`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold text-sm transition-all shadow-lg shadow-emerald-500/20 hover:shadow-xl"
+                          >
+                            <Phone className="w-4 h-4" />
+                            <span>احجز الآن</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Featured Ribbon */}
+                    {offer.is_featured && (
+                      <div className="absolute top-0 left-0 w-0 h-0 border-t-[60px] border-t-luxury-gold border-r-[60px] border-r-transparent z-10">
+                        <Star className="absolute -top-[50px] left-[10px] w-5 h-5 text-luxury-navy fill-luxury-navy" />
+                      </div>
+                    )}
                   </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
 
-                  <div className="absolute bottom-4 right-4 flex items-center gap-1 glass-dark px-3 py-1 rounded-full text-xs">
-                    <MapPin className="w-3 h-3 text-white" /><span className="text-white">{offer.destination}</span>
-                  </div>
-                </div>
-
-                <div className="p-6 bg-white">
-                  <h3 className="text-xl font-bold text-luxury-navy mb-3">{offer.title}</h3>
-
-                  <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
-                    <Clock className="w-4 h-4" /><span>{offer.duration}</span>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {offer.includes.map((item, idx) => (
-                      <span key={idx} className="bg-luxury-teal/10 text-luxury-teal px-2 py-1 rounded-lg text-xs">{item}</span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                    <Calendar className="w-4 h-4" /><span>صالح حتى: {offer.validUntil}</span>
-                  </div>
-
-                  <div className="flex items-center gap-3 mb-6">
-                    <span className="text-muted-foreground line-through text-lg">{offer.originalPrice} ر.س</span>
-                    <span className="text-2xl font-bold text-luxury-teal">{offer.discountedPrice} ر.س</span>
-                  </div>
-
-                  <a href={`https://api.whatsapp.com/send?phone=966569222111&text=أريد الاستفسار عن ${offer.title}`} target="_blank" rel="noopener noreferrer">
-                    <Button className="w-full btn-luxury py-6 flex items-center justify-center gap-2">
-                      <Phone className="w-5 h-5" />احجز العرض
-                    </Button>
-                  </a>
-                </div>
+      {/* Stats Section */}
+      <section className="py-16 bg-gradient-to-r from-luxury-navy via-luxury-navy/95 to-luxury-navy">
+        <div className="container px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { icon: <Gift className="w-8 h-8" />, value: offers.length.toString(), label: "عرض متاح" },
+              { icon: <Percent className="w-8 h-8" />, value: `${Math.max(...offers.map(o => o.discount_percentage), 0)}%`, label: "أعلى خصم" },
+              { icon: <Globe className="w-8 h-8" />, value: [...new Set(offers.flatMap(o => o.countries || []))].length.toString(), label: "وجهة" },
+              { icon: <Users className="w-8 h-8" />, value: "+2,500", label: "عميل سعيد" },
+            ].map((stat, idx) => (
+              <div key={idx} className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors">
+                <div className="text-luxury-gold mb-3 flex justify-center">{stat.icon}</div>
+                <p className="text-3xl font-black text-white mb-1">{stat.value}</p>
+                <p className="text-white/60 text-sm">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -108,20 +389,24 @@ const Offers = () => {
       {/* CTA Section */}
       <section className="py-20 bg-luxury-navy relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-luxury-teal/10 rounded-full blur-[150px]" />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-luxury-gold/10 rounded-full blur-[100px]" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-luxury-teal/10 rounded-full blur-[200px]" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-luxury-gold/10 rounded-full blur-[150px]" />
         </div>
         <div className="container px-4 text-center relative z-10">
-          <Tag className="w-16 h-16 text-luxury-gold mx-auto mb-6" />
-          <h2 className="text-section text-white mb-4">لم تجد العرض المناسب؟</h2>
-          <p className="text-white/60 text-lg mb-8 max-w-xl mx-auto">تواصل معنا وسنجد لك أفضل عرض يناسب ميزانيتك</p>
+          <Sparkles className="w-16 h-16 text-luxury-gold mx-auto mb-6" />
+          <h2 className="text-4xl font-black text-white mb-4">لم تجد العرض المناسب؟</h2>
+          <p className="text-white/60 text-lg mb-8 max-w-xl mx-auto">
+            تواصل معنا وسنصمم لك عرضاً خاصاً يناسب ميزانيتك وتفضيلاتك
+          </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="https://api.whatsapp.com/send?phone=966569222111" target="_blank" rel="noopener noreferrer">
-              <Button className="btn-gold px-10 py-5 text-lg flex items-center gap-2"><Phone className="w-5 h-5" />واتساب</Button>
+            <a href="https://api.whatsapp.com/send?phone=966569222111&text=أريد عرض سفر مخصص" target="_blank" rel="noopener noreferrer">
+              <Button className="btn-gold px-10 py-6 text-lg flex items-center gap-2 rounded-2xl font-bold">
+                <Phone className="w-5 h-5" />واتساب
+              </Button>
             </a>
             <Link to="/destinations">
-              <Button className="btn-outline-luxury px-10 py-5 text-lg text-white border-white/30 hover:bg-white hover:text-luxury-navy flex items-center gap-2">
-                تصفح الوجهات<ArrowLeft className="w-5 h-5" />
+              <Button className="bg-transparent border-2 border-white/30 text-white hover:bg-white hover:text-luxury-navy px-10 py-6 text-lg rounded-2xl font-bold flex items-center gap-2 transition-all">
+                تصفح الوجهات<ChevronLeft className="w-5 h-5" />
               </Button>
             </Link>
           </div>

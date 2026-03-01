@@ -1,28 +1,46 @@
-import { Plane, Hotel, Car, Headphones, CreditCard, Shield, Users, Clock, Sparkles, MapPin, Star, Award } from "lucide-react";
+import { Plane, Hotel, Car, Headphones, CreditCard, Shield, Users, Clock, Sparkles, MapPin, Star, Award, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
 const services = [
-  {
-    icon: Plane,
-    title: "تذاكر طيران",
-    description: "حجز تذاكر طيران على جميع الخطوط العالمية بأفضل الأسعار مع توفير خيارات مرنة للحجز",
-    gradient: "from-blue-500/20 to-cyan-500/20",
-    path: "/flights"
-  },
-  {
-    icon: Hotel,
-    title: "فنادق فاخرة",
-    description: "أفخم الفنادق والمنتجعات العالمية المختارة بعناية لضمان تجربة سكن استثنائية",
-    gradient: "from-gold/20 to-yellow-600/20",
-    path: "/hotels"
-  },
+  /* HIDDEN - car-rental
   {
     icon: Car,
     title: "سيارات خاصة",
     description: "أحدث موديلات السيارات الفاخرة مع سائقين محترفين لاستقبالكم في جميع المطارات",
     gradient: "from-gray-700/20 to-gray-900/20",
     path: "/car-rental"
+  },
+  */
+  {
+    icon: MapPin,
+    title: "برامج سياحية",
+    description: "برامج متكاملة مصممة بعناية لأجمل الوجهات السياحية",
+    gradient: "from-teal-500/20 to-emerald-500/20",
+    path: "/programs"
+  },
+  {
+    icon: MapPin,
+    title: "وجهات سياحية",
+    description: "أجمل الوجهات السياحية المختارة بعناية لضمان تجربة سفر استثنائية لا تُنسى",
+    gradient: "from-gold/20 to-yellow-600/20",
+    path: "/destinations"
+  },
+  /* HIDDEN - car-rental duplicate
+  {
+    icon: Car,
+    title: "سيارات خاصة",
+    description: "أحدث موديلات السيارات الفاخرة مع سائقين محترفين لاستقبالكم في جميع المطارات",
+    gradient: "from-gray-700/20 to-gray-900/20",
+    path: "/car-rental"
+  },
+  */
+  {
+    icon: Heart,
+    title: "شهر العسل",
+    description: "باقات رومانسية فاخرة مصممة خصيصاً للأزواج الجدد",
+    gradient: "from-rose-500/20 to-pink-500/20",
+    path: "/honeymoon"
   },
   {
     icon: Users,

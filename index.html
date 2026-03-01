@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
@@ -73,6 +73,105 @@
 
   <body>
     <div id="root"></div>
+
+    <!-- AI Chat Floating Widget - Pure HTML, outside React -->
+    <div
+      id="ai-float-btn"
+      style="
+        position: fixed;
+        bottom: 28px;
+        right: 20px;
+        z-index: 999999;
+        cursor: pointer;
+      "
+      onclick="
+        document.getElementById('ai-float-btn').style.display = 'none';
+        window.dispatchEvent(new CustomEvent('openAIChatDirect'));
+      "
+    >
+      <style>
+        @keyframes ai-pulse {
+          0%,
+          100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.15);
+          }
+        }
+        @keyframes ai-ping {
+          75%,
+          100% {
+            transform: scale(2);
+            opacity: 0;
+          }
+        }
+        #ai-float-btn button {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: linear-gradient(135deg, #7c3aed, #4f46e5);
+          color: #fff;
+          border: none;
+          border-radius: 50px;
+          padding: 14px 24px;
+          cursor: pointer;
+          box-shadow: 0 8px 32px rgba(124, 58, 237, 0.5);
+          font-size: 14px;
+          font-weight: 700;
+          font-family: "IBM Plex Sans Arabic", sans-serif;
+          animation: ai-pulse 2s ease-in-out infinite;
+          transition: box-shadow 0.3s;
+        }
+        #ai-float-btn button:hover {
+          box-shadow: 0 12px 40px rgba(124, 58, 237, 0.7);
+        }
+        #ai-float-btn .ai-dot {
+          position: relative;
+          width: 10px;
+          height: 10px;
+        }
+        #ai-float-btn .ai-dot::before {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: #4ade80;
+          animation: ai-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        #ai-float-btn .ai-dot::after {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: #4ade80;
+        }
+      </style>
+      <button>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 8V4H8" />
+          <rect width="16" height="12" x="4" y="8" rx="2" />
+          <path d="M2 14h2" />
+          <path d="M20 14h2" />
+          <path d="M15 13v2" />
+          <path d="M9 13v2" />
+        </svg>
+        <span>مساعد ذكي</span>
+        <span class="ai-dot"></span>
+      </button>
+    </div>
+
     <script type="module" src="/src/main.tsx"></script>
 
     <!-- Service Worker Registration -->

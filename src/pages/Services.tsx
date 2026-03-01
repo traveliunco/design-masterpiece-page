@@ -11,26 +11,6 @@ import { useSEO } from "@/hooks/useSEO";
 
 const services = [
   {
-    id: "flights",
-    title: "حجز الطيران",
-    description: "احجز تذكرة طيرانك بأفضل الأسعار من خلال شبكتنا العالمية من شركات الطيران",
-    icon: Plane,
-    color: "from-blue-500 to-cyan-600",
-    path: "/amadeus-flights",
-    features: ["أسعار تنافسية", "حجز فوري", "دعم 24/7", "تأكيد سريع"],
-    image: "✈️",
-  },
-  {
-    id: "hotels",
-    title: "الفنادق والمنتجعات",
-    description: "اختر من بين آلاف الفنادق والمنتجعات الفاخرة حول العالم",
-    icon: Hotel,
-    color: "from-purple-500 to-pink-600",
-    path: "/hotels",
-    features: ["فنادق 5 نجوم", "أسعار مميزة", "إلغاء مجاني", "خدمة عملاء"],
-    image: "🏨",
-  },
-  {
     id: "programs",
     title: "البرامج السياحية",
     description: "برامج سياحية متكاملة مصممة خصيصاً لتناسب احتياجاتك",
@@ -50,6 +30,7 @@ const services = [
     features: ["تزيين الغرفة", "عشاء رومانسي", "جلسة تصوير", "سبا للزوجين"],
     image: "💑",
   },
+  /* HIDDEN - car-rental
   {
     id: "car-rental",
     title: "تأجير السيارات",
@@ -60,6 +41,8 @@ const services = [
     features: ["أحدث الموديلات", "أسعار شاملة", "تأمين كامل", "توصيل مجاني"],
     image: "🚗",
   },
+  */
+  /* HIDDEN - visas
   {
     id: "visas",
     title: "خدمات التأشيرات",
@@ -70,6 +53,8 @@ const services = [
     features: ["معالجة سريعة", "استشارات مجانية", "متابعة دقيقة", "خدمة VIP"],
     image: "📋",
   },
+  */
+  /* HIDDEN - insurance
   {
     id: "insurance",
     title: "تأمين السفر",
@@ -80,6 +65,7 @@ const services = [
     features: ["تغطية طبية", "فقدان الأمتعة", "إلغاء الرحلة", "إصدار فوري"],
     image: "🛡️",
   },
+  */
   {
     id: "offers",
     title: "العروض الخاصة",

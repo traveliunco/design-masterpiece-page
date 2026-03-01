@@ -1,10 +1,10 @@
 // Service Worker for Traveliun PWA
 // Version 1.0.0
 
-const CACHE_NAME = 'traveliun-v1';
-const STATIC_CACHE = 'traveliun-static-v1';
-const DYNAMIC_CACHE = 'traveliun-dynamic-v1';
-const IMAGE_CACHE = 'traveliun-images-v1';
+const CACHE_NAME = 'traveliun-v2';
+const STATIC_CACHE = 'traveliun-static-v2';
+const DYNAMIC_CACHE = 'traveliun-dynamic-v2';
+const IMAGE_CACHE = 'traveliun-images-v2';
 
 // الملفات الثابتة التي يجب تخزينها
 const STATIC_ASSETS = [

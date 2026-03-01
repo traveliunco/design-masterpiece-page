@@ -38,8 +38,8 @@ const MobileNav = () => {
   const items: InteractiveMenuItem[] = [
     { label: 'الرئيسية', icon: Home, onClick: () => navigate('/') },
     { label: 'الوجهات', icon: MapPin, onClick: () => navigate('/destinations') },
-    { label: 'طيران', icon: Plane, onClick: () => navigate('/amadeus-flights') },
-    { label: 'فنادق', icon: Building2, onClick: () => navigate('/hotels') },
+    { label: 'البرامج', icon: Plane, onClick: () => navigate('/programs') },
+    { label: 'العروض', icon: Building2, onClick: () => navigate('/offers') },
     { label: 'حسابي', icon: User, onClick: () => navigate('/login') },
   ];
 
@@ -47,8 +47,8 @@ const MobileNav = () => {
     const path = location.pathname;
     if (path === '/') return 0;
     if (path.startsWith('/destinations')) return 1;
-    if (path.startsWith('/amadeus-flights')) return 2;
-    if (path.startsWith('/hotels')) return 3;
+    if (path.startsWith('/programs')) return 2;
+    if (path.startsWith('/offers')) return 3;
     if (path.startsWith('/login')) return 4;
     return 0;
   };

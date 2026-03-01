@@ -86,22 +86,16 @@ const megaMenuItems = {
   },
   services: {
     title: "خدماتنا",
-    items: [
-      { name: "حجز الطيران", icon: Plane, path: "/amadeus-flights", desc: "جميع الخطوط العالمية" },
-      { name: "الفنادق", icon: Hotel, path: "/hotels", desc: "أفضل العروض الفندقية" },
-      { name: "البرامج السياحية", icon: Calendar, path: "/programs", desc: "رحلات متكاملة" },
-      { name: "شهر العسل", icon: Heart, path: "/honeymoon", desc: "باقات رومانسية" },
-    ]
+    items: []
   },
   more: {
     title: "المزيد",
     items: [
       { name: "الكرة الأرضية", icon: Globe, path: "/globe", desc: "استكشف العالم ثلاثي الأبعاد" },
       { name: "المدونة", icon: "📝", path: "/blog", desc: "مقالات ونصائح السفر" },
-      { name: "حجز الطيران", icon: Plane, path: "/amadeus-flights", desc: "ابحث عن أفضل الرحلات" },
-      { name: "تأجير السيارات", icon: "🚗", path: "/car-rental", desc: "سيارات فاخرة" },
-      { name: "التأشيرات", icon: "🛂", path: "/visas", desc: "خدمات الفيزا" },
-      { name: "التأمين", icon: Shield, path: "/insurance", desc: "تأمين السفر" },
+      // { name: "تأجير السيارات", icon: "🚗", path: "/car-rental", desc: "سيارات فاخرة" }, /* HIDDEN */
+      // { name: "التأشيرات", icon: "🛂", path: "/visas", desc: "خدمات الفيزا" }, /* HIDDEN */
+      // { name: "التأمين", icon: Shield, path: "/insurance", desc: "تأمين السفر" }, /* HIDDEN */
       { name: "تقسيط تابي", icon: CreditCard, path: "/tabby", desc: "ادفع على 4 دفعات" },
       { name: "تقسيط تمارا", icon: CreditCard, path: "/tamara", desc: "قسّط مشترياتك" },
       { name: "برنامج الولاء", icon: Heart, path: "/loyalty", desc: "اكسب النقاط" },
@@ -148,7 +142,7 @@ const Nav3D = () => {
 
   const navLinks = [
     { name: "الرئيسية", path: "/", hasDropdown: false },
-    { name: "الخدمات", path: "/services", hasDropdown: true, dropdownKey: "services" },
+    { name: "الخدمات", path: "/services", hasDropdown: false },
     { name: "الدول", path: "/destinations", hasDropdown: true, dropdownKey: "countries" },
     { name: "شهر العسل", path: "/honeymoon", hasDropdown: false },
     { name: "البرامج", path: "/programs", hasDropdown: false },
@@ -608,13 +602,13 @@ const Nav3D = () => {
               {[
                 { name: "الكرة الأرضية", path: "/globe", icon: "🌍" },
                 { name: "المدونة", path: "/blog", icon: "📝" },
-                { name: "الطيران", path: "/amadeus-flights", icon: "✈️" },
-                { name: "السيارات", path: "/car-rental", icon: "🚗" },
-                { name: "التأشيرات", path: "/visas", icon: "🛂" },
-                { name: "التأمين", path: "/insurance", icon: "🛡️" },
+                // { name: "السيارات", path: "/car-rental", icon: "🚗" }, /* HIDDEN */
+                // { name: "التأشيرات", path: "/visas", icon: "🛂" }, /* HIDDEN */
+                // { name: "التأمين", path: "/insurance", icon: "🛡️" }, /* HIDDEN */
                 { name: "تابي", path: "/tabby", icon: "💳" },
                 { name: "الولاء", path: "/loyalty", icon: "💎" },
                 { name: "الدعم", path: "/customer-support", icon: "🎧" },
+                { name: "من نحن", path: "/about", icon: "ℹ️" },
               ].map((item, idx) => (
                 <Link
                   key={item.path}

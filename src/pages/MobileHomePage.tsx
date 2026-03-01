@@ -92,8 +92,8 @@ const quickActions = [
   { icon: Plane, label: "طيران", path: "/amadeus-flights", color: "bg-gradient-to-br from-blue-500 to-cyan-500" },
   { icon: Building2, label: "فنادق", path: "/hotels", color: "bg-gradient-to-br from-teal-500 to-emerald-500" },
   { icon: MapPin, label: "جولات", path: "/programs", color: "bg-gradient-to-br from-cyan-500 to-blue-500" },
-  { icon: Car, label: "سيارات", path: "/car-rental", color: "bg-gradient-to-br from-emerald-500 to-teal-500" },
-  { icon: Globe, label: "تأشيرات", path: "/visas", color: "bg-gradient-to-br from-blue-600 to-indigo-500" },
+  // { icon: Car, label: "سيارات", path: "/car-rental", color: "bg-gradient-to-br from-emerald-500 to-teal-500" }, /* HIDDEN */
+  // { icon: Globe, label: "تأشيرات", path: "/visas", color: "bg-gradient-to-br from-blue-600 to-indigo-500" }, /* HIDDEN */
   { icon: CreditCard, label: "تقسيط", path: "/tabby", color: "bg-gradient-to-br from-teal-600 to-cyan-500" },
   { icon: Gift, label: "عروض", path: "/offers", color: "bg-gradient-to-br from-indigo-500 to-blue-500" },
   { icon: Heart, label: "شهر عسل", path: "/honeymoon", color: "bg-gradient-to-br from-cyan-600 to-teal-500" },

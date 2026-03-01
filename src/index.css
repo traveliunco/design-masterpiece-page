@@ -159,6 +159,42 @@
     overflow-x: hidden;
   }
 
+  /* Smoother images everywhere */
+  img, video {
+    content-visibility: auto;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  /* GPU-accelerate all animated/transitioned elements */
+  *, *::before, *::after {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Speed up transitions globally */
+  a, button, input, select, textarea,
+  [class*="transition"],
+  [class*="animate"] {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: auto;
+  }
+
+  /* Offscreen section optimizations */
+  section, article, main > div {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+  }
+
+  /* Respect user preference for reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   ::selection {
     background: hsl(175 84% 32%);
     color: white;

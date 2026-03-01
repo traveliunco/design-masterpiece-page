@@ -2,32 +2,18 @@ import { Plane, Hotel, Car, Shield, Users, CreditCard, MapPin, ArrowLeft } from 
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 const services = [{
-  icon: Plane,
-  title: "حجوزات طيران عالمية",
-  description: "تذاكر على جميع الخطوط الجوية العالمية بأفضل الأسعار المضمونة",
-  gradient: "from-sky-500 to-blue-600",
-  path: "/amadeus-flights",
-  featured: true
-}, {
-  icon: Hotel,
-  title: "فنادق ومنتجعات فاخرة",
-  description: "أرقى الفنادق والمنتجعات المختارة بعناية لراحتك",
-  gradient: "from-luxury-gold to-amber-600",
-  path: "/hotels",
-  featured: false
-}, {
   icon: MapPin,
   title: "برامج سياحية متكاملة",
   description: "رحلات منظمة بدقة متناهية لأجمل الوجهات",
   gradient: "from-luxury-teal to-emerald-600",
   path: "/programs",
-  featured: false
+  featured: true
 }, {
-  icon: Car,
-  title: "تأجير سيارات فاخرة",
-  description: "أحدث موديلات السيارات مع سائقين محترفين",
-  gradient: "from-slate-600 to-slate-800",
-  path: "/car-rental",
+  icon: MapPin,
+  title: "شهر العسل",
+  description: "باقات رومانسية مصممة خصيصاً للأزواج",
+  gradient: "from-rose-500 to-pink-600",
+  path: "/honeymoon",
   featured: false
 }, {
   icon: CreditCard,

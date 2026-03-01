@@ -4,16 +4,16 @@ import { cn } from "@/lib/utils";
 
 const items = [
   {
-    icon: Plane,
-    title: "الطيران الخاص",
-    description: "حجوزات عالمية مخصصة للنخبة مع رفاهية لا تضاهى في الأجواء.",
+    icon: Users,
+    title: "برامج سياحية",
+    description: "رحلات متكاملة ومنظمة بأعلى معايير الجودة والرفاهية.",
     className: "md:col-span-2 md:row-span-2 bg-charcoal text-white",
     size: "large"
   },
   {
-    icon: Hotel,
-    title: "إقامات ملكية",
-    description: "نخبة الفنادق والقصور التاريخية حول العالم.",
+    icon: Sparkles,
+    title: "وجهات مميزة",
+    description: "أجمل الوجهات السياحية حول العالم مختارة بعناية.",
     className: "md:col-span-1 md:row-span-1 border border-border/40",
     size: "small"
   },
