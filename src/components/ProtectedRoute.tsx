@@ -1,13 +1,14 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth, UserRole } from "@/hooks/useAuth";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: "admin" | "agent" | "customer";
+  requiredRole?: UserRole | UserRole[];
+  fallbackPath?: string;
 }
 
-const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
-  const { user, loading } = useAuth();
+const ProtectedRoute = ({ children, requiredRole, fallbackPath = "/admin" }: ProtectedRouteProps) => {
+  const { user, loading, userRole } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -22,26 +23,14 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check user role from database if required
+  // Check role-based access
   if (requiredRole) {
-    // Get user profile from Supabase to check role
-    const checkUserRole = async () => {
-      const { supabase } = await import("@/integrations/supabase/client");
-      const { data: profile } = await supabase
-        .from("users")
-        .select("role")
-        .eq("id", user.id)
-        .single();
+    const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
 
-      if (profile?.role !== requiredRole) {
-        return false;
-      }
-      return true;
-    };
-
-    // Note: This is a synchronous guard, role checking should happen in parent component
-    // For now, admin routes are accessible to authenticated users
-    // TODO: Implement proper role-based access control with async state
+    // admin always has access to everything
+    if (userRole !== "admin" && !allowedRoles.includes(userRole)) {
+      return <Navigate to={fallbackPath} replace />;
+    }
   }
 
   return <>{children}</>;

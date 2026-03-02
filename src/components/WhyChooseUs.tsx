@@ -1,4 +1,4 @@
-import { Shield, Award, HeartHandshake, Clock, Globe, Sparkles, CheckCircle2 } from "lucide-react";
+import { Shield, Trophy, HeartHandshake, Clock, Globe, ThumbsUp, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const WhyChooseUs = () => {
@@ -11,7 +11,7 @@ const WhyChooseUs = () => {
       bgColor: "bg-gradient-to-br from-teal-500/20 to-cyan-500/10",
     },
     {
-      icon: Award,
+      icon: Trophy,
       title: "15 سنة من التميز",
       description: "خبرة طويلة في تنظيم أفضل الرحلات السياحية",
       color: "text-cyan-500",
@@ -39,7 +39,7 @@ const WhyChooseUs = () => {
       bgColor: "bg-gradient-to-br from-indigo-500/20 to-blue-500/10",
     },
     {
-      icon: Sparkles,
+      icon: ThumbsUp,
       title: "تجربة استثنائية",
       description: "كل تفصيلة مصممة لراحتك وسعادتك",
       color: "text-teal-600",
@@ -60,7 +60,7 @@ const WhyChooseUs = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 bg-luxury-navy/5 px-5 py-2 rounded-full mb-6">
-            <Award className="w-4 h-4 text-teal-500" />
+            <Trophy className="w-4 h-4 text-teal-500" />
             <span className="text-sm font-bold text-luxury-navy">لماذا ترافليون؟</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-bold text-luxury-navy mb-6">

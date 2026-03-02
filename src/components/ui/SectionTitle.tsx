@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Sparkles } from "lucide-react";
 
 interface SectionTitleProps {
   badge?: string;
@@ -16,7 +15,7 @@ interface SectionTitleProps {
  */
 const SectionTitle = ({
   badge,
-  badgeIcon = <Sparkles className="w-4 h-4 text-luxury-gold" />,
+  badgeIcon = null,
   title,
   highlight,
   subtitle,

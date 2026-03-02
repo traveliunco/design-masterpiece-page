@@ -1,16 +1,19 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { MapPin, ArrowLeft, Star, Calendar, Users, Building2 } from "lucide-react";
+import { MapPin, ArrowLeft, Star, Calendar, Users, Building2, Heart } from "lucide-react";
 import PageLayout from "@/layouts/PageLayout";
 import PageHeader from "@/components/ui/PageHeader";
 import { allCountries } from "@/data/destinations-data";
 import { useSEO } from "@/hooks/useSEO";
 import { cn } from "@/lib/utils";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { toast } from "sonner";
 
 const filterOptions = ["الكل", "جنوب شرق آسيا", "الشرق الأوسط", "أوروبا"];
 
 const DestinationsPage = () => {
   const [activeFilter, setActiveFilter] = useState("الكل");
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useSEO({
     title: "الوجهات السياحية - الدول والمدن",
@@ -98,10 +101,26 @@ const DestinationsPage = () => {
                     <span className="text-white text-xs font-bold">{country.cities.length} مدينة</span>
                   </div>
 
+                  {/* Favorite Button */}
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleFavorite({ id: country.id, type: 'destination', nameAr: country.nameAr, image: country.coverImage });
+                      toast(isFavorite(country.id, 'destination') ? `تمت إزالة ${country.nameAr} من المفضلة` : `تمت إضافة ${country.nameAr} إلى المفضلة ❤️`);
+                    }}
+                    className={cn(
+                      "absolute top-4 left-4 w-10 h-10 rounded-full flex items-center justify-center transition-all z-10",
+                      isFavorite(country.id, 'destination') ? 'bg-red-500 text-white scale-110' : 'bg-white/20 backdrop-blur-md text-white hover:bg-red-500'
+                    )}
+                    title="إضافة للمفضلة"
+                  >
+                    <Heart className={cn("w-4 h-4", isFavorite(country.id, 'destination') && 'fill-current')} />
+                  </button>
+
                   {/* Country Name Overlay */}
                   <div className="absolute bottom-4 right-4 left-4">
                     <h3 className="text-3xl font-black text-white mb-1 group-hover:text-luxury-gold transition-colors">{country.nameAr}</h3>
-                    <p className="text-white/80 text-sm font-medium">{country.nameEn}</p>
                   </div>
                 </Link>
 

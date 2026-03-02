@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { toast } from "sonner";
 
 interface OfferFromDB {
   id: string;
@@ -69,6 +71,7 @@ const Offers = () => {
   const [offers, setOffers] = useState<OfferFromDB[]>([]);
   const [loading, setLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useSEO({
     title: "عروض السفر الحصرية - خصومات تصل إلى 38%",
@@ -223,6 +226,24 @@ const Offers = () => {
                           <Flame className="w-3.5 h-3.5" />عرض ساخن 🔥
                         </div>
                       )}
+
+                      {/* Favorite Button - All Offers */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleFavorite({ id: offer.id, type: 'offer', nameAr: offer.title_ar, image: offer.cover_image || undefined, price: offer.discounted_price, destination: offer.destination });
+                          toast(isFavorite(offer.id, 'offer') ? `تمت إزالة العرض من المفضلة` : `تمت إضافة العرض إلى المفضلة ❤️`);
+                        }}
+                        className={cn(
+                          "absolute w-10 h-10 rounded-full flex items-center justify-center transition-all z-10",
+                          offer.is_hot ? "top-16 left-4" : "top-4 left-4",
+                          isFavorite(offer.id, 'offer') ? 'bg-red-500 text-white scale-110' : 'bg-white/20 backdrop-blur-md text-white hover:bg-red-500'
+                        )}
+                        title="إضافة للمفضلة"
+                      >
+                        <Heart className={cn("w-4 h-4", isFavorite(offer.id, 'offer') && 'fill-current')} />
+                      </button>
 
                       {/* Discount Circle */}
                       <div className="absolute -bottom-6 left-6 w-16 h-16 bg-gradient-to-br from-luxury-gold to-yellow-400 rounded-full flex flex-col items-center justify-center shadow-xl shadow-luxury-gold/30 border-4 border-white z-10">

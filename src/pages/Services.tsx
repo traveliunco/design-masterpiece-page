@@ -1,82 +1,21 @@
 import { Link } from "react-router-dom";
-import { 
-  Plane, Hotel, MapPin, Car, FileText, Shield, 
+import {
+  Plane, Hotel, MapPin, Car, FileText, Shield,
   Heart, Tag, Calendar, Users, Clock, ArrowLeft,
-  Sparkles, Star, CheckCircle
+  Star, CheckCircle, Globe, CreditCard, Camera,
+  Headphones
 } from "lucide-react";
 import PageLayout from "@/layouts/PageLayout";
 import PageHeader from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
+import { getServices, type Service } from "@/pages/admin/Services";
 
-const services = [
-  {
-    id: "programs",
-    title: "البرامج السياحية",
-    description: "برامج سياحية متكاملة مصممة خصيصاً لتناسب احتياجاتك",
-    icon: MapPin,
-    color: "from-emerald-500 to-teal-600",
-    path: "/programs",
-    features: ["برامج مخصصة", "مرشد سياحي", "نقل مريح", "أماكن مميزة"],
-    image: "🗺️",
-  },
-  {
-    id: "honeymoon",
-    title: "رحلات شهر العسل",
-    description: "باقات رومانسية مميزة تجعل شهر عسلك تجربة لا تُنسى",
-    icon: Heart,
-    color: "from-rose-500 to-pink-600",
-    path: "/honeymoon",
-    features: ["تزيين الغرفة", "عشاء رومانسي", "جلسة تصوير", "سبا للزوجين"],
-    image: "💑",
-  },
-  /* HIDDEN - car-rental
-  {
-    id: "car-rental",
-    title: "تأجير السيارات",
-    description: "استأجر سيارتك المفضلة واستمتع بحرية التنقل في وجهتك",
-    icon: Car,
-    color: "from-orange-500 to-red-600",
-    path: "/car-rental",
-    features: ["أحدث الموديلات", "أسعار شاملة", "تأمين كامل", "توصيل مجاني"],
-    image: "🚗",
-  },
-  */
-  /* HIDDEN - visas
-  {
-    id: "visas",
-    title: "خدمات التأشيرات",
-    description: "نساعدك في إنهاء إجراءات التأشيرة بسرعة وسهولة",
-    icon: FileText,
-    color: "from-indigo-500 to-purple-600",
-    path: "/visas",
-    features: ["معالجة سريعة", "استشارات مجانية", "متابعة دقيقة", "خدمة VIP"],
-    image: "📋",
-  },
-  */
-  /* HIDDEN - insurance
-  {
-    id: "insurance",
-    title: "تأمين السفر",
-    description: "سافر بأمان مع تغطية تأمينية شاملة لجميع حالات الطوارئ",
-    icon: Shield,
-    color: "from-teal-500 to-cyan-600",
-    path: "/insurance",
-    features: ["تغطية طبية", "فقدان الأمتعة", "إلغاء الرحلة", "إصدار فوري"],
-    image: "🛡️",
-  },
-  */
-  {
-    id: "offers",
-    title: "العروض الخاصة",
-    description: "عروض وخصومات حصرية على باقات سفر مختارة بعناية",
-    icon: Tag,
-    color: "from-amber-500 to-orange-600",
-    path: "/offers",
-    features: ["خصم حتى 25%", "عروض محدودة", "باقات شاملة", "دفع مرن"],
-    image: "🏷️",
-  },
-];
+// Icon mapping
+const iconMap: Record<string, React.ElementType> = {
+  MapPin, Heart, Tag, Car, FileText, Shield, Plane, Hotel,
+  Users, CreditCard, Calendar, Star, Globe, Camera, Headphones, Clock,
+};
 
 const whyChooseUs = [
   { icon: Star, title: "خبرة 6 سنوات", desc: "في مجال السياحة والسفر" },
@@ -92,11 +31,14 @@ const Services = () => {
     keywords: "خدمات سفر, حجز طيران, فنادق, برامج سياحية, شهر عسل, تأجير سيارات, تأشيرات, تأمين سفر",
   });
 
+  // Load active services from storage
+  const allServices = getServices();
+  const services = allServices.filter(s => s.is_active).sort((a, b) => a.order - b.order);
+
   return (
     <PageLayout>
       <PageHeader
         badge="كل ما تحتاجه لرحلتك"
-        badgeIcon={<Sparkles className="w-4 h-4 text-luxury-gold" />}
         title="خدماتنا المتكاملة"
         subtitle="نوفر لك جميع خدمات السفر في مكان واحد لتجربة سفر سلسة ومريحة"
       />
@@ -105,50 +47,52 @@ const Services = () => {
       <section className="py-20 bg-gradient-to-b from-background via-luxury-cream/30 to-background">
         <div className="container px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {services.map((service, index) => (
-              <Link
-                key={service.id}
-                to={service.path}
-                className="group card-3d overflow-hidden hover:scale-[1.02] transition-all duration-500"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {/* Header with Gradient */}
-                <div className={`h-40 bg-gradient-to-br ${service.color} relative overflow-hidden`}>
-                  <div className="absolute inset-0 bg-black/10" />
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-                  <div className="relative z-10 h-full flex flex-col items-center justify-center text-white">
-                    <span className="text-6xl mb-2">{service.image}</span>
-                    <service.icon className="w-8 h-8" />
+            {services.map((service, index) => {
+              const IconComponent = iconMap[service.icon] || MapPin;
+              return (
+                <Link
+                  key={service.id}
+                  to={service.path}
+                  className="group card-3d overflow-hidden hover:scale-[1.02] transition-all duration-500"
+                >
+                  {/* Header with Gradient */}
+                  <div className={`h-40 bg-gradient-to-br ${service.color} relative overflow-hidden`}>
+                    <div className="absolute inset-0 bg-black/10" />
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+                    <div className="relative z-10 h-full flex flex-col items-center justify-center text-white">
+                      <span className="text-6xl mb-2">{service.emoji}</span>
+                      <IconComponent className="w-8 h-8" />
+                    </div>
                   </div>
-                </div>
 
-                {/* Content */}
-                <div className="p-6 bg-white">
-                  <h3 className="text-xl font-bold text-luxury-navy mb-3 group-hover:text-luxury-teal transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                    {service.description}
-                  </p>
+                  {/* Content */}
+                  <div className="p-6 bg-white">
+                    <h3 className="text-xl font-bold text-luxury-navy mb-3 group-hover:text-luxury-teal transition-colors">
+                      {service.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+                      {service.description}
+                    </p>
 
-                  {/* Features */}
-                  <ul className="space-y-2 mb-6">
-                    {service.features.slice(0, 3).map((feature, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm">
-                        <CheckCircle className="w-4 h-4 text-luxury-teal flex-shrink-0" />
-                        <span className="text-muted-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                    {/* Features */}
+                    <ul className="space-y-2 mb-6">
+                      {service.features.slice(0, 3).map((feature, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-sm">
+                          <CheckCircle className="w-4 h-4 text-luxury-teal flex-shrink-0" />
+                          <span className="text-muted-foreground">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
 
-                  {/* CTA Button */}
-                  <Button className="w-full btn-luxury group-hover:shadow-glow-teal transition-all">
-                    استكشف الخدمة
-                    <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                  </Button>
-                </div>
-              </Link>
-            ))}
+                    {/* CTA Button */}
+                    <Button className="w-full btn-luxury group-hover:shadow-glow-teal transition-all">
+                      استكشف الخدمة
+                      <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+                    </Button>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin, Sparkles } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin, Plane } from "lucide-react";
 
 const PremiumFooter = () => {
   const currentYear = new Date().getFullYear();
@@ -48,7 +48,7 @@ const PremiumFooter = () => {
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-6">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-luxury-teal to-emerald-600 flex items-center justify-center shadow-glow-teal">
-                <Sparkles className="w-7 h-7 text-white" />
+                <Plane className="w-7 h-7 text-white" />
               </div>
               <div>
                 <span className="text-3xl font-bold text-white">ترافليون</span>

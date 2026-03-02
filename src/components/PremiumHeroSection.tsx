@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Play, MapPin, Calendar, Users, Sparkles, ArrowLeft, Award, Shield } from "lucide-react";
+import { Play, MapPin, Calendar, Users, Plane, ArrowLeft, Shield, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import heroVideo from "@/assets/malaysia.jpg"; // Will be video overlay
@@ -14,7 +14,7 @@ const PremiumHeroSection = () => {
   const slides = [
     {
       title: "اكتشف",
-      highlight: "جمال العالم",
+      highlight: "العالم",
       subtitle: "معنا",
       description: "رحلات استثنائية إلى أجمل الوجهات السياحية حول العالم",
       image: heroVideo,
@@ -113,21 +113,21 @@ const PremiumHeroSection = () => {
           {/* Left Content */}
           <div className="text-primary-foreground space-y-8 animate-fade-in">
             {/* Premium Badge */}
-            <div className="inline-flex items-center gap-2 bg-teal-500/20 backdrop-blur-sm px-6 py-3 rounded-full border border-teal-400/30">
-              <Sparkles className="w-5 h-5 text-teal-400" />
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20">
+              <Plane className="w-5 h-5 text-teal-400" />
               <span className="text-sm font-medium">منصة السفر الأكثر ثقة في السعودية</span>
-              <Award className="w-5 h-5 text-cyan-400" />
+              <Shield className="w-5 h-5 text-cyan-400" />
             </div>
 
             {/* Main Title */}
             <div>
               <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-4">
-                {currentData.title}
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 animate-shimmer">
+                {currentData.title}{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 animate-shimmer">
                   {currentData.highlight}
                 </span>
                 {currentData.subtitle && (
-                  <span className="block text-4xl md:text-6xl">{currentData.subtitle}</span>
+                  <span> {currentData.subtitle}</span>
                 )}
               </h1>
               <p className="text-xl md:text-2xl text-primary-foreground/80 max-w-xl">
@@ -140,9 +140,9 @@ const PremiumHeroSection = () => {
               <Link to="/destinations">
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white px-8 py-6 text-lg rounded-full shadow-[0_8px_30px_rgba(20,184,166,0.4)] group"
+                  className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border border-white/30 px-8 py-6 text-lg rounded-full shadow-lg group transition-all"
                 >
-                  <Sparkles className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
+                  <Plane className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
                   اكتشف الوجهات
                   <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
                 </Button>
@@ -151,7 +151,7 @@ const PremiumHeroSection = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-6 text-lg rounded-full backdrop-blur-sm"
+                className="bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 px-8 py-6 text-lg rounded-full shadow-lg transition-all"
                 onClick={() => setIsVideoPlaying(true)}
               >
                 <Play className="w-5 h-5 ml-2 fill-current" />
@@ -230,15 +230,33 @@ const PremiumHeroSection = () => {
         </div>
       </div>
 
-      {/* Video Modal (placeholder) */}
+      {/* Video Modal */}
       {isVideoPlaying && (
         <div 
-          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
+          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-fade-in"
           onClick={() => setIsVideoPlaying(false)}
         >
-          <div className="text-white text-center">
-            <p className="text-2xl mb-4">سيتم إضافة الفيديو هنا</p>
-            <Button onClick={() => setIsVideoPlaying(false)}>إغلاق</Button>
+          <button
+            onClick={() => setIsVideoPlaying(false)}
+            className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all z-10"
+            title="إغلاق"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div 
+            className="w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/LUCM2Sk0J6M?autoplay=1&rel=0"
+              title="فيديو ترافليون"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            />
           </div>
         </div>
       )}

@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Auth
 import { AuthProvider } from "@/hooks/useAuth";
 import { NavigationProvider } from "@/contexts/NavigationContext";
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 // Loading Component
@@ -107,6 +108,13 @@ const AdminOfferEdit = lazy(() => import("./pages/admin/OfferEdit"));
 const AdminSoutheastAsiaCountries = lazy(() => import("./pages/admin/SoutheastAsiaCountries"));
 const AdminSoutheastAsiaCities = lazy(() => import("./pages/admin/SoutheastAsiaCities"));
 const AdminSeedPrograms = lazy(() => import("./pages/admin/SeedPrograms"));
+const AdminServices = lazy(() => import("./pages/admin/Services"));
+const AdminServiceForm = lazy(() => import("./pages/admin/ServiceForm"));
+const AdminHoneymoon = lazy(() => import("./pages/admin/HoneymoonAdmin"));
+const AdminHoneymoonPackageForm = lazy(() => import("./pages/admin/HoneymoonPackageForm"));
+const AdminHomepage = lazy(() => import("./pages/admin/HomepageAdmin"));
+const AdminBlog = lazy(() => import("./pages/admin/BlogAdmin"));
+const AdminBlogArticleForm = lazy(() => import("./pages/admin/BlogArticleForm"));
 
 // Components
 import AIChat from "./components/AIChat";
@@ -119,6 +127,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <NavigationProvider>
+        <FavoritesProvider>
         <TooltipProvider>
           <Sonner />
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -221,6 +230,16 @@ const App = () => (
                 <Route path="southeast-asia-countries" element={<AdminSoutheastAsiaCountries />} />
                 <Route path="seed-programs" element={<AdminSeedPrograms />} />
                 <Route path="southeast-asia-cities" element={<AdminSoutheastAsiaCities />} />
+                <Route path="services" element={<AdminServices />} />
+                <Route path="services/new" element={<AdminServiceForm />} />
+                <Route path="services/edit/:id" element={<AdminServiceForm />} />
+                <Route path="honeymoon" element={<AdminHoneymoon />} />
+                <Route path="honeymoon/packages/new" element={<AdminHoneymoonPackageForm />} />
+                <Route path="honeymoon/packages/edit/:id" element={<AdminHoneymoonPackageForm />} />
+                <Route path="homepage" element={<AdminHomepage />} />
+                <Route path="blog" element={<AdminBlog />} />
+                <Route path="blog/new" element={<AdminBlogArticleForm />} />
+                <Route path="blog/edit/:id" element={<AdminBlogArticleForm />} />
               </Route>
 
               {/* 404 */}
@@ -229,6 +248,7 @@ const App = () => (
           </Suspense>
         </BrowserRouter>
       </TooltipProvider>
+      </FavoritesProvider>
     </NavigationProvider>
     </AuthProvider>
   </QueryClientProvider>

@@ -11,6 +11,8 @@ import SectionTitle from "@/components/ui/SectionTitle";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { toast } from "sonner";
 
 const programTypes = [
   { id: "all", name: "الكل", icon: "📋" },
@@ -57,6 +59,7 @@ const Programs = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [programs, setPrograms] = useState<ProgramFromDB[]>([]);
   const [loading, setLoading] = useState(true);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     loadPrograms();
@@ -222,6 +225,24 @@ const Programs = () => {
                           خصم {discount}%
                         </div>
                       )}
+
+                      {/* Favorite Button */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleFavorite({ id: program.id, type: 'offer', nameAr: program.name_ar, image: program.cover_image || undefined, price: program.base_price || program.price || 0, destination: program.destination?.name_ar || (program.countries || []).join('، ') });
+                          toast(isFavorite(program.id, 'offer') ? `تمت إزالة البرنامج من المفضلة` : `تمت إضافة البرنامج إلى المفضلة ❤️`);
+                        }}
+                        className={cn(
+                          "absolute w-10 h-10 rounded-full flex items-center justify-center transition-all z-10",
+                          discount > 0 ? "top-14 left-4" : "top-4 left-4",
+                          isFavorite(program.id, 'offer') ? 'bg-red-500 text-white scale-110' : 'bg-white/20 backdrop-blur-md text-white hover:bg-red-500'
+                        )}
+                        title="إضافة للمفضلة"
+                      >
+                        <Heart className={cn("w-4 h-4", isFavorite(program.id, 'offer') && 'fill-current')} />
+                      </button>
 
                       {/* Duration */}
                       <div className="absolute bottom-4 right-4 glass-dark rounded-lg px-3 py-1 flex items-center gap-2">

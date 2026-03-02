@@ -6,6 +6,8 @@ import MobileNav from "@/components/MobileNav";
 import PremiumFooter from "@/components/PremiumFooter";
 import LeafletMap from "@/components/maps/LeafletMap";
 import { City, Country, getCountryById, getCityById } from "@/data/destinations-data";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { toast } from "sonner";
 import { 
   Calendar,
   Thermometer,
@@ -32,8 +34,41 @@ interface CityTemplateProps {
 
 const CityTemplate = ({ city, country }: CityTemplateProps) => {
   const navigate = useNavigate();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [activeTab, setActiveTab] = useState<'attractions' | 'highlights' | 'tips'>('attractions');
   const [likedAttractions, setLikedAttractions] = useState<Set<number>>(new Set());
+
+  const cityIsFavorite = isFavorite(city.id, 'city');
+
+  const handleToggleFavorite = () => {
+    toggleFavorite({
+      id: city.id,
+      type: 'city',
+      countryId: country.id,
+      nameAr: city.nameAr,
+      image: city.image,
+    });
+    toast(cityIsFavorite ? `تمت إزالة ${city.nameAr} من المفضلة` : `تمت إضافة ${city.nameAr} إلى المفضلة ❤️`);
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    const text = `${city.nameAr} - ${country.nameAr} | ترافليون للسياحة`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: text, url });
+      } catch { /* user cancelled */ }
+    } else {
+      await navigator.clipboard.writeText(url);
+      toast('تم نسخ رابط الصفحة! 📋');
+    }
+  };
+
+  const handleNavigate = () => {
+    const lat = city.coordinates.lat;
+    const lng = city.coordinates.lng;
+    window.open(`https://www.google.com/maps/@${lat},${lng},12z`, '_blank');
+  };
 
   const toggleLike = (index: number) => {
     const newLiked = new Set(likedAttractions);
@@ -103,10 +138,7 @@ const CityTemplate = ({ city, country }: CityTemplateProps) => {
           <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-3 md:mb-4 animate-fade-in-up px-4" style={{ animationDelay: '0.1s' }}>
             {city.nameAr}
           </h1>
-          <p className="text-xl md:text-2xl lg:text-3xl text-white/70 font-light mb-4 md:mb-6 animate-fade-in-up px-4" style={{ animationDelay: '0.2s' }}>
-            {city.nameEn}
-          </p>
-          <p className="text-base md:text-lg lg:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed animate-fade-in-up px-4" style={{ animationDelay: '0.3s' }}>
+          <p className="text-base md:text-lg lg:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed animate-fade-in-up px-4" style={{ animationDelay: '0.2s' }}>
             {city.description}
           </p>
 
@@ -131,13 +163,53 @@ const CityTemplate = ({ city, country }: CityTemplateProps) => {
                 <p className="text-white/90 text-sm md:text-base font-semibold leading-snug">{city.averageTemp}</p>
               </div>
 
-              {/* Accommodation */}
+              {/* City Tags */}
               <div className="text-center">
                 <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mb-2 md:mb-3 mx-auto shadow-lg">
-                  <Hotel className="w-6 h-6 md:w-7 md:h-7 text-white" />
+                  <Sparkles className="w-6 h-6 md:w-7 md:h-7 text-white" />
                 </div>
-                <h3 className="text-white font-bold text-xs md:text-sm mb-1 md:mb-2">الإقامة</h3>
-                <p className="text-white/90 text-sm md:text-base font-semibold leading-snug">{city.accommodation}</p>
+                <h3 className="text-white font-bold text-xs md:text-sm mb-1 md:mb-2">مميزات</h3>
+                <p className="text-white/90 text-sm md:text-base font-semibold leading-snug">
+                  {(() => {
+                    const cityTags: Record<string, string> = {
+                      'bangkok': 'تسوق • حياة ليلية • ثقافة',
+                      'phuket': 'شواطئ • غوص • طبيعة',
+                      'chiang-mai': 'معابد • طبيعة • هدوء',
+                      'pattaya': 'ترفيه • شواطئ • مغامرة',
+                      'kuala-lumpur': 'تنوع • تسوق • عمارة',
+                      'langkawi': 'جزر • طبيعة • رومانسية',
+                      'penang': 'تراث • فنون • مأكولات',
+                      'genting': 'ترفيه • برودة • مغامرة',
+                      'kota-kinabalu': 'جبال • غوص • طبيعة',
+                      'bali': 'روحانية • طبيعة • جمال',
+                      'jakarta': 'تنوع • تاريخ • حداثة',
+                      'yogyakarta': 'تراث • معابد • ثقافة',
+                      'medan': 'طبيعة • بحيرات • تنوع',
+                      'hanoi': 'تاريخ • ثقافة • مأكولات',
+                      'ho-chi-minh': 'حيوية • تاريخ • تسوق',
+                      'da-nang': 'شواطئ • جسور • طبيعة',
+                      'ha-long-bay': 'خلجان • طبيعة • سحر',
+                      'manila': 'تنوع • تاريخ • حيوية',
+                      'cebu': 'شواطئ • غوص • مغامرة',
+                      'boracay': 'شواطئ • رمال • جمال',
+                      'palawan': 'جزر • طبيعة • صفاء',
+                      'singapore-city': 'حداثة • نظافة • تنوع',
+                      'istanbul': 'تاريخ • ثقافة • جمال',
+                      'trabzon': 'طبيعة • خضرة • هدوء',
+                      'antalya': 'شواطئ • تاريخ • فخامة',
+                      'bursa': 'طبيعة • تلفريك • تاريخ',
+                      'cappadocia': 'مناطيد • صخور • سحر',
+                      'pamukkale': 'ينابيع • طبيعة • جمال',
+                      'sapanca': 'بحيرة • هدوء • رومانسية',
+                      'fethiye': 'خلجان • طيران • طبيعة',
+                      'marmaris': 'بحر • يخوت • ترفيه',
+                      'bodrum': 'فخامة • بحر • حيوية',
+                      'konya': 'روحانية • تاريخ • ثقافة',
+                      'rize': 'شاي • طبيعة • خضرة',
+                    };
+                    return cityTags[city.id] || 'تنوع • جمال • ثقافة';
+                  })()}
+                </p>
               </div>
 
               {/* Attractions */}
@@ -154,30 +226,26 @@ const CityTemplate = ({ city, country }: CityTemplateProps) => {
           {/* Action Buttons */}
           <div className="mt-5 md:mt-6 flex gap-3 md:gap-4 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
             <button 
-              className="w-12 h-12 md:w-14 md:h-14 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-all"
+              onClick={handleToggleFavorite}
+              className={`w-12 h-12 md:w-14 md:h-14 backdrop-blur-md rounded-full flex items-center justify-center transition-all ${cityIsFavorite ? 'bg-red-500 text-white scale-110' : 'bg-white/10 text-white hover:bg-red-500'}`}
               title="إضافة إلى المفضلة"
             >
-              <Heart className="w-5 h-5 md:w-6 md:h-6" />
+              <Heart className={`w-5 h-5 md:w-6 md:h-6 ${cityIsFavorite ? 'fill-current' : ''}`} />
             </button>
             <button 
+              onClick={handleShare}
               className="w-12 h-12 md:w-14 md:h-14 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-blue-500 transition-all"
               title="مشاركة"
             >
               <Share2 className="w-5 h-5 md:w-6 md:h-6" />
             </button>
             <button 
+              onClick={handleNavigate}
               className="w-12 h-12 md:w-14 md:h-14 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-emerald-500 transition-all"
-              title="التنقل"
+              title="فتح في خرائط قوقل"
             >
               <Navigation className="w-5 h-5 md:w-6 md:h-6" />
             </button>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-slow">
-          <div className="w-8 h-12 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
-            <div className="w-1.5 h-3 bg-white/50 rounded-full animate-scroll-down" />
           </div>
         </div>
       </section>
@@ -361,10 +429,9 @@ const CityTemplate = ({ city, country }: CityTemplateProps) => {
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
                   </div>
                   <div className="p-5">
-                    <h3 className="text-xl font-bold text-white mb-1 group-hover:text-purple-400 transition-colors">
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">
                       {otherCity.nameAr}
                     </h3>
-                    <p className="text-white/50 text-sm mb-3">{otherCity.nameEn}</p>
                     <div className="flex items-center text-purple-400 text-sm font-medium">
                       <span>استكشف المدينة</span>
                       <ArrowRight className="w-4 h-4 mr-2 group-hover:mr-4 transition-all" />

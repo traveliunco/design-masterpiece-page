@@ -60,13 +60,13 @@ export default function GlobePage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-slate-900 pb-20 md:pb-0">
       <Nav3D />
       
-      <main className="pt-20">
+      <main className="pt-16 md:pt-20">
         {/* Hero Header with Inline Distance Calculator */}
-        <section className="relative py-3 px-4 border-b border-white/10">
-          <div className="container relative z-10 flex items-center justify-between gap-4 flex-wrap">
+        <section className="relative py-2 md:py-3 px-3 md:px-4 border-b border-white/10">
+          <div className="container relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-4">
             {/* Title */}
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-teal-500/20 rounded-full flex items-center justify-center">
@@ -80,7 +80,7 @@ export default function GlobePage() {
             </div>
             
             {/* Inline Distance Calculator */}
-            <div className="flex items-center gap-2 bg-white/5 backdrop-blur-sm rounded-lg p-2 border border-white/10 flex-1 max-w-xl">
+            <div className="flex items-center gap-2 bg-white/5 backdrop-blur-sm rounded-lg p-2 border border-white/10 w-full md:flex-1 md:max-w-xl">
               <Plane className="w-4 h-4 text-teal-400" />
               <select
                 value={selectedAirport?.code || 'RUH'}
@@ -121,10 +121,10 @@ export default function GlobePage() {
         </section>
 
         {/* Main Content */}
-        <section className="container px-4 pb-12">
-          <div className="grid lg:grid-cols-4 gap-4">
-            {/* Sidebar - Compact */}
-            <div className="lg:col-span-1 space-y-3 order-2 lg:order-1">
+        <section className="container px-3 md:px-4 pb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 md:gap-4">
+            {/* Sidebar - Horizontal scroll on mobile, vertical on desktop */}
+            <div className="lg:col-span-1 order-2 lg:order-1">
               {/* Search - Compact */}
               <div className="relative">
                 <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -137,19 +137,19 @@ export default function GlobePage() {
                 />
               </div>
 
-              {/* Countries List - Compact */}
-              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-                <h3 className="text-white text-sm font-bold mb-2 flex items-center gap-1.5">
+              {/* Countries List - Horizontal scroll on mobile */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/10 mt-2 lg:mt-0">
+                <h3 className="text-white text-sm font-bold mb-2 flex items-center gap-1.5 px-1">
                   <MapPin className="w-3.5 h-3.5 text-teal-400" />
                   الوجهات ({filteredCountries.length})
                 </h3>
-                <div className="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
+                <div className="flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-y-auto lg:max-h-40 hide-scrollbar">
                   {filteredCountries.map((country) => (
                     <button
                       key={country.id}
                       onClick={() => handleCountrySelect(country)}
                       className={cn(
-                        "w-full flex items-center gap-2 p-2 rounded-lg transition-all text-right",
+                        "flex-shrink-0 flex items-center gap-2 p-2 rounded-lg transition-all text-right whitespace-nowrap",
                         selectedCountry?.id === country.id
                           ? "bg-teal-500/30 border border-teal-500/50"
                           : "bg-white/5 hover:bg-white/10 border border-transparent"
@@ -173,11 +173,11 @@ export default function GlobePage() {
               </div>
             </div>
 
-            {/* Globe Area - Takes 3/4 of screen */}
+            {/* Globe Area */}
             <div className="lg:col-span-3 order-1 lg:order-2">
               <div className="relative">
-                {/* 3D Globe - Larger and more prominent */}
-                <div className="aspect-[16/10] lg:aspect-[16/9] rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-teal-500/10">
+                {/* 3D Globe */}
+                <div className="aspect-square md:aspect-[16/10] lg:aspect-[16/9] rounded-xl md:rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-teal-500/10">
                   <Suspense fallback={
                     <div className="w-full h-full flex items-center justify-center bg-slate-800">
                       <div className="text-center">
@@ -197,7 +197,7 @@ export default function GlobePage() {
 
                 {/* Info Panel */}
                 {showInfo && (
-                  <div className="absolute top-4 left-4 bg-slate-800/90 backdrop-blur-sm rounded-lg p-3 text-white/80 text-sm max-w-xs border border-white/10">
+                  <div className="absolute top-2 left-2 md:top-4 md:left-4 bg-slate-800/90 backdrop-blur-sm rounded-lg p-2 md:p-3 text-white/80 text-xs md:text-sm max-w-[200px] md:max-w-xs border border-white/10">
                     <button 
                       onClick={() => setShowInfo(false)}
                       className="absolute top-2 left-2 text-white/50 hover:text-white"
@@ -220,7 +220,7 @@ export default function GlobePage() {
 
                 {/* Selected Country/City Card */}
                 {selectedCountry && !selectedCity && (
-                  <div className="absolute top-4 right-4 w-80 max-h-[calc(100%-2rem)] overflow-y-auto">
+                  <div className="relative mt-3 md:absolute md:top-4 md:right-4 w-full md:w-80 max-h-[60vh] md:max-h-[calc(100%-2rem)] overflow-y-auto">
                     <CountryCard
                       country={selectedCountry}
                       onClose={handleCloseCards}
@@ -230,7 +230,7 @@ export default function GlobePage() {
                 )}
 
                 {selectedCity && selectedCountry && (
-                  <div className="absolute top-4 right-4 w-80 max-h-[calc(100%-2rem)] overflow-y-auto">
+                  <div className="relative mt-3 md:absolute md:top-4 md:right-4 w-full md:w-80 max-h-[60vh] md:max-h-[calc(100%-2rem)] overflow-y-auto">
                     <CityCard
                       city={selectedCity}
                       country={selectedCountry}
@@ -242,17 +242,17 @@ export default function GlobePage() {
               </div>
 
               {/* Quick Stats */}
-              <div className="grid grid-cols-4 gap-4 mt-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mt-4 md:mt-6">
                 {[
                   { icon: Globe, label: 'دول', value: southeastAsiaCountries.length },
                   { icon: MapPin, label: 'مدن', value: southeastAsiaCountries.reduce((acc, c) => acc + c.cities.length, 0) },
                   { icon: Plane, label: 'مطارات', value: '20+' },
                   { icon: Star, label: 'برامج', value: '100+' },
                 ].map((stat, idx) => (
-                  <div key={idx} className="bg-white/5 backdrop-blur-sm rounded-xl p-4 text-center border border-white/10">
-                    <stat.icon className="w-6 h-6 text-teal-400 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-white">{stat.value}</p>
-                    <p className="text-xs text-gray-400">{stat.label}</p>
+                  <div key={idx} className="bg-white/5 backdrop-blur-sm rounded-xl p-3 md:p-4 text-center border border-white/10">
+                    <stat.icon className="w-5 h-5 md:w-6 md:h-6 text-teal-400 mx-auto mb-1 md:mb-2" />
+                    <p className="text-lg md:text-2xl font-bold text-white">{stat.value}</p>
+                    <p className="text-[10px] md:text-xs text-gray-400">{stat.label}</p>
                   </div>
                 ))}
               </div>

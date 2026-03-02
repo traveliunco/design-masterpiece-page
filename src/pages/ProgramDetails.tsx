@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Calendar, Users, MapPin, Star, Check, X, Phone, ArrowRight, Clock, Shield, Plane, Hotel, Globe, Loader2, Camera, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, Users, MapPin, Star, Check, X, Phone, ArrowRight, Clock, Shield, Plane, Hotel, Globe, Loader2, Camera, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageLayout from "@/layouts/PageLayout";
 import { useSEO } from "@/hooks/useSEO";
@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { useFavorites } from "@/contexts/FavoritesContext";
 
 interface ProgramData {
   id: string;
@@ -53,6 +54,7 @@ const ProgramDetails = () => {
   const [loading, setLoading] = useState(true);
   const [travelers, setTravelers] = useState({ adults: 2, children: 0 });
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     if (id) loadProgram(id);
@@ -148,6 +150,21 @@ const ProgramDetails = () => {
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/95 via-luxury-navy/60 to-transparent" />
+
+        {/* Favorite Button on Hero */}
+        <button
+          onClick={() => {
+            toggleFavorite({ id: program.id, type: 'offer', nameAr: program.name_ar, image: program.cover_image || undefined, price: program.base_price || program.price || 0, destination: program.destination?.name_ar || (program.countries || []).join('، ') });
+            toast(isFavorite(program.id, 'offer') ? `تمت إزالة البرنامج من المفضلة` : `تمت إضافة البرنامج إلى المفضلة ❤️`);
+          }}
+          className={cn(
+            "absolute top-24 left-6 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-lg",
+            isFavorite(program.id, 'offer') ? 'bg-red-500 text-white scale-110' : 'bg-white/20 backdrop-blur-md text-white hover:bg-red-500 hover:scale-105'
+          )}
+          title="إضافة للمفضلة"
+        >
+          <Heart className={cn("w-5 h-5", isFavorite(program.id, 'offer') && 'fill-current')} />
+        </button>
         
         <div className="absolute bottom-0 left-0 right-0 pb-16 z-10">
           <div className="container px-4">

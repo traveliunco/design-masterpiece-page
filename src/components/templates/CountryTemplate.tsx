@@ -39,11 +39,9 @@ const CountryTemplate = ({ country }: CountryTemplateProps) => {
   // Quick info cards data
   const quickInfo = [
     { icon: DollarSign, label: "العملة", value: country.currency, color: "from-green-500 to-emerald-600" },
-    { icon: Globe, label: "اللغة", value: country.language, color: "from-blue-500 to-indigo-600" },
     { icon: Plane, label: "التأشيرة", value: country.visa, color: "from-purple-500 to-violet-600" },
     { icon: Calendar, label: "أفضل موسم", value: country.bestSeason, color: "from-amber-500 to-orange-600" },
     { icon: Sun, label: "المناخ", value: country.climate, color: "from-cyan-500 to-blue-600" },
-    { icon: Clock, label: "مدة الرحلة", value: country.tripDuration, color: "from-rose-500 to-pink-600" },
   ];
 
   return (
@@ -95,9 +93,6 @@ const CountryTemplate = ({ country }: CountryTemplateProps) => {
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 tracking-tight">
               {country.nameAr}
             </h1>
-            <p className="text-2xl md:text-3xl text-white/80 font-light mb-6">
-              {country.nameEn}
-            </p>
             <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
               {country.description}
             </p>
@@ -122,20 +117,13 @@ const CountryTemplate = ({ country }: CountryTemplateProps) => {
               </div>
             </div>
           </div>
-
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce-slow">
-            <div className="w-8 h-12 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
-              <div className="w-1.5 h-3 bg-white/50 rounded-full animate-scroll-down" />
-            </div>
-          </div>
         </div>
       </section>
 
       {/* Quick Info Cards */}
       <section className="relative -mt-20 z-20 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-3xl mx-auto">
             {quickInfo.map((info, index) => (
               <div
                 key={info.label}
@@ -241,10 +229,9 @@ const CountryTemplate = ({ country }: CountryTemplateProps) => {
                   {/* City Name */}
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-xl md:text-2xl font-bold text-white mb-1 group-hover:text-amber-400 transition-colors truncate">
+                      <h3 className="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors truncate">
                         {city.nameAr}
                       </h3>
-                      <p className="text-white/50 text-sm">{city.nameEn}</p>
                     </div>
                     <div className="flex items-center gap-1 bg-amber-500/20 px-2.5 py-1.5 rounded-lg flex-shrink-0">
                       <Star className="w-4 h-4 fill-amber-400 text-amber-400" />

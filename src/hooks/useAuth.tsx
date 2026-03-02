@@ -2,16 +2,23 @@ import { useState, useEffect, useContext, createContext, ReactNode } from "react
 import { User, Session, AuthError } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
+export type UserRole = "admin" | "employee" | "agent" | "customer" | null;
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  userRole: UserRole;
+  isAdmin: () => boolean;
+  isEmployee: () => boolean;
+  isStaff: () => boolean;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signUp: (email: string, password: string, metadata?: { firstName?: string; lastName?: string; phone?: string }) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<{ error: AuthError | null }>;
   resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
   updatePassword: (newPassword: string) => Promise<{ error: AuthError | null }>;
+  refreshRole: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,12 +27,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState<UserRole>(null);
+
+  // Fetch user role from the users table
+  const fetchUserRole = async (userId: string): Promise<UserRole> => {
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("role")
+        .eq("id", userId)
+        .single();
+
+      if (error || !data) return null;
+      return (data.role as UserRole) || "customer";
+    } catch {
+      return null;
+    }
+  };
+
+  const refreshRole = async () => {
+    if (user) {
+      const role = await fetchUserRole(user.id);
+      setUserRole(role);
+    }
+  };
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      if (session?.user) {
+        const role = await fetchUserRole(session.user.id);
+        setUserRole(role);
+      }
       setLoading(false);
     });
 
@@ -34,27 +69,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        setLoading(false);
 
-        // Handle specific events
-        if (event === "SIGNED_IN") {
-          console.log("User signed in:", session?.user?.email);
+        if (event === "SIGNED_IN" && session?.user) {
+          const role = await fetchUserRole(session.user.id);
+          setUserRole(role);
         } else if (event === "SIGNED_OUT") {
-          console.log("User signed out");
-        } else if (event === "PASSWORD_RECOVERY") {
-          console.log("Password recovery initiated");
+          setUserRole(null);
         }
+
+        setLoading(false);
       }
     );
 
     return () => subscription.unsubscribe();
   }, []);
 
+  const isAdmin = () => userRole === "admin";
+  const isEmployee = () => userRole === "employee";
+  const isStaff = () => userRole === "admin" || userRole === "employee" || userRole === "agent";
+
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error };
   };
 
@@ -80,6 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    setUserRole(null);
   };
 
   const signInWithGoogle = async () => {
@@ -112,12 +148,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         session,
         loading,
+        userRole,
+        isAdmin,
+        isEmployee,
+        isStaff,
         signIn,
         signUp,
         signOut,
         signInWithGoogle,
         resetPassword,
         updatePassword,
+        refreshRole,
       }}
     >
       {children}

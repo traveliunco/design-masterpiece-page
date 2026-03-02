@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { 
   Search, Bell, User, Plane, Building2, MapPin, Car,
@@ -89,9 +89,6 @@ const popularDestinations = [
 
 // أزرار الخدمات السريعة
 const quickActions = [
-  { icon: Plane, label: "طيران", path: "/amadeus-flights", color: "bg-gradient-to-br from-blue-500 to-cyan-500" },
-  { icon: Building2, label: "فنادق", path: "/hotels", color: "bg-gradient-to-br from-teal-500 to-emerald-500" },
-  { icon: MapPin, label: "جولات", path: "/programs", color: "bg-gradient-to-br from-cyan-500 to-blue-500" },
   // { icon: Car, label: "سيارات", path: "/car-rental", color: "bg-gradient-to-br from-emerald-500 to-teal-500" }, /* HIDDEN */
   // { icon: Globe, label: "تأشيرات", path: "/visas", color: "bg-gradient-to-br from-blue-600 to-indigo-500" }, /* HIDDEN */
   { icon: CreditCard, label: "تقسيط", path: "/tabby", color: "bg-gradient-to-br from-teal-600 to-cyan-500" },
@@ -110,6 +107,15 @@ const features = [
 const MobileHomePage = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [destSlideIndex, setDestSlideIndex] = useState(0);
+
+  // Auto-slide destinations
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDestSlideIndex(prev => (prev + 1) % popularDestinations.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
   useSEO({
     title: "ترافليون - احجز رحلتك بسهولة | فنادق، طيران، جولات",
@@ -238,9 +244,9 @@ const MobileHomePage = () => {
           </div>
         </section>
 
-        {/* Popular Destinations */}
-        <section className="px-4 py-5">
-          <div className="flex items-center justify-between mb-4">
+        {/* Popular Destinations - Auto Slider */}
+        <section className="py-5">
+          <div className="flex items-center justify-between mb-4 px-4">
             <h2 className="text-lg font-bold text-gray-900">الوجهات الأكثر شعبية</h2>
             <Link to="/destinations" className="text-sm text-primary font-medium flex items-center gap-1">
               عرض الكل
@@ -248,31 +254,50 @@ const MobileHomePage = () => {
             </Link>
           </div>
 
-          <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar snap-x snap-mandatory">
-            {popularDestinations.map((dest) => (
-              <Link
-                key={dest.id}
-                to={`/country/${dest.countrySlug}/city/${dest.slug}`}
-                className="flex-shrink-0 w-[160px] rounded-2xl bg-white shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 snap-start group"
-              >
-                <div className="relative h-[120px] overflow-hidden">
-                  <img
-                    src={dest.image}
-                    alt={dest.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  <div className="absolute top-2 right-2 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full flex items-center gap-1">
-                    <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                    <span className="text-xs font-medium">{dest.rating}</span>
+          <div className="relative overflow-hidden">
+            <div 
+              className="flex transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(${destSlideIndex * 170}px)` }}
+            >
+              {popularDestinations.map((dest) => (
+                <Link
+                  key={dest.id}
+                  to={`/country/${dest.countrySlug}/city/${dest.slug}`}
+                  className="flex-shrink-0 w-[160px] mx-[5px] rounded-2xl bg-white shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 group"
+                >
+                  <div className="relative h-[120px] overflow-hidden">
+                    <img
+                      src={dest.image}
+                      alt={dest.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-2 right-2 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full flex items-center gap-1">
+                      <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
+                      <span className="text-xs font-medium">{dest.rating}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="p-3">
-                  <h3 className="font-bold text-gray-900">{dest.name}</h3>
-                  <p className="text-xs text-gray-500">{dest.country}</p>
-                  <p className="text-sm font-bold text-primary mt-1">{dest.price}</p>
-                </div>
-              </Link>
+                  <div className="p-3">
+                    <h3 className="font-bold text-gray-900">{dest.name}</h3>
+                    <p className="text-xs text-gray-500">{dest.country}</p>
+                    <p className="text-sm font-bold text-primary mt-1">{dest.price}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+          {/* Slide Indicators */}
+          <div className="flex justify-center gap-1.5 mt-3">
+            {popularDestinations.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setDestSlideIndex(i)}
+                className={cn(
+                  "h-1.5 rounded-full transition-all duration-300",
+                  i === destSlideIndex ? "bg-primary w-5" : "bg-gray-300 w-1.5"
+                )}
+                aria-label={`الشريحة ${i + 1}`}
+              />
             ))}
           </div>
         </section>

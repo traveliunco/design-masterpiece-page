@@ -26,7 +26,7 @@ const IndexPremium = () => {
         <PremiumHeroSection />
 
         {/* Animated Marquee Banner - Gold Theme */}
-        <MarqueeBanner speed="normal" direction="left" />
+        <MarqueeBanner />
 
         {/* Why Choose Us Section */}
         <WhyChooseUs />
@@ -34,10 +34,8 @@ const IndexPremium = () => {
         {/* Interactive Destinations with 3D Effects */}
         <InteractiveDestinations />
 
-        {/* Second Marquee - Teal Theme, Opposite Direction */}
+        {/* Second Marquee - Teal Theme */}
         <MarqueeBanner 
-          speed="slow" 
-          direction="right" 
           className="bg-gradient-to-r from-primary via-teal-600 to-primary" 
         />
 

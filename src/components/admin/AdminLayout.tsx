@@ -21,6 +21,9 @@ import {
   FileText,
   Star,
   Bot,
+  Briefcase,
+  Heart,
+  Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,11 +36,13 @@ type NavItem = {
   icon: React.ElementType;
   badge?: number;
   children?: { name: string; path: string }[];
+  allowedRoles?: string[]; // undefined = admin only, ['all'] = everyone
 };
 
 const navItems: NavItem[] = [
-  { name: "لوحة التحكم", path: "/admin", icon: LayoutDashboard },
-  { name: "الحجوزات", path: "/admin/bookings", icon: CalendarCheck, badge: 5 },
+  { name: "لوحة التحكم", path: "/admin", icon: LayoutDashboard, allowedRoles: ["all"] },
+  { name: "الصفحة الرئيسية", path: "/admin/homepage", icon: Home },
+  { name: "الحجوزات", path: "/admin/bookings", icon: CalendarCheck, badge: 5, allowedRoles: ["all"] },
   { 
     name: "الوجهات", 
     path: "/admin/destinations", 
@@ -51,6 +56,7 @@ const navItems: NavItem[] = [
     name: "البرامج", 
     path: "/admin/programs", 
     icon: Plane,
+    allowedRoles: ["all"],
     children: [
       { name: "جميع البرامج", path: "/admin/programs" },
       { name: "إضافة برنامج", path: "/admin/programs/new" },
@@ -58,13 +64,39 @@ const navItems: NavItem[] = [
   },
   { name: "الرحلات", path: "/admin/flights", icon: Plane },
   { name: "الفنادق", path: "/admin/hotels", icon: Hotel },
-  { name: "العروض", path: "/admin/offers", icon: Tag },
+  { name: "العروض", path: "/admin/offers", icon: Tag, allowedRoles: ["all"] },
+  { 
+    name: "الخدمات", 
+    path: "/admin/services", 
+    icon: Briefcase,
+    children: [
+      { name: "جميع الخدمات", path: "/admin/services" },
+      { name: "إضافة خدمة", path: "/admin/services/new" },
+    ]
+  },
+  { 
+    name: "شهر العسل", 
+    path: "/admin/honeymoon", 
+    icon: Heart,
+    children: [
+      { name: "إدارة الصفحة", path: "/admin/honeymoon" },
+      { name: "إضافة باقة", path: "/admin/honeymoon/packages/new" },
+    ]
+  },
   { name: "المدفوعات", path: "/admin/payments", icon: CreditCard },
   { name: "التقييمات", path: "/admin/reviews", icon: Star },
   { name: "المستخدمين", path: "/admin/users", icon: Users },
   { name: "الرسائل", path: "/admin/messages", icon: MessageSquare, badge: 3 },
   { name: "التقارير", path: "/admin/reports", icon: BarChart3 },
-  { name: "المقالات", path: "/admin/articles", icon: FileText },
+  { 
+    name: "المدونة", 
+    path: "/admin/blog", 
+    icon: FileText,
+    children: [
+      { name: "جميع المقالات", path: "/admin/blog" },
+      { name: "إضافة مقالة", path: "/admin/blog/new" },
+    ]
+  },
   { name: "الذكاء الاصطناعي", path: "/admin/ai-settings", icon: Bot },
   { name: "الإعدادات", path: "/admin/settings", icon: Settings },
 ];
@@ -72,10 +104,24 @@ const navItems: NavItem[] = [
 const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, signOut, userRole, isAdmin } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+
+  // Filter nav items based on user role
+  const filteredNavItems = navItems.filter((item) => {
+    if (isAdmin()) return true; // admin sees everything
+    if (!item.allowedRoles) return false; // no allowedRoles = admin only
+    return item.allowedRoles.includes("all") || item.allowedRoles.includes(userRole || "");
+  });
+
+  const getRoleBadge = () => {
+    if (userRole === "admin") return { label: "مدير", color: "bg-red-500" };
+    if (userRole === "employee") return { label: "موظف", color: "bg-blue-500" };
+    if (userRole === "agent") return { label: "وكيل", color: "bg-purple-500" };
+    return { label: "عميل", color: "bg-green-500" };
+  };
 
   const handleLogout = async () => {
     await signOut();
@@ -112,7 +158,7 @@ const AdminLayout = () => {
           {sidebarOpen && (
             <Link to="/admin" className="flex items-center gap-2">
               <span className="text-xl font-bold text-primary">ترافليون</span>
-              <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Admin</span>
+              <span className={`text-xs text-white px-2 py-0.5 rounded ${getRoleBadge().color}`}>{getRoleBadge().label}</span>
             </Link>
           )}
           <Button
@@ -127,7 +173,7 @@ const AdminLayout = () => {
 
         {/* Navigation */}
         <nav className="p-4 space-y-1 overflow-y-auto h-[calc(100vh-8rem)]">
-          {navItems.map((item) => (
+          {filteredNavItems.map((item) => (
             <div key={item.name}>
               {item.children ? (
                 <>

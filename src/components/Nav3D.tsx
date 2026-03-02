@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { useNavigate } from "react-router-dom";
 
 // Mega Menu Data
 const megaMenuItems = {
@@ -112,7 +114,10 @@ const megaMenuItems = {
 const Nav3D = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { isMobileMenuOpen, setIsMobileMenuOpen } = useNavigation();
+  const { favorites, favoriteCities, favoriteDestinations, favoriteOffers, favoritesCount, destinationsCount, offersCount, citiesCount, removeFavorite } = useFavorites();
+  const navigateRouter = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [showFavPanel, setShowFavPanel] = useState<'cities' | 'destinations' | 'offers' | null>(null);
   const [language, setLanguage] = useState<'ar' | 'en'>('ar');
   const [currency, setCurrency] = useState<'SAR' | 'USD' | 'EUR'>('SAR');
   const location = useLocation();
@@ -141,12 +146,12 @@ const Nav3D = () => {
   }, []);
 
   const navLinks = [
-    { name: "الرئيسية", path: "/", hasDropdown: false },
-    { name: "الخدمات", path: "/services", hasDropdown: false },
+    { name: "الأولى", path: "/", hasDropdown: false },
     { name: "الدول", path: "/destinations", hasDropdown: true, dropdownKey: "countries" },
     { name: "شهر العسل", path: "/honeymoon", hasDropdown: false },
-    { name: "البرامج", path: "/programs", hasDropdown: false },
     { name: "العروض", path: "/offers", hasDropdown: false },
+    { name: "البرامج", path: "/programs", hasDropdown: false },
+    { name: "الخدمات", path: "/services", hasDropdown: false },
     { name: "المزيد", path: "#", hasDropdown: true, dropdownKey: "more" },
   ];
 
@@ -453,48 +458,61 @@ const Nav3D = () => {
                 <span>{language === 'ar' ? 'EN' : 'عر'}</span>
               </button>
 
-              {/* Wishlist/Favorites */}
+              {/* Saved Places - Destinations */}
               <button
+                onClick={() => setShowFavPanel(showFavPanel === 'destinations' ? null : (destinationsCount > 0 ? 'destinations' : null))}
                 className={cn(
                   "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 relative",
-                  isScrolled
-                    ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal"
-                    : "text-white/90 hover:bg-white/10"
+                  destinationsCount > 0
+                    ? (isScrolled ? "text-emerald-600 hover:bg-emerald-50" : "text-emerald-400 hover:bg-white/10")
+                    : (isScrolled ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal" : "text-white/90 hover:bg-white/10")
                 )}
-                title="المفضلات"
-                aria-label="قائمة المفضلات"
-              >
-                <Heart className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">3</span>
-              </button>
-
-              {/* Saved Places */}
-              <button
-                className={cn(
-                  "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300",
-                  isScrolled
-                    ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal"
-                    : "text-white/90 hover:bg-white/10"
-                )}
-                title="الأماكن المحفوظة"
-                aria-label="الأماكن المحفوظة"
+                title="الوجهات المفضلة"
+                aria-label="الوجهات المفضلة"
               >
                 <MapPinned className="w-5 h-5" />
+                {destinationsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">{destinationsCount}</span>
+                )}
               </button>
 
-              {/* Saved Programs */}
+              {/* Saved Offers */}
               <button
+                onClick={() => setShowFavPanel(showFavPanel === 'offers' ? null : (offersCount > 0 ? 'offers' : null))}
                 className={cn(
-                  "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300",
-                  isScrolled
-                    ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal"
-                    : "text-white/90 hover:bg-white/10"
+                  "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 relative",
+                  offersCount > 0
+                    ? (isScrolled ? "text-orange-600 hover:bg-orange-50" : "text-orange-400 hover:bg-white/10")
+                    : (isScrolled ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal" : "text-white/90 hover:bg-white/10")
                 )}
-                title="البرامج المحفوظة"
-                aria-label="البرامج المحفوظة"
+                title="العروض المفضلة"
+                aria-label="العروض المفضلة"
               >
                 <Package className="w-5 h-5" />
+                {offersCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">{offersCount}</span>
+                )}
               </button>
+
+              {/* Favorite Cities */}
+              {citiesCount > 0 && (
+                <button
+                  onClick={() => setShowFavPanel(showFavPanel === 'cities' ? null : 'cities')}
+                  className={cn(
+                    "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 relative",
+                    isScrolled
+                      ? "text-red-500 hover:bg-red-50"
+                      : "text-red-400 hover:bg-white/10"
+                  )}
+                  title="المدن المفضلة"
+                  aria-label="المدن المفضلة"
+                >
+                  <Heart className="w-5 h-5 fill-current" />
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {citiesCount}
+                  </span>
+                </button>
+              )}
 
               {/* User Profile */}
               <button
@@ -546,6 +564,60 @@ const Nav3D = () => {
         </div>
       </nav>
 
+      {/* Favorites Panel Dropdown */}
+      {showFavPanel && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setShowFavPanel(null)} />
+          <div className="fixed top-20 left-4 md:left-auto md:right-48 z-50 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-fade-in-up">
+            <div className={cn("p-4 flex items-center justify-between", showFavPanel === 'cities' ? 'bg-gradient-to-r from-red-500 to-pink-500' : showFavPanel === 'destinations' ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-orange-500 to-amber-500')}>
+              <h3 className="text-white font-bold flex items-center gap-2">
+                {showFavPanel === 'cities' && <><Heart className="w-5 h-5 fill-current" />المدن المفضلة ({citiesCount})</>}
+                {showFavPanel === 'destinations' && <><MapPinned className="w-5 h-5" />الوجهات المفضلة ({destinationsCount})</>}
+                {showFavPanel === 'offers' && <><Package className="w-5 h-5" />العروض المفضلة ({offersCount})</>}
+              </h3>
+              <button onClick={() => setShowFavPanel(null)} className="text-white/80 hover:text-white" title="إغلاق">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="max-h-80 overflow-y-auto">
+              {(showFavPanel === 'cities' ? favoriteCities : showFavPanel === 'destinations' ? favoriteDestinations : favoriteOffers).map((fav) => (
+                <div key={fav.id} className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0">
+                  {fav.image && (
+                    <img src={fav.image} alt={fav.nameAr} className="w-12 h-12 rounded-xl object-cover" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <button
+                      onClick={() => {
+                        if (fav.type === 'city') navigateRouter(`/country/${fav.countryId}/city/${fav.id}`);
+                        else if (fav.type === 'destination') navigateRouter(`/country/${fav.id}`);
+                        else navigateRouter('/offers');
+                        setShowFavPanel(null);
+                      }}
+                      className="text-gray-800 font-semibold text-sm hover:text-primary transition-colors truncate block w-full text-right"
+                    >
+                      {fav.nameAr}
+                    </button>
+                    {fav.type === 'offer' && fav.price && (
+                      <span className="text-xs text-emerald-600 font-bold">{fav.price.toLocaleString()} ر.س</span>
+                    )}
+                    {fav.type === 'offer' && fav.destination && (
+                      <span className="text-xs text-muted-foreground mr-2">📍 {fav.destination}</span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => removeFavorite(fav.id, fav.type)}
+                    className="w-8 h-8 rounded-full bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-500 flex items-center justify-center transition-all flex-shrink-0"
+                    title="إزالة من المفضلة"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Mobile Menu - Full Screen 3D */}
       <div
         className={cn(
@@ -588,7 +660,7 @@ const Nav3D = () => {
                 }}
               >
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-400">
-                  {link.dropdownKey === 'services' ? <Sparkles className="w-5 h-5" /> : link.dropdownKey === 'countries' ? <MapPin className="w-5 h-5" /> : link.name === 'الرئيسية' ? <Plane className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                  {link.dropdownKey === 'services' ? <Globe className="w-5 h-5" /> : link.dropdownKey === 'countries' ? <MapPin className="w-5 h-5" /> : link.name === 'الرئيسية' ? <Plane className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 </div>
                 <span>{link.name}</span>
               </Link>
