@@ -283,6 +283,66 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_articles: {
+        Row: {
+          author_name: string | null
+          category: string | null
+          content: string | null
+          cover_image: string | null
+          created_at: string | null
+          display_order: number | null
+          excerpt: string | null
+          id: string
+          is_active: boolean | null
+          is_featured: boolean | null
+          published_at: string | null
+          reading_time: number | null
+          slug: string
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+          views: number | null
+        }
+        Insert: {
+          author_name?: string | null
+          category?: string | null
+          content?: string | null
+          cover_image?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          excerpt?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          published_at?: string | null
+          reading_time?: number | null
+          slug: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+          views?: number | null
+        }
+        Update: {
+          author_name?: string | null
+          category?: string | null
+          content?: string | null
+          cover_image?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          excerpt?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          published_at?: string | null
+          reading_time?: number | null
+          slug?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+          views?: number | null
+        }
+        Relationships: []
+      }
       booking_passengers: {
         Row: {
           booking_id: string
@@ -1012,6 +1072,282 @@ export type Database = {
           },
         ]
       }
+      homepage_features: {
+        Row: {
+          bg_color: string | null
+          color: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          icon: string
+          id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          bg_color?: string | null
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          icon?: string
+          id?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          bg_color?: string | null
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          icon?: string
+          id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      homepage_hero_slides: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          highlight: string
+          id: string
+          image: string | null
+          is_active: boolean | null
+          stats: Json | null
+          subtitle: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          highlight?: string
+          id?: string
+          image?: string | null
+          is_active?: boolean | null
+          stats?: Json | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          highlight?: string
+          id?: string
+          image?: string | null
+          is_active?: boolean | null
+          stats?: Json | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      homepage_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string | null
+          value: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string | null
+          value?: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string | null
+          value?: string
+        }
+        Relationships: []
+      }
+      homepage_stats: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          id: string
+          label: string
+          number: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          label: string
+          number: string
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          label?: string
+          number?: string
+        }
+        Relationships: []
+      }
+      homepage_testimonials: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          id: string
+          location: string | null
+          name: string
+          rating: number | null
+          text: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          location?: string | null
+          name: string
+          rating?: number | null
+          text: string
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          location?: string | null
+          name?: string
+          rating?: number | null
+          text?: string
+        }
+        Relationships: []
+      }
+      honeymoon_features: {
+        Row: {
+          bg_color: string | null
+          color: string | null
+          created_at: string | null
+          display_order: number | null
+          icon: string | null
+          id: string
+          title: string
+        }
+        Insert: {
+          bg_color?: string | null
+          color?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          title: string
+        }
+        Update: {
+          bg_color?: string | null
+          color?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      honeymoon_packages: {
+        Row: {
+          badge: string | null
+          created_at: string | null
+          description: string | null
+          destination: string | null
+          display_order: number | null
+          duration: string | null
+          emoji: string | null
+          features: Json | null
+          id: string
+          image: string | null
+          is_active: boolean | null
+          old_price: number | null
+          price: number | null
+          rating: number | null
+          reviews: number | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          badge?: string | null
+          created_at?: string | null
+          description?: string | null
+          destination?: string | null
+          display_order?: number | null
+          duration?: string | null
+          emoji?: string | null
+          features?: Json | null
+          id?: string
+          image?: string | null
+          is_active?: boolean | null
+          old_price?: number | null
+          price?: number | null
+          rating?: number | null
+          reviews?: number | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          badge?: string | null
+          created_at?: string | null
+          description?: string | null
+          destination?: string | null
+          display_order?: number | null
+          duration?: string | null
+          emoji?: string | null
+          features?: Json | null
+          id?: string
+          image?: string | null
+          is_active?: boolean | null
+          old_price?: number | null
+          price?: number | null
+          rating?: number | null
+          reviews?: number | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      honeymoon_testimonials: {
+        Row: {
+          created_at: string | null
+          destination: string | null
+          display_order: number | null
+          id: string
+          location: string | null
+          name: string
+          rating: number | null
+          text: string
+        }
+        Insert: {
+          created_at?: string | null
+          destination?: string | null
+          display_order?: number | null
+          id?: string
+          location?: string | null
+          name: string
+          rating?: number | null
+          text: string
+        }
+        Update: {
+          created_at?: string | null
+          destination?: string | null
+          display_order?: number | null
+          id?: string
+          location?: string | null
+          name?: string
+          rating?: number | null
+          text?: string
+        }
+        Relationships: []
+      }
       hotel_bookings: {
         Row: {
           adults_count: number | null
@@ -1530,12 +1866,13 @@ export type Database = {
           average_rating: number | null
           base_price: number
           child_price: number | null
+          countries: string[] | null
           cover_image: string | null
           created_at: string | null
           created_by: string | null
           description_ar: string | null
           description_en: string | null
-          destination_id: string
+          destination_id: string | null
           discount_percentage: number | null
           discount_valid_until: string | null
           display_order: number | null
@@ -1543,6 +1880,7 @@ export type Database = {
           duration_nights: number
           excludes: Json | null
           gallery: Json | null
+          highlights: string[] | null
           hotel_options: Json | null
           id: string
           includes: Json | null
@@ -1554,6 +1892,7 @@ export type Database = {
           min_travelers: number | null
           name_ar: string
           name_en: string
+          original_price: number | null
           price_currency: string | null
           program_type: string
           single_supplement: number | null
@@ -1566,12 +1905,13 @@ export type Database = {
           average_rating?: number | null
           base_price: number
           child_price?: number | null
+          countries?: string[] | null
           cover_image?: string | null
           created_at?: string | null
           created_by?: string | null
           description_ar?: string | null
           description_en?: string | null
-          destination_id: string
+          destination_id?: string | null
           discount_percentage?: number | null
           discount_valid_until?: string | null
           display_order?: number | null
@@ -1579,6 +1919,7 @@ export type Database = {
           duration_nights: number
           excludes?: Json | null
           gallery?: Json | null
+          highlights?: string[] | null
           hotel_options?: Json | null
           id?: string
           includes?: Json | null
@@ -1590,6 +1931,7 @@ export type Database = {
           min_travelers?: number | null
           name_ar: string
           name_en: string
+          original_price?: number | null
           price_currency?: string | null
           program_type: string
           single_supplement?: number | null
@@ -1602,12 +1944,13 @@ export type Database = {
           average_rating?: number | null
           base_price?: number
           child_price?: number | null
+          countries?: string[] | null
           cover_image?: string | null
           created_at?: string | null
           created_by?: string | null
           description_ar?: string | null
           description_en?: string | null
-          destination_id?: string
+          destination_id?: string | null
           discount_percentage?: number | null
           discount_valid_until?: string | null
           display_order?: number | null
@@ -1615,6 +1958,7 @@ export type Database = {
           duration_nights?: number
           excludes?: Json | null
           gallery?: Json | null
+          highlights?: string[] | null
           hotel_options?: Json | null
           id?: string
           includes?: Json | null
@@ -1626,6 +1970,7 @@ export type Database = {
           min_travelers?: number | null
           name_ar?: string
           name_en?: string
+          original_price?: number | null
           price_currency?: string | null
           program_type?: string
           single_supplement?: number | null
@@ -1948,6 +2293,135 @@ export type Database = {
           used_count?: number | null
           valid_from?: string
           valid_until?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          emoji: string | null
+          features: Json | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          path: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          emoji?: string | null
+          features?: Json | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          path?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          emoji?: string | null
+          features?: Json | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          path?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      special_offers: {
+        Row: {
+          countries: string[] | null
+          cover_image: string | null
+          created_at: string | null
+          description_ar: string | null
+          description_en: string | null
+          destination: string
+          discount_percentage: number | null
+          discounted_price: number
+          display_order: number | null
+          duration: string | null
+          highlights: string[] | null
+          id: string
+          includes: Json | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          is_hot: boolean | null
+          offer_type: string
+          original_price: number
+          slug: string
+          terms: string | null
+          title_ar: string
+          title_en: string | null
+          updated_at: string | null
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          countries?: string[] | null
+          cover_image?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          destination: string
+          discount_percentage?: number | null
+          discounted_price?: number
+          display_order?: number | null
+          duration?: string | null
+          highlights?: string[] | null
+          id?: string
+          includes?: Json | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          is_hot?: boolean | null
+          offer_type?: string
+          original_price?: number
+          slug: string
+          terms?: string | null
+          title_ar: string
+          title_en?: string | null
+          updated_at?: string | null
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          countries?: string[] | null
+          cover_image?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          destination?: string
+          discount_percentage?: number | null
+          discounted_price?: number
+          display_order?: number | null
+          duration?: string | null
+          highlights?: string[] | null
+          id?: string
+          includes?: Json | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          is_hot?: boolean | null
+          offer_type?: string
+          original_price?: number
+          slug?: string
+          terms?: string | null
+          title_ar?: string
+          title_en?: string | null
+          updated_at?: string | null
+          valid_from?: string | null
+          valid_until?: string | null
         }
         Relationships: []
       }
