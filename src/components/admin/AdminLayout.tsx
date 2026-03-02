@@ -117,10 +117,9 @@ const AdminLayout = () => {
   });
 
   const getRoleBadge = () => {
-    if (userRole === "admin") return { label: "مدير", color: "bg-red-500" };
-    if (userRole === "employee") return { label: "موظف", color: "bg-blue-500" };
-    if (userRole === "agent") return { label: "وكيل", color: "bg-purple-500" };
-    return { label: "عميل", color: "bg-green-500" };
+    if (userRole === "admin") return { label: "مدير عام", color: "bg-red-500" };
+    if (userRole === "moderator") return { label: "موظف", color: "bg-blue-500" };
+    return { label: "مستخدم", color: "bg-green-500" };
   };
 
   const handleLogout = async () => {
@@ -265,7 +264,7 @@ const AdminLayout = () => {
               </Button>
             </div>
             <nav className="p-4 space-y-1">
-              {navItems.map((item) => (
+              {filteredNavItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}

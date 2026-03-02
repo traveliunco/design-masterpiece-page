@@ -366,7 +366,7 @@ const Nav3D = () => {
                             </div>
                           ))
                         ) : (
-                          megaMenuItems[link.dropdownKey as keyof typeof megaMenuItems]?.items.map((item, i) => (
+                          ('items' in (megaMenuItems[link.dropdownKey as keyof typeof megaMenuItems] || {}) ? (megaMenuItems[link.dropdownKey as keyof typeof megaMenuItems] as any).items : []).map((item: any, i: number) => (
                             <Link
                               key={i}
                               to={item.path}

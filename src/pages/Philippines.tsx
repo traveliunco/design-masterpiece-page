@@ -77,7 +77,7 @@ export default function Philippines() {
           <h2 className="text-3xl font-bold text-white mb-8 text-center">
             أشهر المدن السياحية
           </h2>
-          <CountryMap country={country} />
+          <CountryMap cities={country.cities} countryName={country.nameAr} centerCoordinates={country.coordinates} />
         </div>
 
         {/* Cities Grid */}
@@ -89,7 +89,7 @@ export default function Philippines() {
                 onClick={() => navigate(`/country/${country.id}/city/${city.id}`)}
                 className="cursor-pointer"
               >
-                <CityCard city={city} />
+                <CityCard city={city} countryId={country.id} />
               </div>
             ))}
           </div>

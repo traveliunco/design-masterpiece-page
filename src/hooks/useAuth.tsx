@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, createContext, ReactNode } from "react
 import { User, Session, AuthError } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-export type UserRole = "admin" | "employee" | "agent" | "customer" | null;
+export type UserRole = "admin" | "moderator" | "user" | null;
 
 interface AuthContextType {
   user: User | null;
@@ -29,19 +29,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<UserRole>(null);
 
-  // Fetch user role from the users table
+  // Fetch user role from user_roles table (secure)
   const fetchUserRole = async (userId: string): Promise<UserRole> => {
     try {
       const { data, error } = await supabase
-        .from("users")
+        .from("user_roles")
         .select("role")
-        .eq("id", userId)
+        .eq("user_id", userId)
         .single();
 
-      if (error || !data) return null;
-      return (data.role as UserRole) || "customer";
+      if (error || !data) return "user";
+      return (data.role as UserRole) || "user";
     } catch {
-      return null;
+      return "user";
     }
   };
 
@@ -53,7 +53,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -64,7 +63,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session);
@@ -85,8 +83,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const isAdmin = () => userRole === "admin";
-  const isEmployee = () => userRole === "employee";
-  const isStaff = () => userRole === "admin" || userRole === "employee" || userRole === "agent";
+  const isEmployee = () => userRole === "moderator";
+  const isStaff = () => userRole === "admin" || userRole === "moderator";
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });

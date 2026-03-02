@@ -1,17 +1,29 @@
 // بيانات دول جنوب شرق آسيا والمدن السياحية
 
+export interface Attraction {
+  nameAr: string;
+  nameEn: string;
+  description: string;
+  type: string;
+  entryFee: string;
+  timeNeeded: string;
+  bestTimeToVisit: string;
+  rating: number;
+}
+
 export interface City {
   id: string;
   nameAr: string;
   nameEn: string;
   description: string;
   image: string;
-  attractions: string[];
-  bestTime: string;
+  attractions: string[] | Attraction[];
+  bestTime?: string;
+  bestTimeToVisit?: string;
   coordinates: { lat: number; lng: number };
   highlights: string[];
   averageTemp: string | { summer: string; winter: string };
-  accommodation: string;
+  accommodation: string | { budget: string; midRange: string; luxury: string };
 }
 
 export interface Country {
@@ -572,12 +584,21 @@ export const southeastAsiaCountries: Country[] = [
     nameEn: "Philippines",
     description: "أكثر من 7000 جزيرة استوائية - شواطئ بيضاء وطبيعة خلابة",
     coverImage: "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86",
+    coordinates: { lat: 12.8797, lng: 121.7740 },
     currency: "بيزو فلبيني (PHP)",
     language: "الإنجليزية والتاغالوغية",
     visa: "تأشيرة عند الوصول",
     bestSeason: "ديسمبر - مايو",
+    tripDuration: "10-14 يوم",
     climate: "استوائي - حار ورطب",
     budget: "35-100 دولار",
+    highlights: [
+      "شواطئ بوراكاي البيضاء",
+      "جزر بالاوان الخلابة",
+      "النهر الجوفي في بويرتو برنسيسا",
+      "الضيافة الفلبينية",
+      "الغوص والسنوركلينج"
+    ],
     cities: [
       {
         id: "manila",
@@ -676,12 +697,21 @@ export const southeastAsiaCountries: Country[] = [
     nameEn: "Singapore",
     description: "مدينة الأسد - الحداثة والنظافة والتطور",
     coverImage: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd",
+    coordinates: { lat: 1.3521, lng: 103.8198 },
     currency: "دولار سنغافوري (SGD)",
     language: "الإنجليزية والصينية والمالاوية",
     visa: "تأشيرة إلكترونية",
     bestSeason: "فبراير - أبريل",
+    tripDuration: "3-5 أيام",
     climate: "استوائي - حار ورطب طوال العام",
     budget: "80-200 دولار",
+    highlights: [
+      "مارينا باي ساندز",
+      "جاردنز باي ذا باي",
+      "يونيفرسال ستوديوز",
+      "التنوع الثقافي",
+      "النظافة والتنظيم"
+    ],
     cities: [
       {
         id: "singapore-city",

@@ -197,49 +197,52 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
 
-              {/* Admin Routes (Protected) */}
+              {/* Admin Routes (Protected - staff only) */}
               <Route
                 path="/admin"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole={["admin", "moderator"]}>
                     <AdminLayout />
                   </ProtectedRoute>
                 }
               >
+                {/* Available to all staff */}
                 <Route index element={<AdminDashboard />} />
                 <Route path="bookings" element={<AdminBookings />} />
-                <Route path="destinations" element={<AdminDestinations />} />
-                <Route path="destinations/new" element={<AdminDestinationNew />} />
                 <Route path="programs" element={<AdminPrograms />} />
                 <Route path="programs/new" element={<AdminProgramNew />} />
-                <Route path="flights" element={<AdminFlights />} />
-                <Route path="hotels" element={<AdminHotels />} />
+                <Route path="programs/edit/:id" element={<AdminProgramEdit />} />
                 <Route path="offers" element={<AdminOffers />} />
                 <Route path="offers/new" element={<AdminOfferNew />} />
                 <Route path="offers/edit/:id" element={<AdminOfferEdit />} />
-                <Route path="destinations/edit/:id" element={<AdminDestinationEdit />} />
-                <Route path="programs/edit/:id" element={<AdminProgramEdit />} />
-                <Route path="payments" element={<AdminPayments />} />
-                <Route path="reviews" element={<AdminReviews />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="messages" element={<AdminMessages />} />
-                <Route path="reports" element={<AdminReports />} />
-                <Route path="articles" element={<AdminArticles />} />
-                <Route path="settings" element={<AdminSettings />} />
-                <Route path="ai-settings" element={<AdminAISettings />} />
-                <Route path="southeast-asia-countries" element={<AdminSoutheastAsiaCountries />} />
-                <Route path="seed-programs" element={<AdminSeedPrograms />} />
-                <Route path="southeast-asia-cities" element={<AdminSoutheastAsiaCities />} />
-                <Route path="services" element={<AdminServices />} />
-                <Route path="services/new" element={<AdminServiceForm />} />
-                <Route path="services/edit/:id" element={<AdminServiceForm />} />
-                <Route path="honeymoon" element={<AdminHoneymoon />} />
-                <Route path="honeymoon/packages/new" element={<AdminHoneymoonPackageForm />} />
-                <Route path="honeymoon/packages/edit/:id" element={<AdminHoneymoonPackageForm />} />
-                <Route path="homepage" element={<AdminHomepage />} />
-                <Route path="blog" element={<AdminBlog />} />
-                <Route path="blog/new" element={<AdminBlogArticleForm />} />
-                <Route path="blog/edit/:id" element={<AdminBlogArticleForm />} />
+
+                {/* Admin only routes */}
+                <Route path="destinations" element={<ProtectedRoute requiredRole="admin"><AdminDestinations /></ProtectedRoute>} />
+                <Route path="destinations/new" element={<ProtectedRoute requiredRole="admin"><AdminDestinationNew /></ProtectedRoute>} />
+                <Route path="destinations/edit/:id" element={<ProtectedRoute requiredRole="admin"><AdminDestinationEdit /></ProtectedRoute>} />
+                <Route path="flights" element={<ProtectedRoute requiredRole="admin"><AdminFlights /></ProtectedRoute>} />
+                <Route path="hotels" element={<ProtectedRoute requiredRole="admin"><AdminHotels /></ProtectedRoute>} />
+                <Route path="payments" element={<ProtectedRoute requiredRole="admin"><AdminPayments /></ProtectedRoute>} />
+                <Route path="reviews" element={<ProtectedRoute requiredRole="admin"><AdminReviews /></ProtectedRoute>} />
+                <Route path="users" element={<ProtectedRoute requiredRole="admin"><AdminUsers /></ProtectedRoute>} />
+                <Route path="messages" element={<ProtectedRoute requiredRole="admin"><AdminMessages /></ProtectedRoute>} />
+                <Route path="reports" element={<ProtectedRoute requiredRole="admin"><AdminReports /></ProtectedRoute>} />
+                <Route path="articles" element={<ProtectedRoute requiredRole="admin"><AdminArticles /></ProtectedRoute>} />
+                <Route path="settings" element={<ProtectedRoute requiredRole="admin"><AdminSettings /></ProtectedRoute>} />
+                <Route path="ai-settings" element={<ProtectedRoute requiredRole="admin"><AdminAISettings /></ProtectedRoute>} />
+                <Route path="southeast-asia-countries" element={<ProtectedRoute requiredRole="admin"><AdminSoutheastAsiaCountries /></ProtectedRoute>} />
+                <Route path="seed-programs" element={<ProtectedRoute requiredRole="admin"><AdminSeedPrograms /></ProtectedRoute>} />
+                <Route path="southeast-asia-cities" element={<ProtectedRoute requiredRole="admin"><AdminSoutheastAsiaCities /></ProtectedRoute>} />
+                <Route path="services" element={<ProtectedRoute requiredRole="admin"><AdminServices /></ProtectedRoute>} />
+                <Route path="services/new" element={<ProtectedRoute requiredRole="admin"><AdminServiceForm /></ProtectedRoute>} />
+                <Route path="services/edit/:id" element={<ProtectedRoute requiredRole="admin"><AdminServiceForm /></ProtectedRoute>} />
+                <Route path="honeymoon" element={<ProtectedRoute requiredRole="admin"><AdminHoneymoon /></ProtectedRoute>} />
+                <Route path="honeymoon/packages/new" element={<ProtectedRoute requiredRole="admin"><AdminHoneymoonPackageForm /></ProtectedRoute>} />
+                <Route path="honeymoon/packages/edit/:id" element={<ProtectedRoute requiredRole="admin"><AdminHoneymoonPackageForm /></ProtectedRoute>} />
+                <Route path="homepage" element={<ProtectedRoute requiredRole="admin"><AdminHomepage /></ProtectedRoute>} />
+                <Route path="blog" element={<ProtectedRoute requiredRole="admin"><AdminBlog /></ProtectedRoute>} />
+                <Route path="blog/new" element={<ProtectedRoute requiredRole="admin"><AdminBlogArticleForm /></ProtectedRoute>} />
+                <Route path="blog/edit/:id" element={<ProtectedRoute requiredRole="admin"><AdminBlogArticleForm /></ProtectedRoute>} />
               </Route>
 
               {/* 404 */}
