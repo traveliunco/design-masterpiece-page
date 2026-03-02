@@ -15,6 +15,7 @@ const AdminSoutheastAsiaCountries = () => {
   const [formData, setFormData] = useState({
     nameAr: "",
     nameEn: "",
+    flag: "",
     description: "",
     coverImage: "",
     currency: "",
@@ -30,6 +31,7 @@ const AdminSoutheastAsiaCountries = () => {
     setFormData({
       nameAr: country.nameAr,
       nameEn: country.nameEn,
+      flag: country.flag || "",
       description: country.description,
       coverImage: country.coverImage,
       currency: country.currency,

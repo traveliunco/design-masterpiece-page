@@ -169,7 +169,7 @@ const AdminProgramNew = () => {
         itinerary: formData.itinerary,
       };
 
-      const { error } = await supabase.from("programs").insert(insertData);
+      const { error } = await supabase.from("programs").insert(insertData as any);
 
       if (error) throw error;
 
