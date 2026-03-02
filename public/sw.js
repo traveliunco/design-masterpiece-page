@@ -1,10 +1,11 @@
 // Service Worker for Traveliun PWA
 // Version 1.0.0
 
-const CACHE_NAME = 'traveliun-v2';
-const STATIC_CACHE = 'traveliun-static-v2';
-const DYNAMIC_CACHE = 'traveliun-dynamic-v2';
-const IMAGE_CACHE = 'traveliun-images-v2';
+const CACHE_NAME = 'traveliun-v3';
+const STATIC_CACHE = 'traveliun-static-v3';
+const DYNAMIC_CACHE = 'traveliun-dynamic-v3';
+const IMAGE_CACHE = 'traveliun-images-v3';
+const DISABLE_CACHE_IN_PREVIEW = self.location.hostname.includes('lovableproject.com') || self.location.hostname.includes('localhost');
 
 // الملفات الثابتة التي يجب تخزينها
 const STATIC_ASSETS = [
@@ -21,6 +22,11 @@ const MAX_IMAGE_CACHE_SIZE = 100;
 // تثبيت Service Worker
 self.addEventListener('install', (event) => {
     console.log('[SW] Installing Service Worker...');
+
+    if (DISABLE_CACHE_IN_PREVIEW) {
+        event.waitUntil(self.skipWaiting());
+        return;
+    }
 
     event.waitUntil(
         caches.open(STATIC_CACHE)
@@ -39,16 +45,14 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys()
             .then((keys) => {
-                return Promise.all(
-                    keys
-                        .filter((key) => key !== STATIC_CACHE && key !== DYNAMIC_CACHE && key !== IMAGE_CACHE)
-                        .map((key) => {
-                            console.log('[SW] Removing old cache:', key);
-                            return caches.delete(key);
-                        })
-                );
+                return Promise.all(keys.map((key) => caches.delete(key)));
             })
-            .then(() => self.clients.claim())
+            .then(async () => {
+                if (DISABLE_CACHE_IN_PREVIEW) {
+                    await self.registration.unregister();
+                }
+                return self.clients.claim();
+            })
     );
 });
 
@@ -57,9 +61,19 @@ self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
 
+    // Disable SW request handling in preview/dev to prevent stale Vite chunks
+    if (DISABLE_CACHE_IN_PREVIEW) {
+        return;
+    }
+
     // تجاهل الطلبات غير HTTP(S)
     if (!request.url.startsWith('http')) {
         return;
+    }
+
+    // Never cache Vite dev modules/chunks
+    if (request.url.includes('/node_modules/.vite/') || request.url.includes('/src/')) {
+        return event.respondWith(fetch(request));
     }
 
     // تجاهل طلبات API
