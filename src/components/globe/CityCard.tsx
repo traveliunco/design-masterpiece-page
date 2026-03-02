@@ -75,7 +75,7 @@ export default function CityCard({ city, country, onClose, onBack }: CityCardPro
           <QuickInfo 
             icon={Hotel} 
             label="السكن" 
-            value={city.accommodation.split(' ')[0]} 
+            value={typeof city.accommodation === 'string' ? city.accommodation.split(' ')[0] : city.accommodation.budget} 
           />
         </div>
         
@@ -109,7 +109,7 @@ export default function CityCard({ city, country, onClose, onBack }: CityCardPro
                 className="flex items-center gap-2 text-sm text-gray-600 py-1"
               >
                 <span className="w-1.5 h-1.5 bg-teal-400 rounded-full" />
-                <span>{typeof attraction === 'string' ? attraction : attraction.nameAr}</span>
+                <span>{typeof attraction === 'string' ? attraction : (attraction as any).nameAr}</span>
               </div>
             ))}
           </div>

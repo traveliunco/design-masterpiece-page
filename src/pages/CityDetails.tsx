@@ -4,13 +4,13 @@ import PageLayout from "@/layouts/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import AttractionsList from "@/components/AttractionsList";
-import { getCityById } from "@/data/southeast-asia";
+import { getCityById, Attraction } from "@/data/southeast-asia";
 import { MapPin, Calendar, Thermometer, DollarSign, ArrowLeft } from "lucide-react";
 
 const CityDetails = () => {
   const { countryId, cityId } = useParams();
   const navigate = useNavigate();
-  const city = getCityById(cityId || "");
+  const city = getCityById(countryId || "", cityId || "");
 
   if (!city) {
     return (
@@ -23,6 +23,17 @@ const CityDetails = () => {
     );
   }
 
+  const bestTime = city.bestTimeToVisit || city.bestTime || "";
+  const avgTemp = typeof city.averageTemp === 'string' 
+    ? { summer: city.averageTemp, winter: city.averageTemp } 
+    : city.averageTemp;
+  const accommodation = typeof city.accommodation === 'string'
+    ? { budget: city.accommodation, midRange: city.accommodation, luxury: city.accommodation }
+    : city.accommodation;
+  
+  // Check if attractions are detailed objects
+  const hasDetailedAttractions = city.attractions.length > 0 && typeof city.attractions[0] !== 'string';
+
   return (
     <PageLayout>
       <Helmet>
@@ -32,65 +43,42 @@ const CityDetails = () => {
 
       {/* صورة الغلاف */}
       <div className="relative h-[70vh] overflow-hidden">
-        <img
-          src={city.image}
-          alt={city.nameAr}
-          className="w-full h-full object-cover"
-        />
+        <img src={city.image} alt={city.nameAr} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-        
-        {/* محتوى الغلاف */}
         <div className="absolute inset-0 flex items-end">
           <div className="container mx-auto px-4 pb-16">
-            {/* زر العودة */}
-            <Button
-              variant="ghost"
-              className="text-white hover:bg-white/20 mb-8"
-              onClick={() => navigate(`/country/${countryId}`)}
-            >
+            <Button variant="ghost" className="text-white hover:bg-white/20 mb-8" onClick={() => navigate(`/country/${countryId}`)}>
               <ArrowLeft className="w-5 h-5 ml-2" />
               العودة إلى الدولة
             </Button>
-
             <h1 className="text-7xl font-bold text-white mb-2">{city.nameAr}</h1>
             <p className="text-3xl text-white/90 mb-4">{city.nameEn}</p>
-            
-            {/* الإحداثيات */}
             <div className="flex items-center gap-2 text-white/80">
               <MapPin className="w-5 h-5" />
-              <span className="text-lg">
-                {city.coordinates.lat.toFixed(4)}°N, {city.coordinates.lng.toFixed(4)}°E
-              </span>
+              <span className="text-lg">{city.coordinates.lat.toFixed(4)}°N, {city.coordinates.lng.toFixed(4)}°E</span>
             </div>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-16 space-y-16">
-        {/* الوصف والأبرز */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* الوصف */}
           <div className="lg:col-span-2">
             <Card className="p-8">
               <h2 className="text-3xl font-bold text-gray-800 mb-4">عن {city.nameAr}</h2>
               <p className="text-gray-600 leading-relaxed text-lg">{city.description}</p>
             </Card>
           </div>
-
-          {/* معلومات سريعة */}
           <div className="space-y-4">
-            {/* أفضل وقت للزيارة */}
             <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-none">
               <div className="flex items-start gap-3">
                 <Calendar className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-800 mb-2">أفضل وقت للزيارة</h3>
-                  <p className="text-gray-600">{city.bestTimeToVisit}</p>
+                  <p className="text-gray-600">{bestTime}</p>
                 </div>
               </div>
             </Card>
-
-            {/* درجات الحرارة */}
             <Card className="p-6 bg-gradient-to-br from-orange-50 to-red-50 border-none">
               <div className="flex items-start gap-3">
                 <Thermometer className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
@@ -99,18 +87,16 @@ const CityDetails = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">الصيف</span>
-                      <span className="font-bold text-orange-600">{city.averageTemp.summer}</span>
+                      <span className="font-bold text-orange-600">{avgTemp.summer}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">الشتاء</span>
-                      <span className="font-bold text-blue-600">{city.averageTemp.winter}</span>
+                      <span className="font-bold text-blue-600">{avgTemp.winter}</span>
                     </div>
                   </div>
                 </div>
               </div>
             </Card>
-
-            {/* الإقامة */}
             <Card className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-none">
               <div className="flex items-start gap-3">
                 <DollarSign className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
@@ -119,15 +105,15 @@ const CityDetails = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">اقتصادي</span>
-                      <span className="font-bold text-green-600">{city.accommodation.budget}</span>
+                      <span className="font-bold text-green-600">{accommodation.budget}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">متوسط</span>
-                      <span className="font-bold text-blue-600">{city.accommodation.midRange}</span>
+                      <span className="font-bold text-blue-600">{accommodation.midRange}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">فاخر</span>
-                      <span className="font-bold text-purple-600">{city.accommodation.luxury}</span>
+                      <span className="font-bold text-purple-600">{accommodation.luxury}</span>
                     </div>
                   </div>
                 </div>
@@ -138,50 +124,42 @@ const CityDetails = () => {
 
         {/* أبرز المعالم */}
         <Card className="p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-none">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-            ✨ أبرز معالم {city.nameAr}
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">✨ أبرز معالم {city.nameAr}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {city.highlights.map((highlight, index) => (
-              <div
-                key={index}
-                className="bg-white p-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 text-center group hover:scale-105"
-              >
+              <div key={index} className="bg-white p-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 text-center group hover:scale-105">
                 <div className="text-3xl mb-2">✨</div>
-                <p className="font-medium text-gray-800 group-hover:text-primary transition-colors">
-                  {highlight}
-                </p>
+                <p className="font-medium text-gray-800 group-hover:text-primary transition-colors">{highlight}</p>
               </div>
             ))}
           </div>
         </Card>
 
         {/* قائمة المعالم السياحية */}
-        <AttractionsList attractions={city.attractions} cityName={city.nameAr} />
+        {hasDetailedAttractions && (
+          <AttractionsList attractions={city.attractions as Attraction[]} cityName={city.nameAr} />
+        )}
+
+        {!hasDetailedAttractions && city.attractions.length > 0 && (
+          <Card className="p-8">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">الأماكن السياحية</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {(city.attractions as string[]).map((attraction, index) => (
+                <div key={index} className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl text-center">
+                  <p className="font-medium text-gray-800">{attraction}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
 
         {/* دعوة للحجز */}
         <Card className="p-12 bg-gradient-to-r from-primary to-blue-600 text-white text-center">
           <h2 className="text-4xl font-bold mb-4">جاهز لزيارة {city.nameAr}؟</h2>
-          <p className="text-xl mb-8 opacity-90">
-            احجز رحلتك الآن واستمتع بعروض حصرية على الطيران والفنادق
-          </p>
+          <p className="text-xl mb-8 opacity-90">احجز رحلتك الآن واستمتع بعروض حصرية على الطيران والفنادق</p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="text-lg px-8 py-6"
-              onClick={() => navigate("/booking")}
-            >
-              احجز رحلتك الآن ✈️
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="text-lg px-8 py-6 bg-white/10 border-white text-white hover:bg-white hover:text-primary"
-              onClick={() => navigate("/contact")}
-            >
-              تواصل معنا للاستشارة 💬
-            </Button>
+            <Button size="lg" variant="secondary" className="text-lg px-8 py-6" onClick={() => navigate("/booking")}>احجز رحلتك الآن ✈️</Button>
+            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 border-white text-white hover:bg-white hover:text-primary" onClick={() => navigate("/contact")}>تواصل معنا للاستشارة 💬</Button>
           </div>
         </Card>
       </div>
