@@ -2343,7 +2343,7 @@ export type Database = {
       }
       special_offers: {
         Row: {
-          countries: string[] | null
+          countries: Json | null
           cover_image: string | null
           created_at: string | null
           description_ar: string | null
@@ -2353,7 +2353,7 @@ export type Database = {
           discounted_price: number
           display_order: number | null
           duration: string | null
-          highlights: string[] | null
+          highlights: Json | null
           id: string
           includes: Json | null
           is_active: boolean | null
@@ -2370,7 +2370,7 @@ export type Database = {
           valid_until: string | null
         }
         Insert: {
-          countries?: string[] | null
+          countries?: Json | null
           cover_image?: string | null
           created_at?: string | null
           description_ar?: string | null
@@ -2380,7 +2380,7 @@ export type Database = {
           discounted_price?: number
           display_order?: number | null
           duration?: string | null
-          highlights?: string[] | null
+          highlights?: Json | null
           id?: string
           includes?: Json | null
           is_active?: boolean | null
@@ -2397,7 +2397,7 @@ export type Database = {
           valid_until?: string | null
         }
         Update: {
-          countries?: string[] | null
+          countries?: Json | null
           cover_image?: string | null
           created_at?: string | null
           description_ar?: string | null
@@ -2407,7 +2407,7 @@ export type Database = {
           discounted_price?: number
           display_order?: number | null
           duration?: string | null
-          highlights?: string[] | null
+          highlights?: Json | null
           id?: string
           includes?: Json | null
           is_active?: boolean | null
@@ -2422,6 +2422,143 @@ export type Database = {
           updated_at?: string | null
           valid_from?: string | null
           valid_until?: string | null
+        }
+        Relationships: []
+      }
+      tour_cities: {
+        Row: {
+          accommodation: string | null
+          attractions: string[] | null
+          average_temp: string | null
+          best_time: string | null
+          coordinates_lat: number | null
+          coordinates_lng: number | null
+          country_id: string
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          highlights: string[] | null
+          id: string
+          image: string | null
+          is_active: boolean | null
+          name_ar: string
+          name_en: string
+          updated_at: string | null
+        }
+        Insert: {
+          accommodation?: string | null
+          attractions?: string[] | null
+          average_temp?: string | null
+          best_time?: string | null
+          coordinates_lat?: number | null
+          coordinates_lng?: number | null
+          country_id: string
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          highlights?: string[] | null
+          id: string
+          image?: string | null
+          is_active?: boolean | null
+          name_ar: string
+          name_en: string
+          updated_at?: string | null
+        }
+        Update: {
+          accommodation?: string | null
+          attractions?: string[] | null
+          average_temp?: string | null
+          best_time?: string | null
+          coordinates_lat?: number | null
+          coordinates_lng?: number | null
+          country_id?: string
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          highlights?: string[] | null
+          id?: string
+          image?: string | null
+          is_active?: boolean | null
+          name_ar?: string
+          name_en?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tour_cities_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "tour_countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tour_countries: {
+        Row: {
+          best_season: string | null
+          budget: string | null
+          climate: string | null
+          coordinates_lat: number | null
+          coordinates_lng: number | null
+          cover_image: string | null
+          created_at: string | null
+          currency: string | null
+          description: string | null
+          display_order: number | null
+          flag_emoji: string | null
+          highlights: string[] | null
+          id: string
+          is_active: boolean | null
+          language: string | null
+          name_ar: string
+          name_en: string
+          trip_duration: string | null
+          updated_at: string | null
+          visa: string | null
+        }
+        Insert: {
+          best_season?: string | null
+          budget?: string | null
+          climate?: string | null
+          coordinates_lat?: number | null
+          coordinates_lng?: number | null
+          cover_image?: string | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          display_order?: number | null
+          flag_emoji?: string | null
+          highlights?: string[] | null
+          id: string
+          is_active?: boolean | null
+          language?: string | null
+          name_ar: string
+          name_en: string
+          trip_duration?: string | null
+          updated_at?: string | null
+          visa?: string | null
+        }
+        Update: {
+          best_season?: string | null
+          budget?: string | null
+          climate?: string | null
+          coordinates_lat?: number | null
+          coordinates_lng?: number | null
+          cover_image?: string | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          display_order?: number | null
+          flag_emoji?: string | null
+          highlights?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          language?: string | null
+          name_ar?: string
+          name_en?: string
+          trip_duration?: string | null
+          updated_at?: string | null
+          visa?: string | null
         }
         Relationships: []
       }
