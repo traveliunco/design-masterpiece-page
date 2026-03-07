@@ -58,19 +58,25 @@ BEGIN
     SELECT 1 FROM information_schema.columns
     WHERE table_name = 'special_offers' AND column_name = 'countries' AND data_type = 'ARRAY'
   ) THEN
+    ALTER TABLE special_offers ALTER COLUMN countries DROP DEFAULT;
     ALTER TABLE special_offers ALTER COLUMN countries TYPE JSONB USING to_jsonb(countries);
+    ALTER TABLE special_offers ALTER COLUMN countries SET DEFAULT '[]'::jsonb;
   END IF;
   IF EXISTS (
     SELECT 1 FROM information_schema.columns
     WHERE table_name = 'special_offers' AND column_name = 'highlights' AND data_type = 'ARRAY'
   ) THEN
+    ALTER TABLE special_offers ALTER COLUMN highlights DROP DEFAULT;
     ALTER TABLE special_offers ALTER COLUMN highlights TYPE JSONB USING to_jsonb(highlights);
+    ALTER TABLE special_offers ALTER COLUMN highlights SET DEFAULT '[]'::jsonb;
   END IF;
   IF EXISTS (
     SELECT 1 FROM information_schema.columns
     WHERE table_name = 'special_offers' AND column_name = 'includes' AND data_type = 'ARRAY'
   ) THEN
+    ALTER TABLE special_offers ALTER COLUMN includes DROP DEFAULT;
     ALTER TABLE special_offers ALTER COLUMN includes TYPE JSONB USING to_jsonb(includes);
+    ALTER TABLE special_offers ALTER COLUMN includes SET DEFAULT '[]'::jsonb;
   END IF;
 END $$;
 
