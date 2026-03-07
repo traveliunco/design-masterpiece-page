@@ -84,7 +84,7 @@ const PremiumHeroSection = () => {
   const currentData = slides[currentSlide];
 
   return (
-    <section ref={sectionRef} className="relative h-screen overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen flex flex-col overflow-hidden">
       {/* Video Background Effect */}
       <div className="absolute inset-0">
         <div 
@@ -129,10 +129,10 @@ const PremiumHeroSection = () => {
       </div>
 
       {/* Content */}
-      <div className="container relative h-full flex items-center">
-        <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
+      <div className="container relative flex-1 flex items-center py-24 pt-32">
+        <div className="w-full max-w-3xl animate-fade-in">
           {/* Left Content */}
-          <div className="text-primary-foreground space-y-8 animate-fade-in">
+          <div className="text-primary-foreground space-y-8">
             {/* Premium Badge */}
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20">
               <Plane className="w-5 h-5 text-teal-400" />
@@ -197,21 +197,23 @@ const PremiumHeroSection = () => {
                     {key === "honeymoon" && "زوجين"}
                     {key === "resorts" && "منتجع فاخر"}
                     {key === "offers" && "خصم"}
+                    {/* fallback for Arabic keys */}
+                    {!["destinations","customers","rating","programs","countries","years","honeymoon","resorts","offers"].includes(key) && key}
                   </div>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Right Side - Skyscanner Search Widget */}
-          <div className="hidden lg:block animate-fade-in [animation-delay:0.3s]">
-            <SkyscannerSearch variant="hero" />
-          </div>
         </div>
       </div>
 
-      {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+      {/* Skyscanner-style Search Bar — Full-width at bottom of hero */}
+      <div className="relative z-20 container pb-10 px-4 lg:px-8 animate-fade-in [animation-delay:0.4s]">
+        <SkyscannerSearch variant="banner" />
+      </div>
+
+      {/* Slide Indicators — left side */}
+      <div className="absolute bottom-36 left-8 flex gap-3 z-10">
         {slides.map((_, index) => (
           <button
             key={index}
@@ -227,7 +229,7 @@ const PremiumHeroSection = () => {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 right-8 animate-bounce">
+      <div className="absolute bottom-36 right-8 animate-bounce z-10">
         <div className="w-6 h-10 border-2 border-primary-foreground/30 rounded-full p-1">
           <div className="w-1 h-3 bg-teal-400 rounded-full mx-auto animate-pulse" />
         </div>

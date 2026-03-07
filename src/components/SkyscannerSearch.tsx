@@ -58,7 +58,7 @@ interface PassengerCount {
 }
 
 interface SkyscannerSearchProps {
-  variant?: "hero" | "page" | "mobile";
+  variant?: "hero" | "page" | "mobile" | "banner";
   className?: string;
 }
 
@@ -156,11 +156,14 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
 
   const isMobile = variant === "mobile";
   const isHero = variant === "hero";
+  const isBanner = variant === "banner";
 
   const containerCls = cn(
     "rounded-2xl overflow-visible",
     isHero
       ? "bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl"
+      : isBanner
+      ? "bg-white shadow-2xl"
       : isMobile
       ? "bg-white shadow-lg border border-gray-100"
       : "bg-white shadow-xl border border-gray-200",
@@ -174,7 +177,7 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
     : "bg-gray-50 border-gray-200 text-gray-800 placeholder-gray-400 hover:bg-white hover:border-primary/50 focus-within:bg-white focus-within:border-primary";
   const tabActiveCls = isHero
     ? "bg-white/20 text-white border-white/30"
-    : "bg-primary text-white border-primary";
+    : "bg-primary/10 text-primary border-primary/20";
   const tabInactiveCls = isHero
     ? "text-white/70 hover:bg-white/10 border-transparent"
     : "text-gray-600 hover:bg-gray-100 border-transparent";
@@ -202,12 +205,12 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
         ))}
       </div>
 
-      <div className="p-4 space-y-4">
+      <div className={cn(isBanner ? "px-5 pt-3 pb-5" : "p-4 space-y-4")}>
         {/* Flight search body */}
         {activeTab === "flights" && (
           <>
-            {/* Trip type selectors */}
-            <div className="flex items-center gap-3 flex-wrap">
+            {/* Trip type + direct toggle */}
+            <div className={cn("flex items-center gap-3 flex-wrap", isBanner ? "pb-3" : "")}>
               {([
                 { value: "roundtrip", label: "ذهاب وإياب" },
                 { value: "oneway", label: "ذهاب فقط" },
@@ -263,245 +266,281 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
               </label>
             </div>
 
-            {/* Main search fields */}
-            <div className={cn(
-              "grid gap-2",
-              isMobile ? "grid-cols-1" : tripType === "roundtrip" ? "grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr_1fr]" : "grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr]"
-            )}>
-              {/* Origin */}
-              <div ref={originRef} className="relative">
-                <div
-                  className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all",
-                    inputBg
-                  )}
-                  onClick={() => {
-                    setShowOriginDropdown(true);
-                    setShowDestDropdown(false);
-                    setShowPassengers(false);
-                  }}
-                >
-                  <MapPin className={cn("w-4 h-4 flex-shrink-0", isHero ? "text-teal-300" : "text-primary")} />
-                  <div className="min-w-0 flex-1">
-                    <p className={cn("text-xs font-medium mb-0.5", mutedText)}>نقطة المغادرة</p>
-                    {origin ? (
-                      <p className={cn("text-sm font-semibold truncate", textColor)}>
-                        {origin.city} <span className={cn("text-xs font-normal", mutedText)}>({origin.code})</span>
+            {/* ── BANNER LAYOUT: one-row horizontal Skyscanner style ─────── */}
+            {isBanner ? (
+              <div className="flex items-stretch rounded-2xl border-2 border-gray-200 overflow-visible hover:border-primary/40 transition-colors">
+                {/* Origin */}
+                <div ref={originRef} className="relative flex-1 min-w-0">
+                  <div
+                    className="flex items-center gap-3 px-5 py-4 cursor-pointer hover:bg-gray-50 transition-colors h-full"
+                    onClick={() => { setShowOriginDropdown(true); setShowDestDropdown(false); setShowPassengers(false); }}
+                  >
+                    <MapPin className="w-5 h-5 text-primary flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs text-gray-500 font-medium mb-0.5">المغادرة من</p>
+                      <p className="text-sm font-bold text-gray-800 truncate">
+                        {origin ? <>{origin.city} <span className="font-normal text-gray-500">({origin.code})</span></> : <span className="text-gray-400 font-normal">مدينة أو مطار</span>}
                       </p>
-                    ) : (
-                      <p className={cn("text-sm", mutedText)}>من</p>
+                    </div>
+                    {origin && (
+                      <button onClick={(e) => { e.stopPropagation(); setOrigin(null); setOriginQuery(""); }} className="text-gray-400 hover:text-gray-600 flex-shrink-0" aria-label="مسح المغادرة"><X className="w-4 h-4" /></button>
                     )}
                   </div>
-                  {origin && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setOrigin(null); setOriginQuery(""); }}
-                      className={cn("flex-shrink-0", mutedText)}
-                      aria-label="مسح المغادرة"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
+                  {showOriginDropdown && (
+                    <AirportDropdown query={originQuery} setQuery={setOriginQuery} airports={filteredOrigins} onSelect={(a) => { setOrigin(a); setShowOriginDropdown(false); setOriginQuery(""); }} isHero={false} exclude={destination?.code} />
                   )}
                 </div>
 
-                {showOriginDropdown && (
-                  <AirportDropdown
-                    query={originQuery}
-                    setQuery={setOriginQuery}
-                    airports={filteredOrigins}
-                    onSelect={(a) => { setOrigin(a); setShowOriginDropdown(false); setOriginQuery(""); }}
-                    isHero={isHero}
-                    exclude={destination?.code}
-                  />
-                )}
-              </div>
+                {/* Swap button */}
+                <div className="flex items-center px-1 border-x border-gray-200 bg-white">
+                  <button
+                    onClick={swapLocations}
+                    className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-100 hover:rotate-180 transition-all duration-300 text-gray-500"
+                    aria-label="تبديل المطارات"
+                  >
+                    <ArrowLeftRight className="w-4 h-4" />
+                  </button>
+                </div>
 
-              {/* Swap button */}
-              <div className={cn("flex items-center justify-center", isMobile && "hidden")}>
-                <button
-                  onClick={swapLocations}
-                  className={cn(
-                    "w-9 h-9 rounded-full border flex items-center justify-center transition-all hover:scale-110 hover:rotate-180 duration-300",
-                    isHero ? "border-white/30 bg-white/10 text-white" : "border-gray-200 bg-white text-gray-600"
+                {/* Destination */}
+                <div ref={destRef} className="relative flex-1 min-w-0">
+                  <div
+                    className="flex items-center gap-3 px-5 py-4 cursor-pointer hover:bg-gray-50 transition-colors h-full"
+                    onClick={() => { setShowDestDropdown(true); setShowOriginDropdown(false); setShowPassengers(false); }}
+                  >
+                    <MapPin className="w-5 h-5 text-teal-600 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs text-gray-500 font-medium mb-0.5">الوصول إلى</p>
+                      <p className="text-sm font-bold text-gray-800 truncate">
+                        {destination ? <>{destination.city} <span className="font-normal text-gray-500">({destination.code})</span></> : <span className="text-gray-400 font-normal">مدينة أو مطار</span>}
+                      </p>
+                    </div>
+                    {destination && (
+                      <button onClick={(e) => { e.stopPropagation(); setDestination(null); setDestQuery(""); }} className="text-gray-400 hover:text-gray-600 flex-shrink-0" aria-label="مسح الوجهة"><X className="w-4 h-4" /></button>
+                    )}
+                  </div>
+                  {showDestDropdown && (
+                    <AirportDropdown query={destQuery} setQuery={setDestQuery} airports={filteredDests} onSelect={(a) => { setDestination(a); setShowDestDropdown(false); setDestQuery(""); }} isHero={false} exclude={origin?.code} />
                   )}
-                  aria-label="تبديل المطارات"
+                </div>
+
+                {/* Departure date */}
+                <div className="flex-1 min-w-0 border-x border-gray-200">
+                  <div className="flex items-center gap-3 px-5 py-4 h-full">
+                    <CalendarDays className="w-5 h-5 text-primary flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-gray-500 font-medium mb-0.5">تاريخ الذهاب</p>
+                      <input
+                        type="date" value={departureDate} min={today}
+                        onChange={(e) => setDepartureDate(e.target.value)}
+                        className="w-full bg-transparent text-sm font-bold text-gray-800 outline-none cursor-pointer"
+                        aria-label="تاريخ المغادرة"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Return date (roundtrip only) */}
+                {tripType === "roundtrip" && (
+                  <div className="flex-1 min-w-0 border-l border-gray-200">
+                    <div className="flex items-center gap-3 px-5 py-4 h-full">
+                      <CalendarDays className="w-5 h-5 text-teal-600 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-gray-500 font-medium mb-0.5">تاريخ العودة</p>
+                        <input
+                          type="date" value={returnDate} min={departureDate || today}
+                          onChange={(e) => setReturnDate(e.target.value)}
+                          className="w-full bg-transparent text-sm font-bold text-gray-800 outline-none cursor-pointer"
+                          aria-label="تاريخ العودة"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Passengers */}
+                <div ref={passRef} className="relative border-x border-gray-200">
+                  <button
+                    onClick={() => { setShowPassengers(!showPassengers); setShowOriginDropdown(false); setShowDestDropdown(false); }}
+                    className="flex items-center gap-2 px-5 py-4 h-full hover:bg-gray-50 transition-colors whitespace-nowrap"
+                  >
+                    <svg className="w-5 h-5 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium mb-0.5">المسافرون</p>
+                      <p className="text-sm font-bold text-gray-800">
+                        {totalPassengers} {totalPassengers === 1 ? "بالغ" : "مسافرون"}
+                        <span className="text-xs font-normal text-gray-500 mr-1">, {cabinLabels[cabinClass]}</span>
+                      </p>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  </button>
+                  {showPassengers && (
+                    <PassengersDropdown passengers={passengers} cabinClass={cabinClass} cabinLabels={cabinLabels} onAdjust={adjustPassenger} onCabinChange={setCabinClass} onClose={() => setShowPassengers(false)} isHero={false} />
+                  )}
+                </div>
+
+                {/* Search button */}
+                <button
+                  onClick={handleSearch}
+                  disabled={!origin || !destination}
+                  className={cn(
+                    "px-8 flex items-center gap-2 font-bold text-base transition-all rounded-l-none rounded-r-2xl",
+                    !origin || !destination
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-gradient-to-br from-primary via-teal-500 to-cyan-500 text-white hover:opacity-90 hover:shadow-lg hover:shadow-primary/30 active:scale-95"
+                  )}
                 >
-                  <ArrowLeftRight className="w-4 h-4" />
+                  <Search className="w-5 h-5" />
+                  بحث
                 </button>
               </div>
-
-              {/* Destination */}
-              <div ref={destRef} className="relative">
-                <div
-                  className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all",
-                    inputBg
-                  )}
-                  onClick={() => {
-                    setShowDestDropdown(true);
-                    setShowOriginDropdown(false);
-                    setShowPassengers(false);
-                  }}
-                >
-                  <MapPin className={cn("w-4 h-4 flex-shrink-0", isHero ? "text-cyan-300" : "text-primary")} />
-                  <div className="min-w-0 flex-1">
-                    <p className={cn("text-xs font-medium mb-0.5", mutedText)}>الوجهة</p>
-                    {destination ? (
-                      <p className={cn("text-sm font-semibold truncate", textColor)}>
-                        {destination.city} <span className={cn("text-xs font-normal", mutedText)}>({destination.code})</span>
-                      </p>
-                    ) : (
-                      <p className={cn("text-sm", mutedText)}>إلى</p>
-                    )}
-                  </div>
-                  {destination && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setDestination(null); setDestQuery(""); }}
-                      className={cn("flex-shrink-0", mutedText)}
-                      aria-label="مسح الوجهة"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                {showDestDropdown && (
-                  <AirportDropdown
-                    query={destQuery}
-                    setQuery={setDestQuery}
-                    airports={filteredDests}
-                    onSelect={(a) => { setDestination(a); setShowDestDropdown(false); setDestQuery(""); }}
-                    isHero={isHero}
-                    exclude={origin?.code}
-                  />
-                )}
-              </div>
-
-              {/* Departure date */}
-              <div
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl border transition-all",
-                  inputBg
-                )}
-              >
-                <CalendarDays className={cn("w-4 h-4 flex-shrink-0", isHero ? "text-teal-300" : "text-primary")} />
-                <div className="flex-1 min-w-0">
-                  <p className={cn("text-xs font-medium mb-0.5", mutedText)}>تاريخ المغادرة</p>
-                  <input
-                    type="date"
-                    value={departureDate}
-                    min={today}
-                    onChange={(e) => setDepartureDate(e.target.value)}
-                    className={cn(
-                      "w-full bg-transparent text-sm font-semibold outline-none",
-                      departureDate ? textColor : mutedText
-                    )}
-                    aria-label="تاريخ المغادرة"
-                  />
-                </div>
-              </div>
-
-              {/* Return date */}
-              {tripType === "roundtrip" && (
-                <div
-                  className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-xl border transition-all",
-                    inputBg
-                  )}
-                >
-                  <CalendarDays className={cn("w-4 h-4 flex-shrink-0", isHero ? "text-cyan-300" : "text-primary")} />
-                  <div className="flex-1 min-w-0">
-                    <p className={cn("text-xs font-medium mb-0.5", mutedText)}>رحلة العودة</p>
-                    <input
-                      type="date"
-                      value={returnDate}
-                      min={departureDate || today}
-                      onChange={(e) => setReturnDate(e.target.value)}
-                      className={cn(
-                        "w-full bg-transparent text-sm font-semibold outline-none",
-                        returnDate ? textColor : mutedText
+            ) : (
+            /* ── STANDARD GRID LAYOUT (hero / mobile / page) ────────────── */
+            <>
+              <div className={cn(
+                "grid gap-2",
+                isMobile ? "grid-cols-1" : tripType === "roundtrip" ? "grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr_1fr]" : "grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr]"
+              )}>
+                {/* Origin */}
+                <div ref={originRef} className="relative">
+                  <div
+                    className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all", inputBg)}
+                    onClick={() => { setShowOriginDropdown(true); setShowDestDropdown(false); setShowPassengers(false); }}
+                  >
+                    <MapPin className={cn("w-4 h-4 flex-shrink-0", isHero ? "text-teal-300" : "text-primary")} />
+                    <div className="min-w-0 flex-1">
+                      <p className={cn("text-xs font-medium mb-0.5", mutedText)}>نقطة المغادرة</p>
+                      {origin ? (
+                        <p className={cn("text-sm font-semibold truncate", textColor)}>{origin.city} <span className={cn("text-xs font-normal", mutedText)}>({origin.code})</span></p>
+                      ) : (
+                        <p className={cn("text-sm", mutedText)}>من</p>
                       )}
-                      aria-label="تاريخ العودة"
-                    />
+                    </div>
+                    {origin && (
+                      <button onClick={(e) => { e.stopPropagation(); setOrigin(null); setOriginQuery(""); }} className={cn("flex-shrink-0", mutedText)} aria-label="مسح المغادرة"><X className="w-3.5 h-3.5" /></button>
+                    )}
+                  </div>
+                  {showOriginDropdown && (
+                    <AirportDropdown query={originQuery} setQuery={setOriginQuery} airports={filteredOrigins} onSelect={(a) => { setOrigin(a); setShowOriginDropdown(false); setOriginQuery(""); }} isHero={isHero} exclude={destination?.code} />
+                  )}
+                </div>
+
+                {/* Swap */}
+                <div className={cn("flex items-center justify-center", isMobile && "hidden")}>
+                  <button
+                    onClick={swapLocations}
+                    className={cn("w-9 h-9 rounded-full border flex items-center justify-center transition-all hover:scale-110 hover:rotate-180 duration-300", isHero ? "border-white/30 bg-white/10 text-white" : "border-gray-200 bg-white text-gray-600")}
+                    aria-label="تبديل المطارات"
+                  >
+                    <ArrowLeftRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Destination */}
+                <div ref={destRef} className="relative">
+                  <div
+                    className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all", inputBg)}
+                    onClick={() => { setShowDestDropdown(true); setShowOriginDropdown(false); setShowPassengers(false); }}
+                  >
+                    <MapPin className={cn("w-4 h-4 flex-shrink-0", isHero ? "text-cyan-300" : "text-primary")} />
+                    <div className="min-w-0 flex-1">
+                      <p className={cn("text-xs font-medium mb-0.5", mutedText)}>الوجهة</p>
+                      {destination ? (
+                        <p className={cn("text-sm font-semibold truncate", textColor)}>{destination.city} <span className={cn("text-xs font-normal", mutedText)}>({destination.code})</span></p>
+                      ) : (
+                        <p className={cn("text-sm", mutedText)}>إلى</p>
+                      )}
+                    </div>
+                    {destination && (
+                      <button onClick={(e) => { e.stopPropagation(); setDestination(null); setDestQuery(""); }} className={cn("flex-shrink-0", mutedText)} aria-label="مسح الوجهة"><X className="w-3.5 h-3.5" /></button>
+                    )}
+                  </div>
+                  {showDestDropdown && (
+                    <AirportDropdown query={destQuery} setQuery={setDestQuery} airports={filteredDests} onSelect={(a) => { setDestination(a); setShowDestDropdown(false); setDestQuery(""); }} isHero={isHero} exclude={origin?.code} />
+                  )}
+                </div>
+
+                {/* Departure date */}
+                <div className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border transition-all", inputBg)}>
+                  <CalendarDays className={cn("w-4 h-4 flex-shrink-0", isHero ? "text-teal-300" : "text-primary")} />
+                  <div className="flex-1 min-w-0">
+                    <p className={cn("text-xs font-medium mb-0.5", mutedText)}>تاريخ المغادرة</p>
+                    <input type="date" value={departureDate} min={today} onChange={(e) => setDepartureDate(e.target.value)} className={cn("w-full bg-transparent text-sm font-semibold outline-none", departureDate ? textColor : mutedText)} aria-label="تاريخ المغادرة" />
                   </div>
                 </div>
-              )}
-            </div>
 
-            {/* Passengers + Class + Add hotel row */}
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Passengers picker */}
-              <div ref={passRef} className="relative">
-                <button
-                  onClick={() => { setShowPassengers(!showPassengers); setShowOriginDropdown(false); setShowDestDropdown(false); }}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm transition-all",
-                    inputBg
-                  )}
-                >
-                  <svg className={cn("w-4 h-4", isHero ? "text-teal-300" : "text-primary")} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                  <span className={cn("font-medium", textColor)}>
-                    {totalPassengers} {totalPassengers === 1 ? "بالغ" : "مسافرون"}
-                    {passengers.children > 0 && `, ${passengers.children} طفل`}
-                    {passengers.infants > 0 && `, ${passengers.infants} رضيع`}
-                  </span>
-                  <span className={cn("text-xs", mutedText)}>, {cabinLabels[cabinClass]}</span>
-                  <ChevronDown className={cn("w-3.5 h-3.5", mutedText)} />
-                </button>
-
-                {showPassengers && (
-                  <PassengersDropdown
-                    passengers={passengers}
-                    cabinClass={cabinClass}
-                    cabinLabels={cabinLabels}
-                    onAdjust={adjustPassenger}
-                    onCabinChange={setCabinClass}
-                    onClose={() => setShowPassengers(false)}
-                    isHero={isHero}
-                  />
+                {/* Return date */}
+                {tripType === "roundtrip" && (
+                  <div className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border transition-all", inputBg)}>
+                    <CalendarDays className={cn("w-4 h-4 flex-shrink-0", isHero ? "text-cyan-300" : "text-primary")} />
+                    <div className="flex-1 min-w-0">
+                      <p className={cn("text-xs font-medium mb-0.5", mutedText)}>رحلة العودة</p>
+                      <input type="date" value={returnDate} min={departureDate || today} onChange={(e) => setReturnDate(e.target.value)} className={cn("w-full bg-transparent text-sm font-semibold outline-none", returnDate ? textColor : mutedText)} aria-label="تاريخ العودة" />
+                    </div>
+                  </div>
                 )}
               </div>
 
-              {/* Add hotel toggle */}
-              <label className={cn("flex items-center gap-2 text-sm cursor-pointer", mutedText)}>
-                <input
-                  type="checkbox"
-                  checked={addHotel}
-                  onChange={(e) => setAddHotel(e.target.checked)}
-                  className="w-4 h-4 rounded accent-primary"
-                />
-                <Building2 className="w-4 h-4" />
-                أضف فندقًا
-              </label>
+              {/* Passengers + Class + Add hotel row */}
+              <div className="flex flex-wrap items-center gap-3">
+                <div ref={passRef} className="relative">
+                  <button
+                    onClick={() => { setShowPassengers(!showPassengers); setShowOriginDropdown(false); setShowDestDropdown(false); }}
+                    className={cn("flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm transition-all", inputBg)}
+                  >
+                    <svg className={cn("w-4 h-4", isHero ? "text-teal-300" : "text-primary")} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span className={cn("font-medium", textColor)}>
+                      {totalPassengers} {totalPassengers === 1 ? "بالغ" : "مسافرون"}
+                      {passengers.children > 0 && `, ${passengers.children} طفل`}
+                      {passengers.infants > 0 && `, ${passengers.infants} رضيع`}
+                    </span>
+                    <span className={cn("text-xs", mutedText)}>, {cabinLabels[cabinClass]}</span>
+                    <ChevronDown className={cn("w-3.5 h-3.5", mutedText)} />
+                  </button>
+                  {showPassengers && (
+                    <PassengersDropdown passengers={passengers} cabinClass={cabinClass} cabinLabels={cabinLabels} onAdjust={adjustPassenger} onCabinChange={setCabinClass} onClose={() => setShowPassengers(false)} isHero={isHero} />
+                  )}
+                </div>
 
-              {/* Search Button */}
-              <button
-                onClick={handleSearch}
-                disabled={!origin || !destination}
-                className={cn(
-                  "mr-auto flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-lg",
-                  !origin || !destination
-                    ? "opacity-50 cursor-not-allowed bg-gray-300 text-gray-500"
-                    : "bg-gradient-to-r from-primary to-teal-500 hover:from-primary/90 hover:to-teal-400 text-white hover:shadow-primary/30 hover:scale-105 active:scale-95"
-                )}
-              >
-                <Search className="w-4 h-4" />
-                بحث
-              </button>
-            </div>
+                <label className={cn("flex items-center gap-2 text-sm cursor-pointer", mutedText)}>
+                  <input type="checkbox" checked={addHotel} onChange={(e) => setAddHotel(e.target.checked)} className="w-4 h-4 rounded accent-primary" />
+                  <Building2 className="w-4 h-4" />
+                  أضف فندقًا
+                </label>
+
+                <button
+                  onClick={handleSearch}
+                  disabled={!origin || !destination}
+                  className={cn(
+                    "mr-auto flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-lg",
+                    !origin || !destination
+                      ? "opacity-50 cursor-not-allowed bg-gray-300 text-gray-500"
+                      : "bg-gradient-to-r from-primary to-teal-500 hover:from-primary/90 hover:to-teal-400 text-white hover:shadow-primary/30 hover:scale-105 active:scale-95"
+                  )}
+                >
+                  <Search className="w-4 h-4" />
+                  بحث
+                </button>
+              </div>
+            </>
+            )}
           </>
         )}
 
-        {/* Hotels tab placeholder */}
+        {/* Hotels tab */}
         {activeTab === "hotels" && (
-          <HotelSearchForm isHero={isHero} textColor={textColor} mutedText={mutedText} inputBg={inputBg} navigate={navigate} today={today} />
+          <HotelSearchForm isHero={isHero} isBanner={isBanner} textColor={textColor} mutedText={mutedText} inputBg={inputBg} navigate={navigate} today={today} />
         )}
 
-        {/* Cars tab placeholder */}
+        {/* Cars tab */}
         {activeTab === "cars" && (
-          <CarSearchForm isHero={isHero} textColor={textColor} mutedText={mutedText} inputBg={inputBg} navigate={navigate} today={today} />
+          <CarSearchForm isHero={isHero} isBanner={isBanner} textColor={textColor} mutedText={mutedText} inputBg={inputBg} navigate={navigate} today={today} />
         )}
       </div>
     </div>
@@ -682,8 +721,8 @@ const PassengersDropdown = ({
 
 // ─── Hotel Search Form ────────────────────────────────────────────────────────
 const HotelSearchForm = ({
-  isHero, textColor, mutedText, inputBg, navigate, today,
-}: { isHero: boolean; textColor: string; mutedText: string; inputBg: string; navigate: ReturnType<typeof useNavigate>; today: string }) => {
+  isHero, isBanner, textColor, mutedText, inputBg, navigate, today,
+}: { isHero: boolean; isBanner?: boolean; textColor: string; mutedText: string; inputBg: string; navigate: ReturnType<typeof useNavigate>; today: string }) => {
   const [dest, setDest] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -746,8 +785,8 @@ const HotelSearchForm = ({
 
 // ─── Car Search Form ──────────────────────────────────────────────────────────
 const CarSearchForm = ({
-  isHero, textColor, mutedText, inputBg, navigate, today,
-}: { isHero: boolean; textColor: string; mutedText: string; inputBg: string; navigate: ReturnType<typeof useNavigate>; today: string }) => {
+  isHero, isBanner, textColor, mutedText, inputBg, navigate, today,
+}: { isHero: boolean; isBanner?: boolean; textColor: string; mutedText: string; inputBg: string; navigate: ReturnType<typeof useNavigate>; today: string }) => {
   const [location, setLocation] = useState("");
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturn] = useState("");

@@ -15,12 +15,12 @@ CREATE TABLE IF NOT EXISTS special_offers (
     offer_type TEXT NOT NULL DEFAULT 'seasonal',
     -- seasonal, flash, honeymoon, family, lastminute, earlybird, group, weekend
     destination TEXT DEFAULT '',
-    countries TEXT[] DEFAULT '{}',
+    countries JSONB DEFAULT '[]',
 
     -- الصور والوصف
     cover_image TEXT,
     description_ar TEXT,
-    highlights TEXT[] DEFAULT '{}',
+    highlights JSONB DEFAULT '[]',
 
     -- التسعير
     original_price DECIMAL(10, 2) NOT NULL DEFAULT 0,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS special_offers (
 
     -- التفاصيل
     duration TEXT,
-    includes TEXT[] DEFAULT '{}',
+    includes JSONB DEFAULT '[]',
     terms TEXT,
 
     -- التواريخ
@@ -89,11 +89,11 @@ VALUES
     'malaysia-golden-package',
     'family',
     'ماليزيا',
-    ARRAY['ماليزيا'],
+    '["ماليزيا"]'::jsonb,
     'https://images.unsplash.com/photo-1596422846543-75c6fc197f07',
     'استمتع برحلة لا تُنسى في ماليزيا مع أفضل الفنادق والجولات السياحية',
     3999, 2999, 25, '7 أيام / 6 ليالي',
-    ARRAY['تذاكر طيران', 'فندق 5 نجوم', 'جولات سياحية', 'إفطار يومي'],
+    '["تذاكر طيران", "فندق 5 نجوم", "جولات سياحية", "إفطار يومي"]'::jsonb,
     NOW() + INTERVAL '30 days',
     true, true
 ),
@@ -103,11 +103,11 @@ VALUES
     'turkey-special-offer',
     'seasonal',
     'تركيا',
-    ARRAY['تركيا'],
+    '["تركيا"]'::jsonb,
     'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200',
     'اكتشف جمال تركيا بأسعار لا تُقاوم',
     4500, 3200, 29, '8 أيام / 7 ليالي',
-    ARRAY['طيران مباشر', 'فندق 4 نجوم', 'نقل من وإلى المطار', 'مرشد سياحي'],
+    '["طيران مباشر", "فندق 4 نجوم", "نقل من وإلى المطار", "مرشد سياحي"]'::jsonb,
     NOW() + INTERVAL '45 days',
     false, true
 ),
@@ -117,11 +117,11 @@ VALUES
     'maldives-honeymoon',
     'honeymoon',
     'المالديف',
-    ARRAY['المالديف'],
+    '["المالديف"]'::jsonb,
     'https://images.unsplash.com/photo-1514282401047-d79a71a590e8',
     'قضِ أجمل أيام عمرك في المالديف مع باقة شهر العسل الفاخرة',
     12000, 8800, 27, '6 أيام / 5 ليالي',
-    ARRAY['طيران', 'فيلا على الماء', 'وجبات كاملة', 'رحلات غوص', 'سبا للزوجين'],
+    '["طيران", "فيلا على الماء", "وجبات كاملة", "رحلات غوص", "سبا للزوجين"]'::jsonb,
     NOW() + INTERVAL '60 days',
     true, true
 )
