@@ -51,6 +51,29 @@ CREATE INDEX IF NOT EXISTS idx_special_offers_active  ON special_offers (is_acti
 CREATE INDEX IF NOT EXISTS idx_special_offers_type    ON special_offers (offer_type);
 CREATE INDEX IF NOT EXISTS idx_special_offers_hot     ON special_offers (is_hot) WHERE is_hot = true;
 
+-- تحويل الأعمدة إلى JSONB إذا كانت لا تزال من نوع TEXT[]
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'special_offers' AND column_name = 'countries' AND data_type = 'ARRAY'
+  ) THEN
+    ALTER TABLE special_offers ALTER COLUMN countries TYPE JSONB USING to_jsonb(countries);
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'special_offers' AND column_name = 'highlights' AND data_type = 'ARRAY'
+  ) THEN
+    ALTER TABLE special_offers ALTER COLUMN highlights TYPE JSONB USING to_jsonb(highlights);
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'special_offers' AND column_name = 'includes' AND data_type = 'ARRAY'
+  ) THEN
+    ALTER TABLE special_offers ALTER COLUMN includes TYPE JSONB USING to_jsonb(includes);
+  END IF;
+END $$;
+
 -- RLS
 ALTER TABLE special_offers ENABLE ROW LEVEL SECURITY;
 
