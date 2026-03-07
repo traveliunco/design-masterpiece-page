@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { Calendar, User, Clock, ArrowLeft, Tag, TrendingUp } from "lucide-react";
+import { User, Clock, TrendingUp, Loader2 } from "lucide-react";
 import PageLayout from "@/layouts/PageLayout";
 import PageHeader from "@/components/ui/PageHeader";
 import { useSEO } from "@/hooks/useSEO";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { blogService } from "@/services/adminDataService";
 
 interface Article {
   id: string;
@@ -20,8 +21,7 @@ interface Article {
   views: number;
 }
 
-// Mock articles data
-const mockArticles: Article[] = [
+const fallbackArticles: Article[] = [
   {
     id: "1",
     title: "أفضل 10 وجهات سياحية في ماليزيا",
@@ -101,17 +101,40 @@ const Blog = () => {
     keywords: "مدونة سياحة, نصائح سفر, دليل سياحي, مقالات سفر",
   });
 
-  const [articles] = useState<Article[]>(mockArticles);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const categories = ["الكل", "دليل السفر", "نصائح السفر", "شهر العسل", "ثقافة وتراث"];
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const data = await blogService.getArticles();
+        setArticles(data && data.length > 0 ? (data as unknown as Article[]) : fallbackArticles);
+      } catch {
+        setArticles(fallbackArticles);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchArticles();
+  }, []);
 
+  const categories = ["الكل", "دليل السفر", "نصائح السفر", "شهر العسل", "ثقافة وتراث"];
   const featuredArticles = articles.filter(a => a.is_featured).slice(0, 2);
   const regularArticles = articles.filter(a => !a.is_featured);
-
-  const filteredArticles = selectedCategory === "all" 
-    ? regularArticles 
+  const filteredArticles = selectedCategory === "all"
+    ? regularArticles
     : regularArticles.filter(a => a.category === selectedCategory);
+
+  if (loading) {
+    return (
+      <PageLayout>
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <Loader2 className="w-10 h-10 animate-spin text-luxury-teal" />
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout>
@@ -132,8 +155,8 @@ const Blog = () => {
                 <Link key={article.id} to={`/blog/${article.slug}`} className="group">
                   <div className="card-3d overflow-hidden hover:shadow-luxury transition-all">
                     <div className="relative h-64">
-                      <img 
-                        src={article.cover_image} 
+                      <img
+                        src={article.cover_image}
                         alt={article.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
@@ -191,8 +214,8 @@ const Blog = () => {
               <Link key={article.id} to={`/blog/${article.slug}`} className="group">
                 <div className="card-3d overflow-hidden hover:shadow-luxury transition-all h-full flex flex-col">
                   <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={article.cover_image} 
+                    <img
+                      src={article.cover_image}
                       alt={article.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
@@ -204,9 +227,7 @@ const Blog = () => {
                     <h3 className="text-xl font-bold text-luxury-navy mb-3 group-hover:text-luxury-teal transition-colors line-clamp-2">
                       {article.title}
                     </h3>
-                    <p className="text-muted-foreground mb-4 line-clamp-2 flex-1">
-                      {article.excerpt}
-                    </p>
+                    <p className="text-muted-foreground mb-4 line-clamp-2 flex-1">{article.excerpt}</p>
                     <div className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t border-border">
                       <div className="flex items-center gap-2">
                         <User className="w-4 h-4" />
@@ -250,8 +271,8 @@ const Blog = () => {
             <h2 className="text-3xl font-bold text-white mb-4">اشترك في نشرتنا البريدية</h2>
             <p className="text-white/70 mb-8">احصل على أحدث المقالات والعروض الحصرية مباشرة إلى بريدك</p>
             <div className="flex gap-4 max-w-md mx-auto">
-              <input 
-                type="email" 
+              <input
+                type="email"
                 placeholder="بريدك الإلكتروني"
                 className="flex-1 px-6 py-4 rounded-full text-luxury-navy"
               />

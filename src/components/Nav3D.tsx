@@ -9,8 +9,11 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { navService, systemSettingsService, type NavLink } from "@/services/adminDataService";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useSystemSettings } from "@/hooks/useSystemSettings";
 
 // Mega Menu Data
 const megaMenuItems = {
@@ -116,12 +119,16 @@ const Nav3D = () => {
   const { isMobileMenuOpen, setIsMobileMenuOpen } = useNavigation();
   const { favorites, favoriteCities, favoriteDestinations, favoriteOffers, favoritesCount, destinationsCount, offersCount, citiesCount, removeFavorite } = useFavorites();
   const navigateRouter = useNavigate();
+  const { user } = useAuth();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [showFavPanel, setShowFavPanel] = useState<'cities' | 'destinations' | 'offers' | null>(null);
   const [language, setLanguage] = useState<'ar' | 'en'>('ar');
   const [currency, setCurrency] = useState<'SAR' | 'USD' | 'EUR'>('SAR');
   const location = useLocation();
   const navRef = useRef<HTMLDivElement>(null);
+
+  // إعدادات النظام الحية
+  const sysSettings = useSystemSettings();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -145,15 +152,15 @@ const Nav3D = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const navLinks = [
-    { name: "الأولى", path: "/", hasDropdown: false },
-    { name: "الدول", path: "/destinations", hasDropdown: true, dropdownKey: "countries" },
-    { name: "شهر العسل", path: "/honeymoon", hasDropdown: false },
-    { name: "العروض", path: "/offers", hasDropdown: false },
-    { name: "البرامج", path: "/programs", hasDropdown: false },
-    { name: "الخدمات", path: "/services", hasDropdown: false },
-    { name: "المزيد", path: "#", hasDropdown: true, dropdownKey: "more" },
-  ];
+
+  // ✅ روابط القائمة من localStorage (تتحدث عند كل تنقل)
+  const [navLinks, setNavLinks] = useState<NavLink[]>(() => navService.getNavLinks());
+  useEffect(() => {
+    setNavLinks(navService.getNavLinks());
+  }, [location.pathname]);
+  const activeNavLinks = navLinks.filter(l => l.is_active).sort((a, b) => a.order - b.order);
+
+
 
   const handleDropdownToggle = (key: string) => {
     setActiveDropdown(activeDropdown === key ? null : key);
@@ -161,11 +168,27 @@ const Nav3D = () => {
 
   return (
     <>
+      {/* Top Bar */}
+      {sysSettings.header.showTopBar && (
+        <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-teal-600 to-cyan-500 text-white text-xs py-2 px-4 flex items-center justify-between z-[calc(var(--z-navigation)+1)] shadow-md">
+          <div className="flex-1 text-center font-bold tracking-wide animate-pulse-slow">
+            {sysSettings.header.topBarText}
+          </div>
+          {sysSettings.header.topBarPhone && (
+            <div className="hidden md:flex items-center gap-2 text-white" dir="ltr">
+              <Phone className="w-3.5 h-3.5" />
+              <span className="font-semibold">{sysSettings.header.topBarPhone}</span>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* 3D Navigation Bar */}
       <nav
         ref={navRef}
         className={cn(
-          "fixed top-0 left-0 right-0 transition-all duration-500",
+          "fixed left-0 right-0 transition-all duration-500",
+          sysSettings.header.showTopBar ? "top-8" : "top-0",
           "z-[var(--z-navigation)]"
         )}
       >
@@ -236,20 +259,20 @@ const Nav3D = () => {
                   "text-2xl font-bold transition-colors duration-300",
                   isScrolled ? "text-luxury-navy" : "text-white drop-shadow-lg"
                 )}>
-                  ترافليون
+                  {sysSettings.header.siteName}
                 </span>
                 <span className={cn(
                   "text-[10px] block tracking-[0.3em] uppercase transition-colors duration-300",
                   isScrolled ? "text-luxury-teal" : "text-white/70"
                 )}>
-                  TRAVELIUN
+                  {sysSettings.header.siteNameEn}
                 </span>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-1 relative z-10">
-              {navLinks.map((link) => (
+              {activeNavLinks.map((link) => (
                 <div key={link.path} className="relative">
                   {link.hasDropdown ? (
                     <button
@@ -407,18 +430,20 @@ const Nav3D = () => {
             {/* CTA & Mobile Toggle */}
             <div className="flex items-center gap-2 relative z-10">
               {/* Search */}
-              <button
-                className={cn(
-                  "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300",
-                  isScrolled
-                    ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal"
-                    : "text-white/90 hover:bg-white/10"
-                )}
-                title="بحث"
-                aria-label="بحث في الموقع"
-              >
-                <Search className="w-5 h-5" />
-              </button>
+              {sysSettings.header.showSearchBar && (
+                <button
+                  className={cn(
+                    "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300",
+                    isScrolled
+                      ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal"
+                      : "text-white/90 hover:bg-white/10"
+                  )}
+                  title="بحث"
+                  aria-label="بحث في الموقع"
+                >
+                  <Search className="w-5 h-5" />
+                </button>
+              )}
 
               {/* Currency Switcher */}
               <div className="hidden md:block relative">
@@ -453,7 +478,7 @@ const Nav3D = () => {
                 )}
                 title="تبديل اللغة"
                 aria-label={`تبديل اللغة. الحالية: ${language === 'ar' ? 'العربية' : 'English'}`}
-              >
+                >
                 <Globe className="w-4 h-4" />
                 <span>{language === 'ar' ? 'EN' : 'عر'}</span>
               </button>
@@ -514,19 +539,29 @@ const Nav3D = () => {
                 </button>
               )}
 
-              {/* User Profile */}
-              <button
-                className={cn(
-                  "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300",
-                  isScrolled
-                    ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal"
-                    : "text-white/90 hover:bg-white/10"
-                )}
-                title="الملف الشخصي"
-                aria-label="فتح ملفك الشخصي"
-              >
-                <User className="w-5 h-5" />
-              </button>
+              {/* User Profile / Login */}
+              {sysSettings.header.showLoginButton && (
+                <button
+                  onClick={() => navigateRouter(user ? "/my-bookings" : "/login")}
+                  className={cn(
+                    "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 relative",
+                    user
+                      ? (isScrolled
+                          ? "text-luxury-teal bg-luxury-teal/10 hover:bg-luxury-teal hover:text-white"
+                          : "text-teal-300 bg-white/10 hover:bg-white/20")
+                      : (isScrolled
+                          ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal"
+                          : "text-white/90 hover:bg-white/10")
+                  )}
+                  title={user ? `مرحباً ${user.email?.split("@")[0]} - حجوزاتي` : "تسجيل الدخول"}
+                  aria-label={user ? "فتح حجوزاتي" : "تسجيل الدخول"}
+                >
+                  <User className="w-5 h-5" />
+                  {user && (
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-teal-400 rounded-full border-2 border-white" />
+                  )}
+                </button>
+              )}
 
               <a
                 href="https://api.whatsapp.com/send?phone=966569222111"
@@ -644,7 +679,7 @@ const Nav3D = () => {
           {/* Mobile Main Links */}
           <div className="space-y-2 mb-6">
             <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4 px-4 text-center md:text-right">القائمة الرئيسية</p>
-            {navLinks.filter(link => link.path !== "#").map((link, index) => (
+            {activeNavLinks.filter(link => link.path !== "#").map((link, index) => (
               <Link
                 key={link.path}
                 to={link.path}

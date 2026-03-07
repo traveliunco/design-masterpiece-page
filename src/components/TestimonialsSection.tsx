@@ -1,38 +1,33 @@
 import { Star, Quote, CheckCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
+import { homepageService } from "@/services/adminDataService";
 
-const testimonials = [
-  {
-    id: 1,
-    name: "أحمد الغامدي",
-    location: "الرياض",
-    text: "تجربة رائعة مع ترافليون! كانت رحلة شهر العسل في ماليزيا من أجمل الذكريات. شكراً على الخدمة المميزة.",
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: "سارة العتيبي",
-    location: "جدة",
-    text: "حجزت لعائلتي رحلة إلى تركيا وكانت التجربة ممتازة. الفريق محترف والخدمة راقية جداً.",
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: "محمد القحطاني",
-    location: "المدينة المنورة",
-    text: "أفضل وكالة سياحية تعاملت معها. الأسعار منافسة والخدمة على مدار الساعة. أنصح الجميع بهم.",
-    rating: 5,
-  },
-  {
-    id: 4,
-    name: "نورة الشمري",
-    location: "الدمام",
-    text: "رحلة إندونيسيا كانت فوق التوقعات! الفنادق فاخرة والجولات منظمة بشكل ممتاز.",
-    rating: 5,
-  },
+interface Testimonial {
+  id: number | string;
+  name: string;
+  location: string;
+  text: string;
+  rating: number;
+}
+
+const defaultTestimonials: Testimonial[] = [
+  { id: 1, name: "أحمد الغامدي", location: "الرياض", text: "تجربة رائعة مع ترافليون! كانت رحلة شهر العسل في ماليزيا من أجمل الذكريات. شكراً على الخدمة المميزة.", rating: 5 },
+  { id: 2, name: "سارة العتيبي", location: "جدة", text: "حجزت لعائلتي رحلة إلى تركيا وكانت التجربة ممتازة. الفريق محترف والخدمة راقية جداً.", rating: 5 },
+  { id: 3, name: "محمد القحطاني", location: "المدينة المنورة", text: "أفضل وكالة سياحية تعاملت معها. الأسعار منافسة والخدمة على مدار الساعة. أنصح الجميع بهم.", rating: 5 },
+  { id: 4, name: "نورة الشمري", location: "الدمام", text: "رحلة إندونيسيا كانت فوق التوقعات! الفنادق فاخرة والجولات منظمة بشكل ممتاز.", rating: 5 },
 ];
 
 const TestimonialsSection = () => {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials);
+
+  useEffect(() => {
+    homepageService.getTestimonials().then((data: unknown[]) => {
+      if (data && data.length > 0) {
+        setTestimonials(data as Testimonial[]);
+      }
+    }).catch(() => {});
+  }, []);
+
   return (
     <section className="py-20 md:py-32 bg-gray-50 relative overflow-hidden">
       <div className="container relative px-4 md:px-6">
@@ -52,7 +47,7 @@ const TestimonialsSection = () => {
 
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
               className="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:border-luxury-teal/30 transition-all duration-500 hover:-translate-y-1"
@@ -63,18 +58,14 @@ const TestimonialsSection = () => {
                   <Star key={i} className="w-4 h-4 text-teal-500 fill-teal-500" />
                 ))}
               </div>
-
               {/* Text */}
               <p className="text-gray-600 mb-6 leading-relaxed text-sm">
                 "{testimonial.text}"
               </p>
-
               {/* Author */}
               <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                 <div className="w-10 h-10 bg-luxury-navy/10 rounded-full flex items-center justify-center">
-                  <span className="text-luxury-navy font-bold">
-                    {testimonial.name.charAt(0)}
-                  </span>
+                  <span className="text-luxury-navy font-bold">{testimonial.name.charAt(0)}</span>
                 </div>
                 <div>
                   <div className="font-bold text-luxury-navy text-sm">{testimonial.name}</div>

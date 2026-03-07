@@ -1,115 +1,207 @@
 import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Edit, Trash2, Save, MapPin } from "lucide-react";
-import { getAllCities, getSoutheastAsiaCountries } from "@/data/southeast-asia";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
+import {
+  Plus, Edit, Trash2, Save, X, MapPin, Search, Eye
+} from "lucide-react";
+import {
+  getAllCountriesAdmin,
+  getAllCitiesAdmin,
+  createCity,
+  updateCity,
+  deleteCity,
+  TourCity,
+} from "@/services/countriesService";
 
-const AdminSoutheastAsiaCities = () => {
-  const [cities] = useState(getAllCities());
-  const [countries] = useState(getSoutheastAsiaCountries());
-  const [editingId, setEditingId] = useState<string | null>(null);
+const emptyForm: Omit<TourCity, "created_at" | "updated_at"> = {
+  id: "",
+  country_id: "",
+  name_ar: "",
+  name_en: "",
+  description: "",
+  image: "",
+  best_time: "",
+  average_temp: "",
+  accommodation: "",
+  coordinates_lat: undefined,
+  coordinates_lng: undefined,
+  attractions: [],
+  highlights: [],
+  is_active: true,
+  display_order: 0,
+};
+
+const AdminCitiesManager = () => {
+  const queryClient = useQueryClient();
+  const [editingKey, setEditingKey] = useState<{ cityId: string; countryId: string } | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterCountry, setFilterCountry] = useState("all");
+  const [formData, setFormData] = useState(emptyForm);
+  const [newAttraction, setNewAttraction] = useState("");
+  const [newHighlight, setNewHighlight] = useState("");
 
-  const [formData, setFormData] = useState({
-    nameAr: "",
-    nameEn: "",
-    description: "",
-    image: "",
-    coordinates: { lat: 0, lng: 0 },
-    bestTimeToVisit: "",
-    averageTemp: { summer: "", winter: "" },
-    accommodation: { budget: "", midRange: "", luxury: "" },
-    highlights: [] as string[],
+  const { data: countries = [] } = useQuery({
+    queryKey: ["admin-tour-countries"],
+    queryFn: getAllCountriesAdmin,
   });
 
-  const filteredCities = selectedCountry === "all" 
-    ? cities 
-    : cities.filter(city => {
-        const country = countries.find(c => c.cities.some(ct => ct.id === city.id));
-        return country?.id === selectedCountry;
-      });
+  const { data: cities = [], isLoading } = useQuery({
+    queryKey: ["admin-tour-cities"],
+    queryFn: getAllCitiesAdmin,
+  });
 
-  const handleEdit = (city: any) => {
-    setEditingId(city.id);
-    setFormData({
-      nameAr: city.nameAr,
-      nameEn: city.nameEn,
-      description: city.description,
-      image: city.image,
-      coordinates: city.coordinates,
-      bestTimeToVisit: city.bestTimeToVisit,
-      averageTemp: city.averageTemp,
-      accommodation: city.accommodation,
-      highlights: city.highlights,
-    });
-  };
+  const createMutation = useMutation({
+    mutationFn: createCity,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-tour-cities"] });
+      toast.success("تم إضافة المدينة بنجاح ✅");
+      setIsCreating(false);
+      setFormData(emptyForm);
+    },
+    onError: (err: any) => toast.error(`خطأ: ${err.message}`),
+  });
 
-  const handleSave = () => {
-    // TODO: Implement Supabase save functionality
-    console.log("Saving city:", formData);
-    setEditingId(null);
+  const updateMutation = useMutation({
+    mutationFn: ({ cityId, countryId, updates }: { cityId: string; countryId: string; updates: Partial<TourCity> }) =>
+      updateCity(cityId, countryId, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-tour-cities"] });
+      toast.success("تم حفظ التعديلات بنجاح ✅");
+      setEditingKey(null);
+      setFormData(emptyForm);
+    },
+    onError: (err: any) => toast.error(`خطأ: ${err.message}`),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: ({ cityId, countryId }: { cityId: string; countryId: string }) =>
+      deleteCity(cityId, countryId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-tour-cities"] });
+      toast.success("تم حذف المدينة");
+    },
+    onError: (err: any) => toast.error(`خطأ: ${err.message}`),
+  });
+
+  const handleEdit = (city: TourCity) => {
+    setEditingKey({ cityId: city.id, countryId: city.country_id });
     setIsCreating(false);
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm("هل أنت متأكد من حذف هذه المدينة؟")) {
-      // TODO: Implement Supabase delete functionality
-      console.log("Deleting city:", id);
-    }
+    setFormData({ ...city });
   };
 
   const handleCreate = () => {
     setIsCreating(true);
-    setFormData({
-      nameAr: "",
-      nameEn: "",
-      description: "",
-      image: "",
-      coordinates: { lat: 0, lng: 0 },
-      bestTimeToVisit: "",
-      averageTemp: { summer: "", winter: "" },
-      accommodation: { budget: "", midRange: "", luxury: "" },
-      highlights: [],
-    });
+    setEditingKey(null);
+    setFormData(emptyForm);
   };
 
-  const handleHighlightAdd = () => {
-    setFormData({ ...formData, highlights: [...formData.highlights, ""] });
+  const handleSave = () => {
+    if (!formData.name_ar || !formData.name_en) {
+      toast.error("يرجى ملء الاسم بالعربية والإنجليزية");
+      return;
+    }
+    if (!formData.id) {
+      toast.error("يرجى ملء المعرّف الفريد");
+      return;
+    }
+    if (!formData.country_id) {
+      toast.error("يرجى اختيار الدولة");
+      return;
+    }
+
+    if (isCreating) {
+      createMutation.mutate(formData);
+    } else if (editingKey) {
+      updateMutation.mutate({ cityId: editingKey.cityId, countryId: editingKey.countryId, updates: formData });
+    }
   };
 
-  const handleHighlightChange = (index: number, value: string) => {
-    const newHighlights = [...formData.highlights];
-    newHighlights[index] = value;
-    setFormData({ ...formData, highlights: newHighlights });
+  const handleDelete = (city: TourCity) => {
+    if (confirm(`هل أنت متأكد من حذف "${city.name_ar}"؟`)) {
+      deleteMutation.mutate({ cityId: city.id, countryId: city.country_id });
+    }
   };
 
-  const handleHighlightRemove = (index: number) => {
-    const newHighlights = formData.highlights.filter((_, i) => i !== index);
-    setFormData({ ...formData, highlights: newHighlights });
+  const handleCancel = () => {
+    setIsCreating(false);
+    setEditingKey(null);
+    setFormData(emptyForm);
   };
+
+  // مساعدات للقوائم
+  const addToList = (field: "attractions" | "highlights", value: string) => {
+    if (value.trim()) {
+      setFormData({ ...formData, [field]: [...(formData[field] || []), value.trim()] });
+    }
+  };
+
+  const removeFromList = (field: "attractions" | "highlights", index: number) => {
+    setFormData({ ...formData, [field]: (formData[field] || []).filter((_, i) => i !== index) });
+  };
+
+  const filteredCities = cities.filter((c) => {
+    const matchCountry = filterCountry === "all" || c.country_id === filterCountry;
+    const matchSearch =
+      !searchQuery ||
+      c.name_ar.includes(searchQuery) ||
+      c.name_en.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchCountry && matchSearch;
+  });
+
+  const getCountryName = (countryId: string) =>
+    countries.find((c) => c.id === countryId)?.name_ar || countryId;
+
+  const isSaving = createMutation.isPending || updateMutation.isPending;
 
   return (
     <div className="space-y-6">
+      {/* الرأس */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">إدارة مدن جنوب شرق آسيا</h1>
-          <p className="text-gray-600 mt-2">إضافة وتعديل المدن السياحية</p>
+          <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+            <MapPin className="w-8 h-8 text-primary" />
+            إدارة المدن السياحية
+          </h1>
+          <p className="text-gray-600 mt-1">
+            {cities.length} مدينة مسجّلة في قاعدة البيانات
+          </p>
         </div>
-        <div className="flex gap-3 items-center">
-          <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="تصفية حسب الدولة" />
+        <div className="flex gap-3 items-center flex-wrap">
+          {/* بحث */}
+          <div className="relative">
+            <Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="بحث عن مدينة..."
+              className="pr-9 w-44"
+            />
+          </div>
+          {/* تصفية حسب الدولة */}
+          <Select value={filterCountry} onValueChange={setFilterCountry}>
+            <SelectTrigger className="w-44">
+              <SelectValue placeholder="كل الدول" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">كل الدول</SelectItem>
-              {countries.map((country) => (
-                <SelectItem key={country.id} value={country.id}>
-                  {country.nameAr}
+              {countries.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.flag_emoji} {c.name_ar}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -121,299 +213,337 @@ const AdminSoutheastAsiaCities = () => {
         </div>
       </div>
 
-      {/* نموذج الإنشاء/التعديل */}
-      {(isCreating || editingId) && (
-        <Card className="p-6 bg-blue-50 border-blue-200">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">
-            {isCreating ? "إضافة مدينة جديدة" : "تعديل المدينة"}
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* الاسم بالعربية */}
+      {/* نموذج الإضافة/التعديل */}
+      {(isCreating || editingKey) && (
+        <Card className="p-6 bg-gradient-to-br from-green-50 to-teal-50 border-green-200 shadow-lg">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">
+              {isCreating ? "✨ إضافة مدينة جديدة" : `✏️ تعديل: ${formData.name_ar}`}
+            </h2>
+            <Button variant="ghost" size="icon" onClick={handleCancel}>
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {/* الدولة */}
             <div className="space-y-2">
-              <Label htmlFor="nameAr">الاسم بالعربية *</Label>
+              <Label>الدولة *</Label>
+              <Select
+                value={formData.country_id}
+                onValueChange={(val) => setFormData({ ...formData, country_id: val })}
+                disabled={!!editingKey}
+              >
+                <SelectTrigger className={editingKey ? "bg-gray-100" : ""}>
+                  <SelectValue placeholder="اختر الدولة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {countries.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.flag_emoji} {c.name_ar}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* المعرّف */}
+            <div className="space-y-2">
+              <Label>المعرّف (Slug) *</Label>
               <Input
-                id="nameAr"
-                value={formData.nameAr}
-                onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
-                placeholder="مثال: بانكوك"
+                value={formData.id}
+                onChange={(e) => setFormData({ ...formData, id: e.target.value.toLowerCase().replace(/\s+/g, "-") })}
+                placeholder="bangkok"
+                disabled={!!editingKey}
+                className={editingKey ? "bg-gray-100" : ""}
               />
             </div>
 
-            {/* الاسم بالإنجليزية */}
+            {/* الاسم عربي */}
             <div className="space-y-2">
-              <Label htmlFor="nameEn">الاسم بالإنجليزية *</Label>
+              <Label>الاسم بالعربية *</Label>
               <Input
-                id="nameEn"
-                value={formData.nameEn}
-                onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
+                value={formData.name_ar}
+                onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
+                placeholder="بانكوك"
+              />
+            </div>
+
+            {/* الاسم إنجليزي */}
+            <div className="space-y-2">
+              <Label>الاسم بالإنجليزية *</Label>
+              <Input
+                value={formData.name_en}
+                onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
                 placeholder="Bangkok"
+              />
+            </div>
+
+            {/* أفضل وقت */}
+            <div className="space-y-2">
+              <Label>أفضل وقت للزيارة</Label>
+              <Input
+                value={formData.best_time}
+                onChange={(e) => setFormData({ ...formData, best_time: e.target.value })}
+                placeholder="نوفمبر - فبراير"
+              />
+            </div>
+
+            {/* درجة الحرارة */}
+            <div className="space-y-2">
+              <Label>متوسط درجة الحرارة</Label>
+              <Input
+                value={formData.average_temp}
+                onChange={(e) => setFormData({ ...formData, average_temp: e.target.value })}
+                placeholder="28-33°C"
+              />
+            </div>
+
+            {/* الإقامة */}
+            <div className="space-y-2">
+              <Label>نطاق أسعار الإقامة</Label>
+              <Input
+                value={formData.accommodation}
+                onChange={(e) => setFormData({ ...formData, accommodation: e.target.value })}
+                placeholder="فنادق 4-5 نجوم من 80-200 دولار"
               />
             </div>
 
             {/* الإحداثيات */}
             <div className="space-y-2">
-              <Label htmlFor="lat">خط العرض (Latitude) *</Label>
+              <Label>خط العرض (Lat)</Label>
               <Input
-                id="lat"
                 type="number"
                 step="0.0001"
-                value={formData.coordinates.lat}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  coordinates: { ...formData.coordinates, lat: parseFloat(e.target.value) } 
-                })}
+                value={formData.coordinates_lat || ""}
+                onChange={(e) => setFormData({ ...formData, coordinates_lat: parseFloat(e.target.value) || undefined })}
                 placeholder="13.7563"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="lng">خط الطول (Longitude) *</Label>
+              <Label>خط الطول (Lng)</Label>
               <Input
-                id="lng"
                 type="number"
                 step="0.0001"
-                value={formData.coordinates.lng}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  coordinates: { ...formData.coordinates, lng: parseFloat(e.target.value) } 
-                })}
+                value={formData.coordinates_lng || ""}
+                onChange={(e) => setFormData({ ...formData, coordinates_lng: parseFloat(e.target.value) || undefined })}
                 placeholder="100.5018"
               />
             </div>
 
-            {/* أفضل وقت للزيارة */}
+            {/* الترتيب */}
             <div className="space-y-2">
-              <Label htmlFor="bestTime">أفضل وقت للزيارة *</Label>
+              <Label>ترتيب العرض</Label>
               <Input
-                id="bestTime"
-                value={formData.bestTimeToVisit}
-                onChange={(e) => setFormData({ ...formData, bestTimeToVisit: e.target.value })}
-                placeholder="نوفمبر - فبراير"
+                type="number"
+                value={formData.display_order}
+                onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })}
               />
             </div>
 
-            {/* درجة الحرارة - الصيف */}
-            <div className="space-y-2">
-              <Label htmlFor="tempSummer">درجة الحرارة - الصيف *</Label>
-              <Input
-                id="tempSummer"
-                value={formData.averageTemp.summer}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  averageTemp: { ...formData.averageTemp, summer: e.target.value } 
-                })}
-                placeholder="28-35°C"
+            {/* الحالة */}
+            <div className="flex items-center gap-3 pt-6">
+              <Switch
+                checked={formData.is_active}
+                onCheckedChange={(val) => setFormData({ ...formData, is_active: val })}
               />
+              <Label>المدينة مفعّلة</Label>
             </div>
 
-            {/* درجة الحرارة - الشتاء */}
-            <div className="space-y-2">
-              <Label htmlFor="tempWinter">درجة الحرارة - الشتاء *</Label>
+            {/* الصورة */}
+            <div className="space-y-2 md:col-span-2 lg:col-span-3">
+              <Label>رابط الصورة</Label>
               <Input
-                id="tempWinter"
-                value={formData.averageTemp.winter}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  averageTemp: { ...formData.averageTemp, winter: e.target.value } 
-                })}
-                placeholder="20-28°C"
-              />
-            </div>
-
-            {/* الإقامة - اقتصادي */}
-            <div className="space-y-2">
-              <Label htmlFor="accBudget">الإقامة - اقتصادي *</Label>
-              <Input
-                id="accBudget"
-                value={formData.accommodation.budget}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  accommodation: { ...formData.accommodation, budget: e.target.value } 
-                })}
-                placeholder="15-30$"
-              />
-            </div>
-
-            {/* الإقامة - متوسط */}
-            <div className="space-y-2">
-              <Label htmlFor="accMid">الإقامة - متوسط *</Label>
-              <Input
-                id="accMid"
-                value={formData.accommodation.midRange}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  accommodation: { ...formData.accommodation, midRange: e.target.value } 
-                })}
-                placeholder="50-100$"
-              />
-            </div>
-
-            {/* الإقامة - فاخر */}
-            <div className="space-y-2">
-              <Label htmlFor="accLux">الإقامة - فاخر *</Label>
-              <Input
-                id="accLux"
-                value={formData.accommodation.luxury}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  accommodation: { ...formData.accommodation, luxury: e.target.value } 
-                })}
-                placeholder="150-500$"
-              />
-            </div>
-
-            {/* رابط الصورة */}
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="image">رابط الصورة *</Label>
-              <Input
-                id="image"
                 value={formData.image}
                 onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                placeholder="https://example.com/city.jpg"
+                placeholder="https://images.unsplash.com/..."
               />
               {formData.image && (
-                <img src={formData.image} alt="Preview" className="w-full h-48 object-cover rounded-lg mt-2" />
+                <img src={formData.image} alt="معاينة" className="w-full h-40 object-cover rounded-xl mt-2 border" />
               )}
             </div>
 
             {/* الوصف */}
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="description">الوصف *</Label>
+            <div className="space-y-2 md:col-span-2 lg:col-span-3">
+              <Label>الوصف</Label>
               <Textarea
-                id="description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="اكتب وصفاً شاملاً عن المدينة..."
-                rows={4}
+                placeholder="اكتب وصفاً جذاباً عن المدينة..."
+                rows={3}
               />
             </div>
 
-            {/* أبرز المعالم */}
-            <div className="space-y-2 md:col-span-2">
-              <div className="flex items-center justify-between mb-2">
-                <Label>أبرز المعالم</Label>
-                <Button type="button" size="sm" variant="outline" onClick={handleHighlightAdd}>
-                  <Plus className="w-4 h-4 ml-2" />
-                  إضافة معلم
+            {/* المعالم السياحية */}
+            <div className="space-y-3 md:col-span-2 lg:col-span-3">
+              <Label>المعالم السياحية</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={newAttraction}
+                  onChange={(e) => setNewAttraction(e.target.value)}
+                  placeholder="مثال: القصر الكبير"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      addToList("attractions", newAttraction);
+                      setNewAttraction("");
+                    }
+                  }}
+                />
+                <Button type="button" variant="outline" onClick={() => { addToList("attractions", newAttraction); setNewAttraction(""); }}>
+                  <Plus className="w-4 h-4" />
                 </Button>
               </div>
-              <div className="space-y-2">
-                {formData.highlights.map((highlight, index) => (
-                  <div key={index} className="flex gap-2">
-                    <Input
-                      value={highlight}
-                      onChange={(e) => handleHighlightChange(index, e.target.value)}
-                      placeholder="اسم المعلم"
-                    />
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="icon"
-                      onClick={() => handleHighlightRemove(index)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
+              <div className="flex flex-wrap gap-2">
+                {(formData.attractions || []).map((a, i) => (
+                  <Badge key={i} variant="outline" className="gap-1 text-sm py-1 px-3">
+                    {a}
+                    <button onClick={() => removeFromList("attractions", i)} className="hover:text-red-500">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
+            {/* أبرز مزايا */}
+            <div className="space-y-3 md:col-span-2 lg:col-span-3">
+              <Label>أبرز مزايا المدينة</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={newHighlight}
+                  onChange={(e) => setNewHighlight(e.target.value)}
+                  placeholder="مثال: الشواطئ الذهبية"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      addToList("highlights", newHighlight);
+                      setNewHighlight("");
+                    }
+                  }}
+                />
+                <Button type="button" variant="outline" onClick={() => { addToList("highlights", newHighlight); setNewHighlight(""); }}>
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {(formData.highlights || []).map((h, i) => (
+                  <Badge key={i} variant="secondary" className="gap-1 text-sm py-1 px-3">
+                    {h}
+                    <button onClick={() => removeFromList("highlights", i)} className="hover:text-red-500">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="flex gap-3 mt-6">
-            <Button onClick={handleSave} className="gap-2">
+          <div className="flex gap-3 mt-6 pt-6 border-t">
+            <Button onClick={handleSave} disabled={isSaving} className="gap-2 min-w-32">
               <Save className="w-5 h-5" />
-              حفظ
+              {isSaving ? "جاري الحفظ..." : "حفظ"}
             </Button>
-            <Button variant="outline" onClick={() => {
-              setIsCreating(false);
-              setEditingId(null);
-            }}>
-              إلغاء
-            </Button>
+            <Button variant="outline" onClick={handleCancel}>إلغاء</Button>
           </div>
         </Card>
       )}
 
+      {/* تحميل */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+          <span className="mr-3 text-gray-600">جاري تحميل المدن...</span>
+        </div>
+      )}
+
       {/* قائمة المدن */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredCities.map((city) => {
-          const country = countries.find(c => c.cities.some(ct => ct.id === city.id));
-          
-          return (
-            <Card key={city.id} className="overflow-hidden hover:shadow-xl transition-all">
-              <div className="relative h-48">
-                <img
-                  src={city.image}
-                  alt={city.nameAr}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
-                  <MapPin className="w-3 h-3 text-primary" />
-                  <span className="text-xs font-medium">{city.coordinates.lat.toFixed(2)}°, {city.coordinates.lng.toFixed(2)}°</span>
-                </div>
-                {country && (
-                  <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
-                    <span className="text-xs font-medium">{country.nameAr}</span>
+      {!isLoading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {filteredCities.map((city) => (
+            <Card key={`${city.country_id}-${city.id}`} className="overflow-hidden hover:shadow-xl transition-all group">
+              <div className="relative h-36">
+                {city.image ? (
+                  <img
+                    src={city.image}
+                    alt={city.name_ar}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-green-100 to-teal-200 flex items-center justify-center">
+                    <MapPin className="w-12 h-12 text-teal-400" />
                   </div>
                 )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                {/* شارة الدولة */}
+                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-xs font-medium">
+                  {getCountryName(city.country_id)}
+                </div>
+                {/* الحالة */}
+                <div className={`absolute top-2 left-2 w-2 h-2 rounded-full ${city.is_active ? "bg-green-400" : "bg-gray-400"}`} />
               </div>
 
-              <div className="p-6 space-y-4">
+              <div className="p-3 space-y-2">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-800">{city.nameAr}</h3>
-                  <p className="text-gray-500">{city.nameEn}</p>
+                  <h3 className="font-bold text-gray-800">{city.name_ar}</h3>
+                  <p className="text-xs text-gray-500">{city.name_en}</p>
+                </div>
+                {city.description && (
+                  <p className="text-xs text-gray-600 line-clamp-2">{city.description}</p>
+                )}
+                <div className="text-xs text-gray-500 flex gap-2">
+                  {city.attractions && <span>🎯 {city.attractions.length} معلم</span>}
+                  {city.best_time && <span>📅 {city.best_time}</span>}
                 </div>
 
-                <p className="text-gray-600 line-clamp-2">{city.description}</p>
-
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <span className="text-gray-500">أفضل وقت:</span>
-                    <p className="font-medium">{city.bestTimeToVisit}</p>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">المعالم:</span>
-                    <p className="font-medium">{city.highlights.length} معلم</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-2 pt-4 border-t">
+                <div className="flex gap-1 pt-1 border-t">
+                  <Button variant="outline" size="sm" className="flex-1 h-7 text-xs gap-1" onClick={() => handleEdit(city)}>
+                    <Edit className="w-3 h-3" />
+                    تعديل
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 gap-2"
-                    onClick={() => handleEdit(city)}
+                    className="h-7 px-2"
+                    title="معاينة صفحة المدينة"
+                    onClick={() => window.open(`/country/${city.country_id}/city/${city.id}`, "_blank")}
                   >
-                    <Edit className="w-4 h-4" />
-                    تعديل
+                    <Eye className="w-3 h-3" />
                   </Button>
                   <Button
                     variant="destructive"
                     size="sm"
-                    className="gap-2"
-                    onClick={() => handleDelete(city.id)}
+                    className="h-7 px-2"
+                    title="حذف المدينة"
+                    onClick={() => handleDelete(city)}
+                    disabled={deleteMutation.isPending}
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3 h-3" />
                   </Button>
                 </div>
               </div>
             </Card>
-          );
-        })}
-      </div>
+          ))}
 
-      {filteredCities.length === 0 && !isCreating && (
-        <Card className="p-12 text-center">
-          <p className="text-gray-500 text-lg">لا توجد مدن مضافة بعد</p>
-          <Button onClick={handleCreate} className="mt-4 gap-2">
-            <Plus className="w-5 h-5" />
-            إضافة أول مدينة
-          </Button>
-        </Card>
+          {filteredCities.length === 0 && !isCreating && (
+            <div className="col-span-full">
+              <Card className="p-12 text-center">
+                <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">
+                  {searchQuery || filterCountry !== "all" ? "لا توجد نتائج" : "لا توجد مدن مضافة بعد"}
+                </p>
+                {!searchQuery && filterCountry === "all" && (
+                  <Button onClick={handleCreate} className="mt-4 gap-2">
+                    <Plus className="w-5 h-5" />
+                    إضافة أول مدينة
+                  </Button>
+                )}
+              </Card>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
 };
 
-export default AdminSoutheastAsiaCities;
+export default AdminCitiesManager;

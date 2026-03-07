@@ -61,7 +61,10 @@ const MyBookings = lazy(() => import("./pages/MyBookings"));
 const MobileHomePage = lazy(() => import("./pages/MobileHomePage"));
 const GlobePage = lazy(() => import("./pages/GlobePage"));
 
-// Southeast Asia Pages
+// صفحة الدولة الديناميكية (تستخدم Supabase مع fallback محلي)
+const CountryPage = lazy(() => import("./pages/countries/CountryPage"));
+
+// Southeast Asia Pages (احتياطي للتوافق القديم)
 const Thailand = lazy(() => import("./pages/countries/Thailand"));
 const Malaysia = lazy(() => import("./pages/countries/Malaysia"));
 const Indonesia = lazy(() => import("./pages/countries/Indonesia"));
@@ -108,6 +111,7 @@ const AdminOfferEdit = lazy(() => import("./pages/admin/OfferEdit"));
 const AdminSoutheastAsiaCountries = lazy(() => import("./pages/admin/SoutheastAsiaCountries"));
 const AdminSoutheastAsiaCities = lazy(() => import("./pages/admin/SoutheastAsiaCities"));
 const AdminSeedPrograms = lazy(() => import("./pages/admin/SeedPrograms"));
+const AdminSeedCountries = lazy(() => import("./pages/admin/SeedCountries"));
 const AdminServices = lazy(() => import("./pages/admin/Services"));
 const AdminServiceForm = lazy(() => import("./pages/admin/ServiceForm"));
 const AdminHoneymoon = lazy(() => import("./pages/admin/HoneymoonAdmin"));
@@ -115,17 +119,39 @@ const AdminHoneymoonPackageForm = lazy(() => import("./pages/admin/HoneymoonPack
 const AdminHomepage = lazy(() => import("./pages/admin/HomepageAdmin"));
 const AdminBlog = lazy(() => import("./pages/admin/BlogAdmin"));
 const AdminBlogArticleForm = lazy(() => import("./pages/admin/BlogArticleForm"));
+const AdminNavMenu = lazy(() => import("./pages/admin/NavAdmin"));
+const AdminMobileHomepage = lazy(() => import("./pages/admin/MobileHomepageAdmin"));
+
+
 
 // Components
 import AIChat from "./components/AIChat";
 import MobileNav from "./components/MobileNav";
 import ScrollToTop from "./components/ScrollToTop";
+import { useEffect } from "react";
+import { systemSettingsService } from "./services/adminDataService";
+import { useSystemSettings } from "./hooks/useSystemSettings";
+import { useSupabaseKeepAlive } from "./hooks/useSupabaseKeepAlive";
 
 const queryClient = new QueryClient();
+
+// مكوّن داخلي يُفعَّل الـ hook فقط داخل AuthProvider
+const AppInner = () => {
+  useSupabaseKeepAlive();
+  const sysSettings = useSystemSettings();
+
+  useEffect(() => {
+    document.title = `${sysSettings.header.siteName} | ${sysSettings.siteDescription}`;
+    document.documentElement.lang = sysSettings.defaultLang;
+  }, [sysSettings]);
+
+  return null;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+      <AppInner />
       <NavigationProvider>
         <FavoritesProvider>
         <TooltipProvider>
@@ -176,16 +202,8 @@ const App = () => (
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/globe" element={<GlobePage />} />
 
-              {/* Southeast Asia Routes */}
-              <Route path="/country/thailand" element={<Thailand />} />
-              <Route path="/country/malaysia" element={<Malaysia />} />
-              <Route path="/country/indonesia" element={<Indonesia />} />
-              <Route path="/country/vietnam" element={<Vietnam />} />
-              <Route path="/country/philippines" element={<Philippines />} />
-              <Route path="/country/singapore" element={<Singapore />} />
-
-              {/* Turkey Route */}
-              <Route path="/country/turkey" element={<Turkey />} />
+              {/* صفحة الدولة الديناميكية - تشمل جميع الدول بما فيها الجديدة */}
+              <Route path="/country/:countryId" element={<CountryPage />} />
 
               {/* City Details Route */}
               <Route path="/country/:countryId/city/:cityId" element={<CityDetails />} />
@@ -215,19 +233,6 @@ const App = () => (
                 <Route path="offers" element={<AdminOffers />} />
                 <Route path="offers/new" element={<AdminOfferNew />} />
                 <Route path="offers/edit/:id" element={<AdminOfferEdit />} />
-
-                {/* Admin only routes */}
-                <Route path="destinations" element={<ProtectedRoute requiredRole="admin"><AdminDestinations /></ProtectedRoute>} />
-                <Route path="destinations/new" element={<ProtectedRoute requiredRole="admin"><AdminDestinationNew /></ProtectedRoute>} />
-                <Route path="destinations/edit/:id" element={<ProtectedRoute requiredRole="admin"><AdminDestinationEdit /></ProtectedRoute>} />
-                <Route path="flights" element={<ProtectedRoute requiredRole="admin"><AdminFlights /></ProtectedRoute>} />
-                <Route path="hotels" element={<ProtectedRoute requiredRole="admin"><AdminHotels /></ProtectedRoute>} />
-                <Route path="payments" element={<ProtectedRoute requiredRole="admin"><AdminPayments /></ProtectedRoute>} />
-                <Route path="reviews" element={<ProtectedRoute requiredRole="admin"><AdminReviews /></ProtectedRoute>} />
-                <Route path="users" element={<ProtectedRoute requiredRole="admin"><AdminUsers /></ProtectedRoute>} />
-                <Route path="messages" element={<ProtectedRoute requiredRole="admin"><AdminMessages /></ProtectedRoute>} />
-                <Route path="reports" element={<ProtectedRoute requiredRole="admin"><AdminReports /></ProtectedRoute>} />
-                <Route path="articles" element={<ProtectedRoute requiredRole="admin"><AdminArticles /></ProtectedRoute>} />
                 <Route path="settings" element={<ProtectedRoute requiredRole="admin"><AdminSettings /></ProtectedRoute>} />
                 <Route path="ai-settings" element={<ProtectedRoute requiredRole="admin"><AdminAISettings /></ProtectedRoute>} />
                 <Route path="southeast-asia-countries" element={<ProtectedRoute requiredRole="admin"><AdminSoutheastAsiaCountries /></ProtectedRoute>} />

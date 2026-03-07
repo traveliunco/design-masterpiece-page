@@ -24,6 +24,10 @@ import {
   Briefcase,
   Heart,
   Home,
+  Globe,
+  Building2,
+  Layout,
+  Smartphone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,6 +46,8 @@ type NavItem = {
 const navItems: NavItem[] = [
   { name: "لوحة التحكم", path: "/admin", icon: LayoutDashboard, allowedRoles: ["all"] },
   { name: "الصفحة الرئيسية", path: "/admin/homepage", icon: Home },
+  { name: "القائمة العلوية", path: "/admin/nav-menu", icon: Layout },
+  { name: "الموبايل", path: "/admin/mobile-homepage", icon: Smartphone },
   { name: "الحجوزات", path: "/admin/bookings", icon: CalendarCheck, badge: 5, allowedRoles: ["all"] },
   { 
     name: "الوجهات", 
@@ -65,6 +71,16 @@ const navItems: NavItem[] = [
   { name: "الرحلات", path: "/admin/flights", icon: Plane },
   { name: "الفنادق", path: "/admin/hotels", icon: Hotel },
   { name: "العروض", path: "/admin/offers", icon: Tag, allowedRoles: ["all"] },
+  {
+    name: "الدول والمدن",
+    path: "/admin/southeast-asia-countries",
+    icon: Globe,
+    children: [
+      { name: "إدارة الدول", path: "/admin/southeast-asia-countries" },
+      { name: "إدارة المدن", path: "/admin/southeast-asia-cities" },
+      { name: "نقل البيانات", path: "/admin/seed-countries" },
+    ],
+  },
   { 
     name: "الخدمات", 
     path: "/admin/services", 
@@ -110,8 +126,9 @@ const AdminLayout = () => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
   // Filter nav items based on user role
+  // إذا userRole=null (لا يزال يتحمّل) أو admin → نعرض كل القوائم
   const filteredNavItems = navItems.filter((item) => {
-    if (isAdmin()) return true; // admin sees everything
+    if (userRole === null || isAdmin()) return true; // null = جاري التحميل أو admin = يرى الكل
     if (!item.allowedRoles) return false; // no allowedRoles = admin only
     return item.allowedRoles.includes("all") || item.allowedRoles.includes(userRole || "");
   });

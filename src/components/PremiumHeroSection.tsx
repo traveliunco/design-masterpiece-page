@@ -1,9 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Play, MapPin, Calendar, Users, Plane, ArrowLeft, Shield, X } from "lucide-react";
+import { Play, Plane, ArrowLeft, Shield, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import heroVideo from "@/assets/malaysia.jpg"; // Will be video overlay
+import heroVideo from "@/assets/malaysia.jpg";
+import { homepageService } from "@/services/adminDataService";
+import SkyscannerSearch from "@/components/SkyscannerSearch";
+
+interface Slide {
+  title: string;
+  highlight: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  stats: Record<string, string>;
+}
 
 const PremiumHeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -11,39 +22,49 @@ const PremiumHeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLElement>(null);
 
-  const slides = [
+  const defaultSlides: Slide[] = [
     {
-      title: "اكتشف",
-      highlight: "العالم",
-      subtitle: "معنا",
+      title: "اكتشف", highlight: "العالم", subtitle: "معنا",
       description: "رحلات استثنائية إلى أجمل الوجهات السياحية حول العالم",
       image: heroVideo,
-      stats: { destinations: "50+", customers: "10,000+", rating: "4.9" }
+      stats: { "وجهة": "50+", "عميل": "10,000+", "تقييم": "4.9" }
     },
     {
-      title: "رحلة",
-      highlight: "أحلامك",
-      subtitle: "تبدأ هنا",
+      title: "رحلة", highlight: "أحلامك", subtitle: "تبدأ هنا",
       description: "برامج سياحية مخصصة تناسب جميع الأذواق والميزانيات",
       image: heroVideo,
-      stats: { programs: "200+", countries: "25+", years: "15+" }
+      stats: { "برنامج": "200+", "دولة": "25+", "سنة خبرة": "15+" }
     },
     {
-      title: "شهر عسل",
-      highlight: "لا يُنسى",
-      subtitle: "",
+      title: "شهر عسل", highlight: "لا يُنسى", subtitle: "",
       description: "عروض رومانسية خاصة للعرسان في أفخم المنتجعات",
       image: heroVideo,
-      stats: { honeymoon: "5000+", resorts: "100+", offers: "30%" }
+      stats: { "شهر عسل": "5000+", "منتجع": "100+", "خصم حتى": "30%" }
     },
   ];
 
+  const [slides, setSlides] = useState<Slide[]>(defaultSlides);
+
+  // ✅ جلب السلايدات من Supabase/localStorage
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(timer);
+    homepageService.getHeroSlides().then((data: unknown[]) => {
+      if (data && data.length > 0) {
+        const mapped: Slide[] = (data as Array<Record<string, unknown>>)
+          .filter(s => s.is_active !== false)
+          .sort((a, b) => ((a.display_order as number || a.order as number || 0) - (b.display_order as number || b.order as number || 0)))
+          .map(s => ({
+            title: (s.title as string) || "",
+            highlight: (s.highlight as string) || "",
+            subtitle: (s.subtitle as string) || "",
+            description: (s.description as string) || "",
+            image: (s.image as string) || heroVideo,
+            stats: (s.stats as Record<string, string>) || {}
+          }));
+        if (mapped.length > 0) setSlides(mapped);
+      }
+    }).catch(() => {});
   }, []);
+
 
   // Mouse tracking for parallax effect
   useEffect(() => {
@@ -182,27 +203,9 @@ const PremiumHeroSection = () => {
             </div>
           </div>
 
-          {/* Right Side - Features Cards */}
-          <div className="hidden lg:grid grid-cols-2 gap-4">
-            {[
-              { icon: MapPin, title: "وجهات متنوعة", desc: "أكثر من 50 وجهة حول العالم", color: "bg-teal-500/20" },
-              { icon: Calendar, title: "برامج مخصصة", desc: "خطط رحلتك كما تريد", color: "bg-cyan-500/20" },
-              { icon: Users, title: "خدمة 24/7", desc: "فريق دعم متاح دائماً", color: "bg-blue-500/20" },
-              { icon: Shield, title: "حجز آمن", desc: "ضمان استرداد كامل", color: "bg-teal-600/20" },
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className={cn(
-                  feature.color,
-                  "backdrop-blur-sm p-6 rounded-2xl border border-primary-foreground/10 hover:scale-105 transition-all duration-300 animate-fade-in group cursor-pointer",
-                  index === 0 ? "[animation-delay:0s]" : index === 1 ? "[animation-delay:0.15s]" : index === 2 ? "[animation-delay:0.3s]" : "[animation-delay:0.45s]"
-                )}
-              >
-                <feature.icon className="w-10 h-10 text-primary-foreground mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-bold text-primary-foreground mb-2">{feature.title}</h3>
-                <p className="text-primary-foreground/70">{feature.desc}</p>
-              </div>
-            ))}
+          {/* Right Side - Skyscanner Search Widget */}
+          <div className="hidden lg:block animate-fade-in [animation-delay:0.3s]">
+            <SkyscannerSearch variant="hero" />
           </div>
         </div>
       </div>

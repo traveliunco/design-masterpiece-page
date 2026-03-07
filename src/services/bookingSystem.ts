@@ -225,12 +225,30 @@ export async function getFlightOffers(params?: FlightSearchParams): Promise<Flig
     .gte('departure_date', new Date().toISOString().split('T')[0])
     .order('price_adult');
 
+  // ✅ إصلاح: PostgREST لا يدعم الفلترة على الـ relations
+  // نجلب الـ airport IDs أولاً ثم نفلتر بها
   if (params?.origin) {
-    query = query.eq('origin_airport.iata_code', params.origin);
+    const { data: originAirport } = await supabase
+      .from('airports')
+      .select('id')
+      .eq('iata_code', params.origin)
+      .single();
+    if (originAirport) {
+      query = query.eq('origin_airport_id', originAirport.id);
+    }
   }
+
   if (params?.destination) {
-    query = query.eq('destination_airport.iata_code', params.destination);
+    const { data: destAirport } = await supabase
+      .from('airports')
+      .select('id')
+      .eq('iata_code', params.destination)
+      .single();
+    if (destAirport) {
+      query = query.eq('destination_airport_id', destAirport.id);
+    }
   }
+
   if (params?.departure_date) {
     query = query.eq('departure_date', params.departure_date);
   }

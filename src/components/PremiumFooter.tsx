@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin, Plane } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin, Plane, ShieldCheck } from "lucide-react";
 
 const PremiumFooter = () => {
   const currentYear = new Date().getFullYear();
@@ -161,6 +161,14 @@ const PremiumFooter = () => {
             </Link>
             <Link to="/sitemap" className="text-white/50 hover:text-luxury-gold transition-colors">
               خريطة الموقع
+            </Link>
+            <Link
+              to="/admin"
+              className="text-white/15 hover:text-white/50 transition-colors flex items-center gap-1"
+              title="لوحة التحكم"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>الإدارة</span>
             </Link>
           </div>
         </div>

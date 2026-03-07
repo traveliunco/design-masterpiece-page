@@ -309,12 +309,14 @@ const ProgramDetails = () => {
                       <>
                         <button
                           onClick={() => setActiveGalleryIndex(prev => prev > 0 ? prev - 1 : gallery.length - 1)}
+                          aria-label="الصورة السابقة"
                           className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors"
                         >
                           <ChevronRight className="w-5 h-5" />
                         </button>
                         <button
                           onClick={() => setActiveGalleryIndex(prev => prev < gallery.length - 1 ? prev + 1 : 0)}
+                          aria-label="الصورة التالية"
                           className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors"
                         >
                           <ChevronLeft className="w-5 h-5" />
@@ -324,6 +326,7 @@ const ProgramDetails = () => {
                             <button
                               key={i}
                               onClick={() => setActiveGalleryIndex(i)}
+                              aria-label={`صورة ${i + 1}`}
                               className={cn(
                                 "w-2.5 h-2.5 rounded-full transition-all",
                                 i === activeGalleryIndex ? "bg-white w-6" : "bg-white/50"
@@ -339,8 +342,7 @@ const ProgramDetails = () => {
                       {gallery.map((img: string, i: number) => (
                         <button
                           key={i}
-                          onClick={() => setActiveGalleryIndex(i)}
-                          className={cn(
+                          onClick={() => setActiveGalleryIndex(i)}                          aria-label={`معاينة الصورة ${i + 1}`}                          className={cn(
                             "rounded-lg overflow-hidden border-2 transition-all",
                             i === activeGalleryIndex ? "border-luxury-teal" : "border-transparent opacity-60 hover:opacity-100"
                           )}
@@ -457,6 +459,7 @@ const ProgramDetails = () => {
                       <select
                         value={travelers.adults}
                         onChange={(e) => setTravelers({...travelers, adults: Number(e.target.value)})}
+                        aria-label="عدد البالغين"
                         className="w-full p-3 border rounded-xl bg-white focus:ring-2 focus:ring-luxury-teal/50 focus:border-luxury-teal transition-all"
                       >
                         {[1,2,3,4,5,6,7,8].map(n => <option key={n} value={n}>{n} بالغ</option>)}
@@ -467,6 +470,7 @@ const ProgramDetails = () => {
                       <select
                         value={travelers.children}
                         onChange={(e) => setTravelers({...travelers, children: Number(e.target.value)})}
+                        aria-label="عدد الأطفال"
                         className="w-full p-3 border rounded-xl bg-white focus:ring-2 focus:ring-luxury-teal/50 focus:border-luxury-teal transition-all"
                       >
                         {[0,1,2,3,4,5].map(n => <option key={n} value={n}>{n} طفل</option>)}

@@ -1,0 +1,29 @@
+name: Supabase Keep-Alive
+
+# يعمل كل 5 أيام الساعة 7 صباحاً (توقيت الرياض = 4 UTC)
+# ويمكن تشغيله يدوياً من GitHub Actions
+on:
+  schedule:
+    - cron: "0 4 */5 * *" # كل 5 أيام - 4:00 UTC = 7:00 صباحاً الرياض
+  workflow_dispatch: # تشغيل يدوي
+
+jobs:
+  ping:
+    name: Ping Supabase DB
+    runs-on: ubuntu-latest
+    steps:
+      - name: إرسال نبضة إلى Supabase
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${{ secrets.VITE_SUPABASE_URL }}/rest/v1/homepage_settings?select=key&limit=1" \
+            -H "apikey: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}")
+
+          NOW=$(TZ="Asia/Riyadh" date "+%Y-%m-%d %H:%M:%S")
+
+          if [ "$RESPONSE" = "200" ] || [ "$RESPONSE" = "206" ]; then
+            echo "✅ [$NOW] نجاح! Supabase نشطة — HTTP $RESPONSE"
+          else
+            echo "⚠️ [$NOW] استجابة غير متوقعة — HTTP $RESPONSE"
+            exit 1
+          fi

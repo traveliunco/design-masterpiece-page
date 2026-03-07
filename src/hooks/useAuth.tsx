@@ -4,6 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 
 export type UserRole = "admin" | "moderator" | "user" | null;
 
+// قائمة إيميلات الأدمن - fallback إذا فشل استعلام قاعدة البيانات
+const ADMIN_EMAILS = [
+  "klidmorre@gmail.com",
+  "admin@traveliun.com",
+  "admin@traveliun.com.sa",
+];
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -29,57 +36,85 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<UserRole>(null);
 
-  // Fetch user role from user_roles table (secure)
-  const fetchUserRole = async (userId: string): Promise<UserRole> => {
+  // Fetch user role من مصادر بالأولوية:
+  // 1. جدول users في Supabase
+  // 2. user_metadata من Supabase Auth
+  // 3. قائمة ADMIN_EMAILS كـ fallback نهائي
+  const fetchUserRole = async (userId: string, email?: string, userMeta?: Record<string, unknown>): Promise<UserRole> => {
+    const getFallbackRole = (): UserRole => {
+      // فحص user_metadata من Supabase Auth
+      if (userMeta?.role && typeof userMeta.role === "string") {
+        return userMeta.role as UserRole;
+      }
+      // فحص ADMIN_EMAILS
+      if (email && ADMIN_EMAILS.includes(email.toLowerCase())) return "admin";
+      return "customer";
+    };
+
     try {
       const { data, error } = await supabase
         .from("user_roles")
         .select("role")
-        .eq("user_id", userId)
-        .single();
+        .eq("id", userId)
+        .maybeSingle();
 
-      if (error || !data) return "user";
-      return (data.role as UserRole) || "user";
+      if (error || !data) return getFallbackRole();
+      return (data.role as UserRole) || getFallbackRole();
     } catch {
-      return "user";
+      return getFallbackRole();
     }
   };
 
   const refreshRole = async () => {
     if (user) {
-      const role = await fetchUserRole(user.id);
+      const role = await fetchUserRole(user.id, user.email || undefined);
       setUserRole(role);
     }
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    // Timeout احتياطي (3 ثوانٍ فقط)
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    // Get initial session — نوقف loading فور معرفة الـ session (قبل fetchUserRole)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      clearTimeout(timeoutId);
       setSession(session);
       setUser(session?.user ?? null);
+      // ✅ أوقف loading هنا فوراً — لا ننتظر جلب الـ Role
+      setLoading(false);
+
+      // جلب الـ Role في الخلفية بدون تأخير
       if (session?.user) {
-        const role = await fetchUserRole(session.user.id);
-        setUserRole(role);
+        fetchUserRole(session.user.id, session.user.email || undefined).then(setUserRole);
       }
+    }).catch(() => {
+      clearTimeout(timeoutId);
       setLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        // ✅ أوقف loading فوراً
+        setLoading(false);
 
         if (event === "SIGNED_IN" && session?.user) {
-          const role = await fetchUserRole(session.user.id);
-          setUserRole(role);
+          // جلب الـ Role في الخلفية
+          fetchUserRole(session.user.id, session.user.email || undefined).then(setUserRole);
         } else if (event === "SIGNED_OUT") {
           setUserRole(null);
         }
-
-        setLoading(false);
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timeoutId);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const isAdmin = () => userRole === "admin";

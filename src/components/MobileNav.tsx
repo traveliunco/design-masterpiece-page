@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Home, MapPin, Plane, Gift, User, Heart } from "lucide-react";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { mobileHomepageService, MobileBottomNavItem } from "@/services/adminDataService";
 import { cn } from "@/lib/utils";
 
 const MobileNav = () => {
@@ -30,25 +31,36 @@ const MobileNav = () => {
 
   if (isAdmin) return null;
 
-  const navItems = [
-    { icon: Home, label: "الأولى", path: "/" },
-    { icon: MapPin, label: "الدول", path: "/destinations" },
-    { icon: Heart, label: "شهر عسل", path: "/honeymoon" },
-    { icon: Gift, label: "العروض", path: "/offers" },
-    { icon: User, label: "حسابي", path: "/login" },
-  ];
+  const [navItems, setNavItems] = useState<MobileBottomNavItem[]>([]);
+
+  useEffect(() => {
+    const data = mobileHomepageService.getData();
+    const activeNav = (data.bottomNav || []).filter(item => item.is_active).sort((a, b) => a.order - b.order);
+    
+    // Fallback if empty
+    if (activeNav.length === 0) {
+      setNavItems([
+        { id: '1', icon: "🏠", label: "الرئيسية", path: "/", is_active: true, order: 1 },
+        { id: '2', icon: "🗺️", label: "الدول", path: "/destinations", is_active: true, order: 2 },
+        { id: '3', icon: "🎁", label: "العروض", path: "/offers", is_active: true, order: 3 },
+        { id: '4', icon: "👤", label: "حسابي", path: "/login", is_active: true, order: 4 },
+      ]);
+    } else {
+      setNavItems(activeNav);
+    }
+  }, [location.pathname]); // Re-fetch on navigation to ensure it's up to date
 
   const getActiveIndex = () => {
     const path = location.pathname;
-    if (path === '/' || path === '/m') return 0;
-    if (path.startsWith('/destinations') || path.startsWith('/country')) return 1;
-    if (path.startsWith('/honeymoon')) return 2;
-    if (path.startsWith('/offers')) return 3;
-    if (path.startsWith('/login')) return 4;
-    return -1;
+    return navItems.findIndex(item => {
+      if (item.path === '/' && path !== '/') return false;
+      if (item.path === '/m' && path !== '/m') return false;
+      return path.startsWith(item.path);
+    });
   };
 
-  const activeIdx = getActiveIndex();
+  const activeIdx = getActiveIndex() !== -1 ? getActiveIndex() : 0; // Default to first if none match
+
 
   return (
     <div className={cn(
@@ -80,10 +92,12 @@ const MobileNav = () => {
                   "relative p-1.5 rounded-xl transition-all duration-300",
                   isActive && "bg-teal-50"
                 )}>
-                  <item.icon className={cn(
-                    "w-5 h-5 transition-all duration-300",
-                    isActive && "text-teal-600 scale-110"
-                  )} />
+                  <span className={cn(
+                    "text-xl transition-all duration-300 block",
+                    isActive ? "scale-110" : "grayscale opacity-70"
+                  )}>
+                    {item.icon}
+                  </span>
                   {isActive && (
                     <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-teal-500 rounded-full" />
                   )}

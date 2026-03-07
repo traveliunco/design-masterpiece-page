@@ -13,8 +13,9 @@ const ProtectedRoute = ({ children, requiredRole, fallbackPath = "/admin" }: Pro
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
+        <div className="animate-spin rounded-full h-14 w-14 border-4 border-primary border-t-transparent"></div>
+        <p className="text-muted-foreground text-sm">جاري التحقق من صلاحيات الدخول...</p>
       </div>
     );
   }

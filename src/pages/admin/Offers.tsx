@@ -4,14 +4,14 @@ import {
   Search,
   Tag,
   Plus,
-  Copy,
   Edit,
   Trash2,
   Loader2,
   RefreshCw,
   Calendar,
-  Percent,
-  Users,
+  MapPin,
+  Flame,
+  Star,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,17 +29,20 @@ import { toast } from "sonner";
 
 interface Offer {
   id: string;
-  code: string;
-  name_ar: string | null;
-  name_en: string | null;
-  discount_type: string;
-  discount_value: number;
-  min_order_amount: number | null;
-  usage_limit: number | null;
-  used_count: number | null;
-  valid_from: string;
-  valid_until: string;
-  is_active: boolean | null;
+  title_ar: string;
+  title_en: string | null;
+  slug: string;
+  offer_type: string;
+  destination: string | null;
+  cover_image: string | null;
+  original_price: number;
+  discounted_price: number;
+  discount_percentage: number;
+  duration: string | null;
+  valid_until: string | null;
+  is_hot: boolean;
+  is_active: boolean;
+  is_featured: boolean;
   created_at: string | null;
 }
 
@@ -56,8 +59,8 @@ const AdminOffers = () => {
   const loadOffers = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("promo_codes")
+      const { data, error } = await (supabase as any)
+        .from("special_offers")
         .select("*")
         .order("created_at", { ascending: false });
 
@@ -73,9 +76,8 @@ const AdminOffers = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm("هل أنت متأكد من حذف هذا العرض؟")) return;
-
     try {
-      const { error } = await supabase.from("promo_codes").delete().eq("id", id);
+      const { error } = await (supabase as any).from("special_offers").delete().eq("id", id);
       if (error) throw error;
       toast.success("تم حذف العرض بنجاح");
       loadOffers();
@@ -84,13 +86,12 @@ const AdminOffers = () => {
     }
   };
 
-  const toggleStatus = async (id: string, currentStatus: boolean | null) => {
+  const toggleStatus = async (id: string, currentStatus: boolean) => {
     try {
-      const { error } = await supabase
-        .from("promo_codes")
+      const { error } = await (supabase as any)
+        .from("special_offers")
         .update({ is_active: !currentStatus })
         .eq("id", id);
-
       if (error) throw error;
       loadOffers();
       toast.success("تم تحديث الحالة");
@@ -99,51 +100,22 @@ const AdminOffers = () => {
     }
   };
 
-  const copyCode = (code: string) => {
-    navigator.clipboard.writeText(code);
-    toast.success("تم نسخ الكود");
-  };
-
-  const getOfferStatus = (offer: Offer) => {
-    const now = new Date();
-    const start = new Date(offer.valid_from);
-    const end = new Date(offer.valid_until);
-
-    if (!offer.is_active) return "disabled";
-    if (now < start) return "upcoming";
-    if (now > end) return "expired";
-    if (offer.usage_limit && (offer.used_count || 0) >= offer.usage_limit) return "exhausted";
-    return "active";
-  };
-
-  const getStatusBadge = (status: string) => {
-    const styles: Record<string, string> = {
-      active: "bg-green-100 text-green-700",
-      disabled: "bg-gray-100 text-gray-700",
-      expired: "bg-red-100 text-red-700",
-      upcoming: "bg-blue-100 text-blue-700",
-      exhausted: "bg-orange-100 text-orange-700",
-    };
-    const labels: Record<string, string> = {
-      active: "نشط",
-      disabled: "معطل",
-      expired: "منتهي",
-      upcoming: "قادم",
-      exhausted: "استنفد",
-    };
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
-        {labels[status]}
-      </span>
-    );
+  const offerTypeLabels: Record<string, string> = {
+    seasonal: "موسمي", flash: "فلاش", honeymoon: "شهر عسل",
+    family: "عائلي", lastminute: "لحظة أخيرة", earlybird: "حجز مبكر",
+    group: "مجموعات", weekend: "نهاية أسبوع",
   };
 
   const filteredOffers = offers.filter((offer) => {
-    const matchesSearch = 
-      offer.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (offer.name_ar || "").toLowerCase().includes(searchTerm.toLowerCase());
-    const status = getOfferStatus(offer);
-    const matchesStatus = statusFilter === "all" || status === statusFilter;
+    const matchesSearch =
+      offer.title_ar.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (offer.destination || "").toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "active" && offer.is_active) ||
+      (statusFilter === "inactive" && !offer.is_active) ||
+      (statusFilter === "featured" && offer.is_featured) ||
+      (statusFilter === "hot" && offer.is_hot);
     return matchesSearch && matchesStatus;
   });
 
@@ -166,7 +138,7 @@ const AdminOffers = () => {
             إدارة العروض والخصومات
           </h1>
           <p className="text-muted-foreground">
-            إنشاء وإدارة أكواد الخصم ({offers.length} عرض)
+            إدارة عروض السفر الخاصة المعروضة للعملاء ({offers.length} عرض)
           </p>
         </div>
         <div className="flex gap-2">
@@ -201,18 +173,18 @@ const AdminOffers = () => {
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-3xl font-bold text-blue-600">
-              {offers.reduce((sum, o) => sum + (o.used_count || 0), 0)}
+            <p className="text-3xl font-bold text-amber-600">
+              {offers.filter(o => o.is_hot).length}
             </p>
-            <p className="text-sm text-muted-foreground">مرات الاستخدام</p>
+            <p className="text-sm text-muted-foreground">عروض ساخنة</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-3xl font-bold text-red-600">
-              {offers.filter(o => getOfferStatus(o) === "expired").length}
+              {offers.filter(o => !o.is_active).length}
             </p>
-            <p className="text-sm text-muted-foreground">منتهي</p>
+            <p className="text-sm text-muted-foreground">غير نشط</p>
           </CardContent>
         </Card>
       </div>
@@ -224,7 +196,7 @@ const AdminOffers = () => {
             <div className="flex-1 relative">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder="بحث بالكود أو الاسم..."
+                placeholder="بحث بالاسم أو الوجهة..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pr-10"
@@ -235,11 +207,11 @@ const AdminOffers = () => {
                 <SelectValue placeholder="الحالة" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">جميع الحالات</SelectItem>
+                <SelectItem value="all">جميع العروض</SelectItem>
                 <SelectItem value="active">نشط</SelectItem>
-                <SelectItem value="disabled">معطل</SelectItem>
-                <SelectItem value="expired">منتهي</SelectItem>
-                <SelectItem value="upcoming">قادم</SelectItem>
+                <SelectItem value="inactive">غير نشط</SelectItem>
+                <SelectItem value="featured">مميز</SelectItem>
+                <SelectItem value="hot">ساخن 🔥</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -253,12 +225,12 @@ const AdminOffers = () => {
             <table className="w-full">
               <thead className="bg-muted/50">
                 <tr>
-                  <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">الكود</th>
-                  <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">الاسم</th>
+                  <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">العرض</th>
+                  <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">النوع</th>
+                  <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">الوجهة</th>
+                  <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">السعر</th>
                   <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">الخصم</th>
-                  <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">الاستخدام</th>
-                  <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">الصلاحية</th>
-                  <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">الحالة</th>
+                  <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">صالح حتى</th>
                   <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">تفعيل</th>
                   <th className="text-right py-4 px-4 text-sm font-medium text-muted-foreground">إجراءات</th>
                 </tr>
@@ -267,46 +239,56 @@ const AdminOffers = () => {
                 {filteredOffers.map((offer) => (
                   <tr key={offer.id} className="border-b last:border-0 hover:bg-muted/30">
                     <td className="py-4 px-4">
-                      <div className="flex items-center gap-2">
-                        <code className="bg-muted px-2 py-1 rounded font-mono text-sm">{offer.code}</code>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-6 w-6"
-                          onClick={() => copyCode(offer.code)}
-                          aria-label="نسخ الكود"
-                        >
-                          <Copy className="w-3 h-3" />
-                        </Button>
+                      <div className="flex items-center gap-3">
+                        {offer.cover_image ? (
+                          <img src={offer.cover_image} alt="" className="w-12 h-10 object-cover rounded-lg flex-shrink-0" />
+                        ) : (
+                          <div className="w-12 h-10 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center">
+                            <Tag className="w-5 h-5 text-muted-foreground" />
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-medium line-clamp-1">{offer.title_ar}</p>
+                          <div className="flex items-center gap-1 mt-0.5">
+                            {offer.is_hot && <span className="text-xs text-red-500 font-bold">🔥 ساخن</span>}
+                            {offer.is_featured && <span className="text-xs text-amber-500 font-bold">⭐ مميز</span>}
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td className="py-4 px-4">
-                      <p className="font-medium">{offer.name_ar}</p>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-1">
-                        <Percent className="w-4 h-4 text-primary" />
-                        <span className="font-bold text-primary">
-                          {offer.discount_value}{offer.discount_type === "percentage" ? "%" : " ر.س"}
-                        </span>
-                      </div>
+                      <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
+                        {offerTypeLabels[offer.offer_type] || offer.offer_type}
+                      </span>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-1 text-sm">
-                        <Users className="w-4 h-4 text-muted-foreground" />
-                        {offer.used_count || 0} / {offer.usage_limit || "∞"}
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
+                        {offer.destination || "—"}
                       </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <div>
+                        <p className="font-bold text-primary">{offer.discounted_price.toLocaleString()} ر.س</p>
+                        {offer.original_price > offer.discounted_price && (
+                          <p className="text-xs text-muted-foreground line-through">{offer.original_price.toLocaleString()} ر.س</p>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="font-bold text-red-600">{offer.discount_percentage}%</span>
                     </td>
                     <td className="py-4 px-4 text-sm">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4 text-muted-foreground" />
-                        {new Date(offer.valid_until).toLocaleDateString("ar-SA")}
-                      </div>
+                      {offer.valid_until ? (
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4 text-muted-foreground" />
+                          {new Date(offer.valid_until).toLocaleDateString("ar-SA")}
+                        </div>
+                      ) : "—"}
                     </td>
-                    <td className="py-4 px-4">{getStatusBadge(getOfferStatus(offer))}</td>
                     <td className="py-4 px-4">
                       <Switch
-                        checked={offer.is_active || false}
+                        checked={offer.is_active}
                         onCheckedChange={() => toggleStatus(offer.id, offer.is_active)}
                       />
                     </td>
@@ -317,9 +299,9 @@ const AdminOffers = () => {
                             <Edit className="w-4 h-4" />
                           </Link>
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           className="text-red-600"
                           onClick={() => handleDelete(offer.id)}
                           aria-label="حذف"

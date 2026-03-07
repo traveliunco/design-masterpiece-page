@@ -1,58 +1,48 @@
-import { Shield, Trophy, HeartHandshake, Clock, Globe, ThumbsUp, CheckCircle2 } from "lucide-react";
+import { Shield, Trophy, HeartHandshake, Clock, Globe, ThumbsUp, Star, Heart, MapPin, Users, CheckCircle2, Plane } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
+import { homepageService } from "@/services/adminDataService";
+
+// خريطة الأيقونات
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Shield, Trophy, HeartHandshake, Clock, Globe, ThumbsUp,
+  Star, Heart, MapPin, Users, CheckCircle: CheckCircle2, Plane,
+};
+
 
 const WhyChooseUs = () => {
-  const features = [
-    {
-      icon: Shield,
-      title: "حجز آمن ومضمون",
-      description: "نظام دفع آمن 100% مع ضمان استرداد كامل",
-      color: "text-teal-500",
-      bgColor: "bg-gradient-to-br from-teal-500/20 to-cyan-500/10",
-    },
-    {
-      icon: Trophy,
-      title: "15 سنة من التميز",
-      description: "خبرة طويلة في تنظيم أفضل الرحلات السياحية",
-      color: "text-cyan-500",
-      bgColor: "bg-gradient-to-br from-cyan-500/20 to-blue-500/10",
-    },
-    {
-      icon: HeartHandshake,
-      title: "خدمة عملاء متميزة",
-      description: "فريق محترف متاح 24/7 لخدمتك",
-      color: "text-blue-500",
-      bgColor: "bg-gradient-to-br from-blue-500/20 to-indigo-500/10",
-    },
-    {
-      icon: Clock,
-      title: "أسعار تنافسية",
-      description: "أفضل الأسعار مع عروض حصرية طوال العام",
-      color: "text-emerald-500",
-      bgColor: "bg-gradient-to-br from-emerald-500/20 to-teal-500/10",
-    },
-    {
-      icon: Globe,
-      title: "وجهات متنوعة",
-      description: "أكثر من 50 وجهة سياحية حول العالم",
-      color: "text-indigo-500",
-      bgColor: "bg-gradient-to-br from-indigo-500/20 to-blue-500/10",
-    },
-    {
-      icon: ThumbsUp,
-      title: "تجربة استثنائية",
-      description: "كل تفصيلة مصممة لراحتك وسعادتك",
-      color: "text-teal-600",
-      bgColor: "bg-gradient-to-br from-teal-600/20 to-emerald-500/10",
-    },
+  const defaultFeatures = [
+    { id: "1", icon: "Shield", title: "حجز آمن ومضمون", description: "نظام دفع آمن 100% مع ضمان استرداد كامل", color: "text-teal-500", bgColor: "bg-gradient-to-br from-teal-500/20 to-cyan-500/10" },
+    { id: "2", icon: "Trophy", title: "15 سنة من التميز", description: "خبرة طويلة في تنظيم أفضل الرحلات السياحية", color: "text-cyan-500", bgColor: "bg-gradient-to-br from-cyan-500/20 to-blue-500/10" },
+    { id: "3", icon: "HeartHandshake", title: "خدمة عملاء متميزة", description: "فريق محترف متاح 24/7 لخدمتك", color: "text-blue-500", bgColor: "bg-gradient-to-br from-blue-500/20 to-indigo-500/10" },
+    { id: "4", icon: "Clock", title: "أسعار تنافسية", description: "أفضل الأسعار مع عروض حصرية طوال العام", color: "text-emerald-500", bgColor: "bg-gradient-to-br from-emerald-500/20 to-teal-500/10" },
+    { id: "5", icon: "Globe", title: "وجهات متنوعة", description: "أكثر من 50 وجهة سياحية حول العالم", color: "text-indigo-500", bgColor: "bg-gradient-to-br from-indigo-500/20 to-blue-500/10" },
+    { id: "6", icon: "ThumbsUp", title: "تجربة استثنائية", description: "كل تفصيلة مصممة لراحتك وسعادتك", color: "text-teal-600", bgColor: "bg-gradient-to-br from-teal-600/20 to-emerald-500/10" },
+  ];
+  const defaultStats = [
+    { id: "1", number: "10,000+", label: "عميل سعيد" },
+    { id: "2", number: "50+", label: "وجهة سياحية" },
+    { id: "3", number: "98%", label: "نسبة الرضا" },
+    { id: "4", number: "15+", label: "سنة خبرة" },
   ];
 
-  const stats = [
-    { number: "10,000+", label: "عميل سعيد" },
-    { number: "50+", label: "وجهة سياحية" },
-    { number: "98%", label: "نسبة الرضا" },
-    { number: "15+", label: "سنة خبرة" },
-  ];
+  const [features, setFeatures] = useState(defaultFeatures);
+  const [stats, setStats] = useState(defaultStats);
+
+  useEffect(() => {
+    // جلب المميزات
+    homepageService.getFeatures().then((data: unknown[]) => {
+      if (data && data.length > 0) {
+        setFeatures((data as typeof defaultFeatures).map((f, i) => ({ ...defaultFeatures[0], ...f, id: String(f.id || i) })));
+      }
+    }).catch(() => {});
+    // جلب الإحصائيات
+    homepageService.getStats().then((data: unknown[]) => {
+      if (data && data.length > 0) {
+        setStats((data as typeof defaultStats).map((s, i) => ({ ...defaultStats[0], ...s, id: String(s.id || i) })));
+      }
+    }).catch(() => {});
+  }, []);
 
   return (
     <section className="py-20 md:py-32 bg-gradient-to-b from-white to-gray-50 relative">

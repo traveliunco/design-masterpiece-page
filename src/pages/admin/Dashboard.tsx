@@ -281,32 +281,49 @@ const AdminDashboard = () => {
 
   const loadDashboardData = async () => {
     setLoading(true);
+
+    // timeout لمنع التحميل اللانهائي (8 ثوانٍ)
+    const timeoutPromise = new Promise<null>((resolve) =>
+      setTimeout(() => resolve(null), 8000)
+    );
+
     try {
-      // Fetch stats
-      const { count: bookingsCount } = await supabase.from("bookings").select("*", { count: 'exact', head: true });
-      const { count: usersCount } = await supabase.from("users").select("*", { count: 'exact', head: true });
-      const { count: destinationsCount } = await supabase.from("destinations").select("*", { count: 'exact', head: true });
-      
-      // Fetch revenue
-      const { data: revenueData } = await supabase.from("bookings").select("total_amount").eq("status", "confirmed");
-      const totalRevenue = revenueData?.reduce((sum, b) => sum + (Number(b.total_amount) || 0), 0) || 0;
+      // تشغيل كل الـ queries بشكل متوازٍ بدلاً من تسلسلي
+      const dataPromise = Promise.all([
+        supabase.from("bookings").select("*", { count: "exact", head: true }),
+        supabase.from("users").select("*", { count: "exact", head: true }),
+        supabase.from("destinations").select("*", { count: "exact", head: true }),
+        supabase.from("bookings").select("total_amount").eq("status", "confirmed"),
+        supabase
+          .from("bookings")
+          .select("id, booking_reference, booking_type, status, total_amount, user_id")
+          .order("created_at", { ascending: false })
+          .limit(5),
+      ]);
 
-      // Fetch recent bookings
-      const { data: recentBookings } = await supabase
-        .from("bookings")
-        .select("id, booking_reference, booking_type, status, total_amount, user_id")
-        .order("created_at", { ascending: false })
-        .limit(5);
+      // السباق بين البيانات والـ timeout
+      const result = await Promise.race([dataPromise, timeoutPromise]);
 
-      setStats({
-        bookingsCount: bookingsCount || 0,
-        revenue: totalRevenue,
-        usersCount: usersCount || 0,
-        destinationsCount: destinationsCount || 0,
-        recentBookings: (recentBookings || []) as DashboardBooking[],
-      });
+      if (result === null) {
+        // انتهى الـ timeout قبل البيانات
+        console.warn("Dashboard: timeout exceeded, showing empty stats");
+        toast.error("استغرق التحميل وقتاً طويلاً، حاول تحديث الصفحة");
+      } else {
+        const [bookingsRes, usersRes, destinationsRes, revenueRes, recentRes] = result;
+        const totalRevenue =
+          revenueRes.data?.reduce((sum, b) => sum + (Number(b.total_amount) || 0), 0) || 0;
+
+        setStats({
+          bookingsCount: bookingsRes.count || 0,
+          revenue: totalRevenue,
+          usersCount: usersRes.count || 0,
+          destinationsCount: destinationsRes.count || 0,
+          recentBookings: (recentRes.data || []) as DashboardBooking[],
+        });
+      }
     } catch (error) {
       console.error("Dashboard error:", error);
+      toast.error("حدث خطأ في تحميل البيانات");
     } finally {
       setLoading(false);
     }
