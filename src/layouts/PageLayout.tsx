@@ -43,7 +43,6 @@ const PAGE_TITLES: Record<string, string> = {
   "/reset-password": "تعيين كلمة المرور",
   "/globe": "استكشاف العالم",
   "/account": "حسابي",
-  "/my-bookings": "حجوزاتي",
 };
 
 const MobileHeader = ({ title, hideBack }: { title: string; hideBack?: boolean }) => {
