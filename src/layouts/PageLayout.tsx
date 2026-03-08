@@ -73,6 +73,16 @@ const MobileHeader = ({ title, hideBack }: { title: string; hideBack?: boolean }
           </button>
         </div>
       </div>
+      {/* Search Bar */}
+      <div className="px-4 pb-3">
+        <button
+          onClick={() => navigate("/search")}
+          className="w-full flex items-center gap-3 bg-muted/50 rounded-xl px-4 py-2.5 text-muted-foreground"
+        >
+          <Search className="w-4 h-4" />
+          <span className="text-sm">ابحث عن وجهة، فندق، رحلة...</span>
+        </button>
+      </div>
     </header>
   );
 };
