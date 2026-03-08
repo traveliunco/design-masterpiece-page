@@ -164,7 +164,7 @@ const PremiumHeroSection = () => {
           <div className="grid grid-cols-3 gap-8 pt-8 max-w-xl mx-auto">
             {Object.entries(currentData.stats).map(([key, value], index) => (
               <div key={key} className={cn("text-center animate-scale-in", index === 0 ? "[animation-delay:0s]" : index === 1 ? "[animation-delay:0.1s]" : "[animation-delay:0.2s]")}>
-                <div className="text-3xl md:text-4xl font-bold text-accent mb-1">
+                <div className="text-3xl md:text-4xl font-bold text-secondary mb-1">
                   {value}
                 </div>
                 <div className="text-sm text-primary-foreground/60 capitalize">
