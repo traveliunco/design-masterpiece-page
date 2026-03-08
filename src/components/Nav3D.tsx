@@ -435,6 +435,7 @@ const Nav3D = () => {
               {/* Search */}
               {sysSettings.header.showSearchBar && (
                 <button
+                  onClick={() => navigateRouter('/search')}
                   className={cn(
                     "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300",
                     isScrolled
