@@ -1,71 +1,163 @@
 
 
-# خطة نظام الصلاحيات + إصلاح أخطاء البناء
+# ذاكرة المشروع + قائمة فحص شاملة
 
-## المهام المطلوبة
+## ما سيتم إنشاؤه
 
-### 1. إصلاح أخطاء البناء (Build Errors)
-
-هناك عدة أخطاء TypeScript يجب إصلاحها أولاً:
-
-**A. `src/data/southeast-asia.ts`** - تعريف الأنواع (Types) لا يتطابق مع البيانات الفعلية:
-- `City.accommodation` معرف كـ `string` لكن البيانات تحتوي كائن `{ budget, midRange, luxury }`
-- `City.attractions` معرف كـ `string[]` لكن البيانات تحتوي كائنات
-- `City` ينقصها خاصية `bestTimeToVisit`
-- سيتم تحديث الـ interface ليطابق البيانات الفعلية
-
-**B. `src/pages/CityDetails.tsx`** - يستدعي `getCityById` بمعامل واحد بدل اثنين، ويستخدم خصائص غير موجودة في النوع الحالي. سيتم إصلاحه ليتوافق مع الأنواع المحدثة.
-
-**C. `src/components/Nav3D.tsx`** - خطأ في الوصول لـ `.items` على نوع `countries` الذي يحتوي `countries` بدلاً من `items`. سيتم إضافة type guard.
-
-**D. `src/components/globe/CityCard.tsx`** - خطأ `nameAr` على نوع `never`. سيتم إصلاح النوع.
+ملف `PROJECT_MEMORY.md` في جذر المشروع يحتوي على كل ما يلي:
 
 ---
 
-### 2. نظام الصلاحيات
+## 1. هيكل التطبيق الكامل
 
-**الوضع الحالي:**
-- جدول `user_roles` موجود لكنه فارغ
-- دالة `has_role()` موجودة وتعمل
-- `useAuth` يقرأ الأدوار من جدول `users` (خطأ أمني) بدلاً من `user_roles`
-- المستخدم `klidmorre@gmail.com` موجود بالفعل في `auth.users`
+### الصفحات العامة (Public) - 30 صفحة مُفعّلة
 
-**الخطوات:**
+| الصفحة | المسار | الحالة |
+|--------|--------|--------|
+| الرئيسية | `/` | ✅ متصلة بـ DB |
+| الموبايل | `/m` | ✅ متصلة بـ DB |
+| بريميوم | `/premium` | ✅ عرض ثابت |
+| الوجهات | `/destinations` | ✅ متصلة بـ DB |
+| تفاصيل وجهة | `/destinations/:id` | ✅ متصلة بـ DB |
+| البرامج | `/programs` | ✅ متصلة بـ DB |
+| تفاصيل برنامج | `/programs/:id` | ✅ متصلة بـ DB |
+| الفنادق | `/hotels` | ✅ متصلة بـ DB |
+| تفاصيل فندق | `/hotels/:id` | ✅ متصلة بـ DB |
+| الرحلات | `/flights` | ✅ متصلة بـ DB |
+| حجز رحلة | `/flight-booking` | ⚠️ واجهة فقط |
+| رحلات أماديوس | `/amadeus-flights` | ⚠️ تحتاج API key |
+| العروض | `/offers` | ✅ متصلة بـ DB |
+| شهر العسل | `/honeymoon` | ✅ متصلة بـ DB |
+| الحجز | `/booking` | ✅ متصلة بـ DB |
+| تأكيد الحجز | `/booking/confirmation` | ✅ عرض نتيجة |
+| حجوزاتي | `/my-bookings` | ✅ متصلة بـ DB |
+| البكجات الجاهزة | `/packages` | ✅ متصلة بـ DB (مُحدّثة) |
+| مصمم الرحلات | `/trip-builder` | ✅ متصلة بـ DB |
+| المدونة | `/blog` | ✅ متصلة بـ DB |
+| مقال مدونة | `/blog/:slug` | ✅ متصلة بـ DB |
+| الخدمات | `/services` | ✅ متصلة بـ DB |
+| معلومات الخدمة | `/service-info` | ✅ عرض ثابت |
+| ضمان الخدمة | `/service-guarantee` | ✅ عرض ثابت |
+| صفحة الدولة | `/country/:countryId` | ✅ ديناميكية + fallback |
+| تفاصيل مدينة | `/country/:countryId/city/:cityId` | ✅ ديناميكية |
+| البحث | `/search` | ✅ |
+| تواصل معنا | `/contact` | ✅ متصلة بـ DB |
+| من نحن | `/about` | ✅ عرض ثابت |
+| الكرة الأرضية | `/globe` | ⚠️ ثقيلة (three.js) |
+| الولاء | `/loyalty` | ✅ عرض ثابت |
+| الوظائف | `/careers` | ✅ عرض ثابت |
+| تابي | `/tabby` | ✅ عرض ثابت |
+| تمارا | `/tamara` | ✅ عرض ثابت |
+| دعم العملاء | `/customer-support` | ✅ عرض ثابت |
+| خريطة الموقع | `/sitemap` | ✅ |
+| الخصوصية | `/privacy` | ✅ عرض ثابت |
+| الشروط | `/terms` | ✅ عرض ثابت |
 
-**A. إدخال الأدوار في جدول `user_roles`:**
-- `klidmorre@gmail.com` → `admin` (مدير عام - صلاحيات كاملة)
-- `eng.khalid.work@gmail.com` → `moderator` (موظف - صلاحيات محدودة)
+### صفحات مخفية (Routes معلقة) - 3 صفحات
 
-ملاحظة: الأدوار المتاحة حالياً في `app_role` هي: `admin`, `moderator`, `user`. سنستخدم `moderator` للموظف.
+| الصفحة | المسار | الحالة |
+|--------|--------|--------|
+| تأجير سيارات | `/car-rental` | ❌ Route معلق بتعليق |
+| التأشيرات | `/visas` | ❌ Route معلق بتعليق |
+| التأمين | `/insurance` | ❌ Route معلق بتعليق |
 
-**B. تحديث `useAuth.tsx`:**
-- تغيير قراءة الدور من جدول `users` إلى `user_roles`
-- تحديث نوع `UserRole` ليطابق `app_role` enum
+### صفحات مصادقة - 5 صفحات
 
-**C. تحديث `ProtectedRoute.tsx`:**
-- إضافة دعم التحقق من الأدوار عبر `user_roles`
+| الصفحة | المسار | الحالة |
+|--------|--------|--------|
+| تسجيل الدخول | `/login` | ✅ |
+| التسجيل | `/register` | ✅ |
+| نسيت كلمة المرور | `/forgot-password` | ✅ |
+| إعادة تعيين كلمة المرور | `/reset-password` | ✅ |
+| Auth Callback | `/auth/callback` | ✅ |
 
-**D. تحديث `AdminLayout.tsx`:**
-- تعديل القائمة الجانبية لإظهار العناصر حسب الدور
-- الموظف يرى فقط: لوحة التحكم، البرامج، العروض (إضافة/تعديل/حذف)
-- المدير يرى كل شيء
+### صفحات لوحة التحكم - مُفعّلة (لها Routes)
 
-**E. تحديث مسارات Admin في `App.tsx`:**
-- حماية المسارات بأدوار محددة
-- البرامج والعروض: متاحة للموظف والمدير
-- باقي الصفحات: مدير فقط
+| الصفحة | المسار | الحالة |
+|--------|--------|--------|
+| لوحة القيادة | `/admin` | ✅ |
+| الحجوزات | `/admin/bookings` | ✅ |
+| البرامج | `/admin/programs` | ✅ |
+| إضافة/تعديل برنامج | `/admin/programs/new`, `edit/:id` | ✅ |
+| العروض | `/admin/offers` | ✅ |
+| إضافة/تعديل عرض | `/admin/offers/new`, `edit/:id` | ✅ |
+| البكجات الجاهزة | `/admin/ready-packages` | ✅ |
+| الإعدادات | `/admin/settings` | ✅ (admin only) |
+| إعدادات AI | `/admin/ai-settings` | ✅ (admin only) |
+| دول جنوب شرق آسيا | `/admin/southeast-asia-countries` | ✅ (admin only) |
+| مدن جنوب شرق آسيا | `/admin/southeast-asia-cities` | ✅ (admin only) |
+| بذر البرامج | `/admin/seed-programs` | ✅ (admin only) |
+| الخدمات | `/admin/services` | ✅ (admin only) |
+| إضافة/تعديل خدمة | `/admin/services/new`, `edit/:id` | ✅ (admin only) |
+| شهر العسل | `/admin/honeymoon` | ✅ (admin only) |
+| باقات شهر العسل | `/admin/honeymoon/packages/new`, `edit/:id` | ✅ (admin only) |
+| الصفحة الرئيسية | `/admin/homepage` | ✅ (admin only) |
+| المدونة | `/admin/blog` | ✅ (admin only) |
+| إضافة/تعديل مقال | `/admin/blog/new`, `edit/:id` | ✅ (admin only) |
+
+### صفحات لوحة التحكم - مستوردة بدون Route ❌
+
+هذه الصفحات لها ملفات ومُستوردة في App.tsx لكن **ليس لها `<Route>`**:
+
+| الصفحة | ملف | الحالة |
+|--------|------|--------|
+| الوجهات (Admin) | `AdminDestinations` | ❌ لا يوجد route |
+| إضافة وجهة | `AdminDestinationNew` | ❌ لا يوجد route |
+| تعديل وجهة | `AdminDestinationEdit` | ❌ لا يوجد route |
+| الفنادق (Admin) | `AdminHotels` | ❌ لا يوجد route |
+| الرحلات (Admin) | `AdminFlights` | ❌ لا يوجد route |
+| المدفوعات | `AdminPayments` | ❌ لا يوجد route |
+| التقييمات | `AdminReviews` | ❌ لا يوجد route |
+| المستخدمين | `AdminUsers` | ❌ لا يوجد route |
+| الرسائل | `AdminMessages` | ❌ لا يوجد route |
+| التقارير | `AdminReports` | ❌ لا يوجد route |
+| المقالات | `AdminArticles` | ❌ لا يوجد route |
+| قائمة التنقل | `AdminNavMenu` | ❌ لا يوجد route |
+| الموبايل (Admin) | `AdminMobileHomepage` | ❌ لا يوجد route |
+| بذر الدول | `AdminSeedCountries` | ❌ لا يوجد route |
+
+### ملفات مكررة/قديمة 🗑️
+
+| الملف | السبب |
+|-------|-------|
+| `src/pages/Thailand.tsx` | مكرر مع `src/pages/countries/Thailand.tsx` |
+| `src/pages/Malaysia.tsx` | مكرر مع `src/pages/countries/Malaysia.tsx` |
+| `src/pages/Indonesia.tsx` | مكرر مع `src/pages/countries/Indonesia.tsx` |
+| `src/pages/Vietnam.tsx` | مكرر مع `src/pages/countries/Vietnam.tsx` |
+| `src/pages/Philippines.tsx` | مكرر مع `src/pages/countries/Philippines.tsx` |
+| `src/pages/Singapore.tsx` | مكرر مع `src/pages/countries/Singapore.tsx` |
+| `src/pages/CityDetails.tsx` | مكرر - يُستخدم `CityTemplate` بدلاً منه |
+| `src/pages/Api.tsx` | مستوردة لكن لا يوجد route لها |
+| `design-masterpiece-page-main/` | مجلد مشروع قديم في الجذر |
 
 ---
 
-### التفاصيل التقنية
+## 2. سجل التعديلات الأخيرة
 
-**صلاحيات الموظف (moderator):**
-| الصفحة | الصلاحية |
-|--------|----------|
-| لوحة التحكم | عرض فقط |
-| البرامج | إضافة/تعديل/حذف |
-| العروض | إضافة/تعديل/حذف |
+- إضافة نظام البكجات القابلة للتخصيص (تغيير فندق/طيران/سيارة مع تسعير حي)
+- إنشاء صفحة إدارة البكجات `/admin/ready-packages`
+- تحسين الأداء: code splitting، caching Supabase، lazy loading للمكتبات الثقيلة
+- Migration لإضافة أعمدة الربط في `ready_packages`
 
-**صلاحيات المدير (admin):**
-- كل شيء بدون قيود
+## 3. قواعد التطوير
+
+- استخدام `useAuth()` من `@/hooks/useAuth` (وليس hook مستقل)
+- جميع الصفحات lazy loaded عبر `React.lazy()`
+- صفحات Admin محمية بـ `ProtectedRoute`
+- الصفحات العامة تستخدم `useSEO()` لـ meta tags
+- الاستعلامات تستخدم caching في `tripBuilderService`
+- التصميم RTL بالكامل (عربي)
+
+## 4. المشاكل المعروفة
+
+- Routes مكررة: `/destinations/:id` و `/destinations/:slug` (نفس الكومبوننت)
+- 14 صفحة admin مستوردة بدون routes
+- 6 ملفات دول مكررة في `src/pages/` و `src/pages/countries/`
+- صفحة `/globe` ثقيلة (three.js) - تم عمل lazy loading لكن لا تزال كبيرة
+
+---
+
+## التنفيذ
+
+إنشاء ملف `PROJECT_MEMORY.md` واحد في جذر المشروع يحتوي كل المعلومات أعلاه بتنسيق markdown منظم.
 
