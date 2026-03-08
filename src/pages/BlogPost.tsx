@@ -98,7 +98,7 @@ const BlogPost = () => {
           void (supabase
             .from("blog_articles" as "destinations")
             .select("*")
-            .eq("category", (data as unknown as Article).category)
+            .eq("category", (data as unknown as Article).category as string)
             .limit(4) as unknown as Promise<{data: unknown[] | null}>)
             .then(res => {
               const relArr = ((res.data || []) as unknown as Article[]).filter(a => a.id !== (data as unknown as Article).id).slice(0, 3);

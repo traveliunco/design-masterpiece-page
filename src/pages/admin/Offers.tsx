@@ -166,7 +166,7 @@ const AdminOffers = () => {
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-3xl font-bold text-green-600">
-              {offers.filter(o => getOfferStatus(o) === "active").length}
+              {offers.filter(o => o.is_active).length}
             </p>
             <p className="text-sm text-muted-foreground">نشط</p>
           </CardContent>

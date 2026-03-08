@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, createContext, ReactNode } from "react
 import { User, Session, AuthError } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-export type UserRole = "admin" | "moderator" | "user" | null;
+export type UserRole = "admin" | "moderator" | "user" | "customer" | null;
 
 // قائمة إيميلات الأدمن - fallback إذا فشل استعلام قاعدة البيانات
 const ADMIN_EMAILS = [
