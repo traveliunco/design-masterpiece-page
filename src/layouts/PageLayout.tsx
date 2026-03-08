@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ArrowRight, Bell, User } from "lucide-react";
+import { ArrowRight, Bell, User, Search } from "lucide-react";
 import Nav3D from "@/components/Nav3D";
 import PremiumFooter from "@/components/PremiumFooter";
 import MobileNav from "@/components/MobileNav";
@@ -72,6 +72,16 @@ const MobileHeader = ({ title, hideBack }: { title: string; hideBack?: boolean }
             <User className="w-4.5 h-4.5 text-primary" />
           </button>
         </div>
+      </div>
+      {/* Search Bar */}
+      <div className="px-4 pb-3">
+        <button
+          onClick={() => navigate("/search")}
+          className="w-full flex items-center gap-3 bg-muted/50 rounded-xl px-4 py-2.5 text-muted-foreground"
+        >
+          <Search className="w-4 h-4" />
+          <span className="text-sm">ابحث عن وجهة، فندق، رحلة...</span>
+        </button>
       </div>
     </header>
   );
