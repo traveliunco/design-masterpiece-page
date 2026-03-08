@@ -86,7 +86,7 @@ const Offers = () => {
   const loadOffers = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("special_offers")
         .select("*")
         .eq("is_active", true)
@@ -95,9 +95,10 @@ const Offers = () => {
         .order("discount_percentage", { ascending: false });
 
       if (error) throw error;
-      setOffers((data || []) as unknown as OfferFromDB[]);
+      setOffers((data || []) as OfferFromDB[]);
     } catch (error) {
       console.error("Error loading offers:", error);
+      toast.error("حدث خطأ في تحميل العروض");
     } finally {
       setLoading(false);
     }
@@ -165,14 +166,24 @@ const Offers = () => {
         <div className="container px-4">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="w-12 h-12 animate-spin text-luxury-teal mb-4" />
-              <p className="text-muted-foreground">جاري تحميل العروض...</p>
+              <div className="relative">
+                <Loader2 className="w-12 h-12 animate-spin text-primary mb-4" />
+                <div className="absolute inset-0 w-12 h-12 rounded-full bg-primary/10 animate-ping" />
+              </div>
+              <p className="text-muted-foreground mt-4">جاري تحميل العروض...</p>
             </div>
           ) : filteredOffers.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <Gift className="w-20 h-20 text-muted-foreground/30 mb-6" />
-              <h3 className="text-2xl font-bold text-luxury-navy mb-2">لا توجد عروض حالياً</h3>
-              <p className="text-muted-foreground">تابعنا للحصول على أحدث العروض</p>
+              <div className="w-24 h-24 bg-muted/30 rounded-full flex items-center justify-center mb-6">
+                <Gift className="w-12 h-12 text-muted-foreground/40" />
+              </div>
+              <h3 className="text-2xl font-bold text-foreground mb-2">لا توجد عروض حالياً</h3>
+              <p className="text-muted-foreground mb-6">تابعنا للحصول على أحدث العروض</p>
+              {selectedType !== "all" && (
+                <Button variant="outline" onClick={() => setSelectedType("all")} className="rounded-xl">
+                  عرض جميع العروض
+                </Button>
+              )}
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

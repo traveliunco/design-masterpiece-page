@@ -17,7 +17,7 @@ interface ProgramData {
   program_type: string;
   duration_days: number;
   duration_nights: number;
-  price: number;
+  price: number; // alias for base_price
   base_price: number | null;
   original_price: number | null;
   description_ar: string | null;
