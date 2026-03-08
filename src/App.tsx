@@ -171,7 +171,6 @@ const App = () => (
               <Route path="/premium" element={<IndexPremium />} />
               <Route path="/destinations" element={<Destinations />} />
               <Route path="/destinations/:id" element={<DestinationDetails />} />
-              <Route path="/destinations/:slug" element={<DestinationDetails />} />
               <Route path="/programs/:id" element={<ProgramDetails />} />
               <Route path="/hotels/:id" element={<HotelDetails />} />
               <Route path="/contact" element={<Contact />} />
