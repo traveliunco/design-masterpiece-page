@@ -11,6 +11,8 @@ interface PageLayoutProps {
   className?: string;
   pageTitle?: string;
   hideBackButton?: boolean;
+  hideSearchBar?: boolean;
+  hideMobileHeader?: boolean;
 }
 
 const PAGE_TITLES: Record<string, string> = {
@@ -45,7 +47,10 @@ const PAGE_TITLES: Record<string, string> = {
   "/account": "حسابي",
 };
 
-const MobileHeader = ({ title, hideBack }: { title: string; hideBack?: boolean }) => {
+// Auth pages that should hide the search bar
+const AUTH_PATHS = ["/login", "/register", "/forgot-password", "/reset-password"];
+
+const MobileHeader = ({ title, hideBack, hideSearch }: { title: string; hideBack?: boolean; hideSearch?: boolean }) => {
   const navigate = useNavigate();
 
   return (
@@ -67,23 +72,25 @@ const MobileHeader = ({ title, hideBack }: { title: string; hideBack?: boolean }
             <Bell className="w-4.5 h-4.5 text-foreground" />
           </button>
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/account")}
             className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center"
           >
             <User className="w-4.5 h-4.5 text-primary" />
           </button>
         </div>
       </div>
-      {/* Search Bar */}
-      <div className="px-4 pb-3">
-        <button
-          onClick={() => navigate("/search")}
-          className="w-full flex items-center gap-3 bg-muted/50 rounded-xl px-4 py-2.5 text-muted-foreground"
-        >
-          <Search className="w-4 h-4" />
-          <span className="text-sm">ابحث عن وجهة، فندق، رحلة...</span>
-        </button>
-      </div>
+      {/* Search Bar - hidden on auth pages */}
+      {!hideSearch && (
+        <div className="px-4 pb-3">
+          <button
+            onClick={() => navigate("/search")}
+            className="w-full flex items-center gap-3 bg-muted/50 rounded-xl px-4 py-2.5 text-muted-foreground"
+          >
+            <Search className="w-4 h-4" />
+            <span className="text-sm">ابحث عن وجهة، فندق، رحلة...</span>
+          </button>
+        </div>
+      )}
     </header>
   );
 };
@@ -95,16 +102,20 @@ const MobileFooter = () => (
   </footer>
 );
 
-const PageLayout = ({ children, className = "", pageTitle, hideBackButton }: PageLayoutProps) => {
+const PageLayout = ({ children, className = "", pageTitle, hideBackButton, hideSearchBar, hideMobileHeader }: PageLayoutProps) => {
   const isMobile = useIsMobile();
   const location = useLocation();
 
   const resolvedTitle = pageTitle || PAGE_TITLES[location.pathname] || "ترافليون";
+  const isAuthPage = AUTH_PATHS.includes(location.pathname);
+  const shouldHideSearch = hideSearchBar || isAuthPage;
 
   if (isMobile) {
     return (
       <div className={`min-h-screen bg-background overflow-x-hidden ${className}`}>
-        <MobileHeader title={resolvedTitle} hideBack={hideBackButton} />
+        {!hideMobileHeader && (
+          <MobileHeader title={resolvedTitle} hideBack={hideBackButton} hideSearch={shouldHideSearch} />
+        )}
         <main className="pb-0">{children}</main>
         <MobileFooter />
         <MobileNav />
