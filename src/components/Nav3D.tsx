@@ -91,16 +91,19 @@ const megaMenuItems = {
   },
   services: {
     title: "خدماتنا",
-    items: []
+    items: [
+      { name: "حجز الطيران", icon: Plane, path: "/flights", desc: "أفضل أسعار تذاكر الطيران" },
+      { name: "حجز الفنادق", icon: Hotel, path: "/hotels", desc: "فنادق مختارة بعناية" },
+      { name: "البرامج السياحية", icon: Calendar, path: "/programs", desc: "برامج شاملة ومتكاملة" },
+      { name: "شهر العسل", icon: Heart, path: "/honeymoon", desc: "باقات رومانسية مميزة" },
+      { name: "العروض الخاصة", icon: Sparkles, path: "/offers", desc: "خصومات حصرية", hot: true },
+    ]
   },
   more: {
     title: "المزيد",
     items: [
       { name: "الكرة الأرضية", icon: Globe, path: "/globe", desc: "استكشف العالم ثلاثي الأبعاد" },
-      { name: "المدونة", icon: "📝", path: "/blog", desc: "مقالات ونصائح السفر" },
-      // { name: "تأجير السيارات", icon: "🚗", path: "/car-rental", desc: "سيارات فاخرة" }, /* HIDDEN */
-      // { name: "التأشيرات", icon: "🛂", path: "/visas", desc: "خدمات الفيزا" }, /* HIDDEN */
-      // { name: "التأمين", icon: Shield, path: "/insurance", desc: "تأمين السفر" }, /* HIDDEN */
+      { name: "المدونة", icon: MapPinned, path: "/blog", desc: "مقالات ونصائح السفر" },
       { name: "تقسيط تابي", icon: CreditCard, path: "/tabby", desc: "ادفع على 4 دفعات" },
       { name: "تقسيط تمارا", icon: CreditCard, path: "/tamara", desc: "قسّط مشترياتك" },
       { name: "برنامج الولاء", icon: Heart, path: "/loyalty", desc: "اكسب النقاط" },
