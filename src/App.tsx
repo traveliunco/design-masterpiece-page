@@ -219,6 +219,7 @@ const App = () => (
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/account" element={<Account />} />
 
               {/* Admin Routes (Protected - staff only) */}
               <Route

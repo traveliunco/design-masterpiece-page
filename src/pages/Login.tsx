@@ -12,9 +12,17 @@ import { toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { user, isStaff } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate(isStaff() ? "/admin" : "/account");
+    }
+  }, [user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
