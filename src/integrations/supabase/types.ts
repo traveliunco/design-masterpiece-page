@@ -629,6 +629,75 @@ export type Database = {
           },
         ]
       }
+      car_rentals: {
+        Row: {
+          bags: number | null
+          category: string | null
+          city_ar: string
+          city_en: string
+          country_ar: string
+          country_en: string
+          created_at: string | null
+          features: Json | null
+          fuel_type: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          name_ar: string
+          name_en: string
+          price_per_day: number
+          price_with_driver: number | null
+          rating: number | null
+          seats: number | null
+          transmission: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          bags?: number | null
+          category?: string | null
+          city_ar?: string
+          city_en?: string
+          country_ar?: string
+          country_en?: string
+          created_at?: string | null
+          features?: Json | null
+          fuel_type?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name_ar: string
+          name_en: string
+          price_per_day?: number
+          price_with_driver?: number | null
+          rating?: number | null
+          seats?: number | null
+          transmission?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          bags?: number | null
+          category?: string | null
+          city_ar?: string
+          city_en?: string
+          country_ar?: string
+          country_en?: string
+          created_at?: string | null
+          features?: Json | null
+          fuel_type?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name_ar?: string
+          name_en?: string
+          price_per_day?: number
+          price_with_driver?: number | null
+          rating?: number | null
+          seats?: number | null
+          transmission?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string | null
@@ -818,6 +887,125 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dynamic_packages: {
+        Row: {
+          adults_count: number | null
+          car_rental_id: string | null
+          check_in_date: string | null
+          check_out_date: string | null
+          children_count: number | null
+          created_at: string | null
+          currency: string | null
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          destination: string | null
+          destination_id: string | null
+          extras: Json | null
+          flight_offer_id: string | null
+          hotel_id: string | null
+          id: string
+          infants_count: number | null
+          notes: string | null
+          room_id: string | null
+          selected_activities: Json | null
+          session_id: string | null
+          status: string | null
+          subtotal: number | null
+          taxes: number | null
+          total_price: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          adults_count?: number | null
+          car_rental_id?: string | null
+          check_in_date?: string | null
+          check_out_date?: string | null
+          children_count?: number | null
+          created_at?: string | null
+          currency?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          destination?: string | null
+          destination_id?: string | null
+          extras?: Json | null
+          flight_offer_id?: string | null
+          hotel_id?: string | null
+          id?: string
+          infants_count?: number | null
+          notes?: string | null
+          room_id?: string | null
+          selected_activities?: Json | null
+          session_id?: string | null
+          status?: string | null
+          subtotal?: number | null
+          taxes?: number | null
+          total_price?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          adults_count?: number | null
+          car_rental_id?: string | null
+          check_in_date?: string | null
+          check_out_date?: string | null
+          children_count?: number | null
+          created_at?: string | null
+          currency?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          destination?: string | null
+          destination_id?: string | null
+          extras?: Json | null
+          flight_offer_id?: string | null
+          hotel_id?: string | null
+          id?: string
+          infants_count?: number | null
+          notes?: string | null
+          room_id?: string | null
+          selected_activities?: Json | null
+          session_id?: string | null
+          status?: string | null
+          subtotal?: number | null
+          taxes?: number | null
+          total_price?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dynamic_packages_car_rental_id_fkey"
+            columns: ["car_rental_id"]
+            isOneToOne: false
+            referencedRelation: "car_rentals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dynamic_packages_flight_offer_id_fkey"
+            columns: ["flight_offer_id"]
+            isOneToOne: false
+            referencedRelation: "flight_offers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dynamic_packages_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dynamic_packages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_rooms"
             referencedColumns: ["id"]
           },
         ]
@@ -2422,6 +2610,63 @@ export type Database = {
           updated_at?: string | null
           valid_from?: string | null
           valid_until?: string | null
+        }
+        Relationships: []
+      }
+      tour_activities: {
+        Row: {
+          category: string | null
+          city_ar: string
+          city_en: string
+          country_ar: string | null
+          country_en: string | null
+          created_at: string | null
+          description_ar: string | null
+          description_en: string | null
+          duration_hours: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          name_ar: string
+          name_en: string
+          price_per_person: number
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          city_ar?: string
+          city_en?: string
+          country_ar?: string | null
+          country_en?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          duration_hours?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name_ar: string
+          name_en: string
+          price_per_person?: number
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          city_ar?: string
+          city_en?: string
+          country_ar?: string | null
+          country_en?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          duration_hours?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name_ar?: string
+          name_en?: string
+          price_per_person?: number
+          updated_at?: string | null
         }
         Relationships: []
       }
