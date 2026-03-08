@@ -92,147 +92,118 @@ const PremiumHeroSection = () => {
           style={{ "--hero-bg": `url(${currentData.image})` } as React.CSSProperties}
         />
         {/* Dark Overlay with Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-900/95 via-cyan-900/80 to-blue-900/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))]/90 via-[hsl(var(--primary))]/70 to-[hsl(180,40%,15%)]/90" />
         
-        {/* Animated Shapes - Interactive with mouse */}
+        {/* Animated Shapes */}
         <div 
-          className="absolute top-20 right-20 w-96 h-96 bg-teal-500/15 rounded-full blur-3xl transition-transform duration-700 ease-out"
-          style={{ 
-            transform: `translate(${mousePosition.x * -40}px, ${mousePosition.y * -40}px)` 
-          }}
+          className="absolute top-20 right-20 w-96 h-96 bg-primary/15 rounded-full blur-3xl transition-transform duration-700 ease-out"
+          style={{ transform: `translate(${mousePosition.x * -40}px, ${mousePosition.y * -40}px)` }}
         />
         <div 
-          className="absolute bottom-20 left-20 w-80 h-80 bg-cyan-500/15 rounded-full blur-3xl transition-transform duration-500 ease-out"
-          style={{ 
-            transform: `translate(${mousePosition.x * 60}px, ${mousePosition.y * 60}px)` 
-          }}
+          className="absolute bottom-20 left-20 w-80 h-80 bg-accent/15 rounded-full blur-3xl transition-transform duration-500 ease-out"
+          style={{ transform: `translate(${mousePosition.x * 60}px, ${mousePosition.y * 60}px)` }}
         />
         <div 
-          className="absolute top-1/2 right-1/3 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl transition-transform duration-1000 ease-out"
-          style={{ 
-            transform: `translate(${mousePosition.x * -30}px, ${mousePosition.y * 30}px)` 
-          }}
-        />
-        {/* Extra floating particles */}
-        <div 
-          className="absolute top-1/4 left-1/4 w-32 h-32 bg-teal-400/10 rounded-full blur-2xl transition-transform duration-300 ease-out"
-          style={{ 
-            transform: `translate(${mousePosition.x * 80}px, ${mousePosition.y * -50}px)` 
-          }}
-        />
-        <div 
-          className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-cyan-400/10 rounded-full blur-2xl transition-transform duration-800 ease-out"
-          style={{ 
-            transform: `translate(${mousePosition.x * -50}px, ${mousePosition.y * 70}px)` 
-          }}
+          className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full blur-2xl transition-transform duration-300 ease-out"
+          style={{ transform: `translate(${mousePosition.x * 80}px, ${mousePosition.y * -50}px)` }}
         />
       </div>
 
-      {/* Content */}
-      <div className="container relative flex-1 flex items-center py-24 pt-32">
-        <div className="w-full max-w-3xl animate-fade-in">
-          {/* Left Content */}
-          <div className="text-primary-foreground space-y-8">
-            {/* Premium Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20">
-              <Plane className="w-5 h-5 text-teal-400" />
-              <span className="text-sm font-medium">منصة السفر الأكثر ثقة في السعودية</span>
-              <Shield className="w-5 h-5 text-cyan-400" />
+      {/* Centered Content */}
+      <div className="container relative flex-1 flex flex-col items-center justify-center text-center py-24 pt-32 z-10">
+        <div className="w-full max-w-4xl mx-auto animate-fade-in space-y-8">
+          
+          {/* Premium Badge */}
+          <div className="flex justify-center">
+            <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20">
+              <Plane className="w-5 h-5 text-primary-foreground/80" />
+              <span className="text-sm font-medium text-primary-foreground/90">منصة السفر الأكثر ثقة في السعودية</span>
+              <Shield className="w-5 h-5 text-primary-foreground/80" />
             </div>
+          </div>
 
-            {/* Main Title */}
-            <div>
-              <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-4">
-                {currentData.title}{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 animate-shimmer">
-                  {currentData.highlight}
-                </span>
-                {currentData.subtitle && (
-                  <span> {currentData.subtitle}</span>
-                )}
-              </h1>
-              <p className="text-xl md:text-2xl text-primary-foreground/80 max-w-xl">
-                {currentData.description}
-              </p>
-            </div>
+          {/* Main Title */}
+          <div className="space-y-4">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-primary-foreground">
+              {currentData.title}{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-[hsl(40,80%,70%)] to-secondary animate-shimmer">
+                {currentData.highlight}
+              </span>
+              {currentData.subtitle && <span> {currentData.subtitle}</span>}
+            </h1>
+            <p className="text-lg md:text-xl text-primary-foreground/75 max-w-2xl mx-auto leading-relaxed">
+              {currentData.description}
+            </p>
+          </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-4">
-              <Link to="/destinations">
-                <Button 
-                  size="lg"
-                  className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border border-white/30 px-8 py-6 text-lg rounded-full shadow-lg group transition-all"
-                >
-                  <Plane className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
-                  اكتشف الوجهات
-                  <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              
-              <Button
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap justify-center gap-4 pt-2">
+            <Link to="/destinations">
+              <Button 
                 size="lg"
-                variant="outline"
-                className="bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 px-8 py-6 text-lg rounded-full shadow-lg transition-all"
-                onClick={() => setIsVideoPlaying(true)}
+                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-6 text-lg rounded-full shadow-lg group transition-all font-bold"
               >
-                <Play className="w-5 h-5 ml-2 fill-current" />
-                شاهد الفيديو
+                <Plane className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
+                اكتشف الوجهات
+                <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
               </Button>
-            </div>
+            </Link>
+            
+            <Button
+              size="lg"
+              variant="outline"
+              className="bg-white/10 backdrop-blur-md border border-white/30 text-primary-foreground hover:bg-white/20 px-8 py-6 text-lg rounded-full shadow-lg transition-all"
+              onClick={() => setIsVideoPlaying(true)}
+            >
+              <Play className="w-5 h-5 ml-2 fill-current" />
+              شاهد الفيديو
+            </Button>
+          </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-primary-foreground/20">
-              {Object.entries(currentData.stats).map(([key, value], index) => (
-                <div key={key} className={cn("text-center animate-scale-in", index === 0 ? "[animation-delay:0s]" : index === 1 ? "[animation-delay:0.1s]" : "[animation-delay:0.2s]")}>
-                  <div className="text-3xl md:text-4xl font-bold text-teal-400 mb-1">
-                    {value}
-                  </div>
-                  <div className="text-sm text-primary-foreground/70 capitalize">
-                    {key === "destinations" && "وجهة سياحية"}
-                    {key === "customers" && "عميل سعيد"}
-                    {key === "rating" && "تقييم العملاء"}
-                    {key === "programs" && "برنامج سياحي"}
-                    {key === "countries" && "دولة"}
-                    {key === "years" && "سنة خبرة"}
-                    {key === "honeymoon" && "زوجين"}
-                    {key === "resorts" && "منتجع فاخر"}
-                    {key === "offers" && "خصم"}
-                    {/* fallback for Arabic keys */}
-                    {!["destinations","customers","rating","programs","countries","years","honeymoon","resorts","offers"].includes(key) && key}
-                  </div>
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-8 pt-8 max-w-xl mx-auto">
+            {Object.entries(currentData.stats).map(([key, value], index) => (
+              <div key={key} className={cn("text-center animate-scale-in", index === 0 ? "[animation-delay:0s]" : index === 1 ? "[animation-delay:0.1s]" : "[animation-delay:0.2s]")}>
+                <div className="text-3xl md:text-4xl font-bold text-secondary mb-1">
+                  {value}
                 </div>
-              ))}
-            </div>
+                <div className="text-sm text-primary-foreground/60 capitalize">
+                  {!["destinations","customers","rating","programs","countries","years","honeymoon","resorts","offers"].includes(key) ? key : 
+                    key === "destinations" ? "وجهة سياحية" :
+                    key === "customers" ? "عميل سعيد" :
+                    key === "rating" ? "تقييم العملاء" :
+                    key === "programs" ? "برنامج سياحي" :
+                    key === "countries" ? "دولة" :
+                    key === "years" ? "سنة خبرة" :
+                    key === "honeymoon" ? "زوجين" :
+                    key === "resorts" ? "منتجع فاخر" : "خصم"
+                  }
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Skyscanner-style Search Bar — Full-width at bottom of hero */}
-      <div className="relative z-20 container pb-10 px-4 lg:px-8 animate-fade-in [animation-delay:0.4s]">
+      {/* Search Bar */}
+      <div className="relative z-20 container pb-8 px-4 lg:px-8 animate-fade-in [animation-delay:0.4s]">
         <SkyscannerSearch variant="banner" />
       </div>
 
-      {/* Slide Indicators — left side */}
-      <div className="absolute bottom-36 left-8 flex gap-3 z-10">
+      {/* Slide Indicators — centered bottom */}
+      <div className="absolute bottom-28 left-1/2 -translate-x-1/2 flex gap-3 z-10">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`h-1 rounded-full transition-all duration-300 ${
+            className={`h-1.5 rounded-full transition-all duration-300 ${
               index === currentSlide 
-                ? "bg-teal-400 w-12" 
-                : "bg-primary-foreground/30 w-8 hover:bg-primary-foreground/50"
+                ? "bg-secondary w-10" 
+                : "bg-primary-foreground/30 w-6 hover:bg-primary-foreground/50"
             }`}
             aria-label={`الذهاب إلى الشريحة ${index + 1}`}
           />
         ))}
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-36 right-8 animate-bounce z-10">
-        <div className="w-6 h-10 border-2 border-primary-foreground/30 rounded-full p-1">
-          <div className="w-1 h-3 bg-teal-400 rounded-full mx-auto animate-pulse" />
-        </div>
       </div>
 
       {/* Video Modal */}
