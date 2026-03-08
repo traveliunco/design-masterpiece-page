@@ -126,7 +126,7 @@ const PremiumHeroSection = () => {
           <div className="space-y-4">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-primary-foreground">
               {currentData.title}{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-secondary to-accent animate-shimmer">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-[hsl(40,80%,70%)] to-secondary animate-shimmer">
                 {currentData.highlight}
               </span>
               {currentData.subtitle && <span> {currentData.subtitle}</span>}
