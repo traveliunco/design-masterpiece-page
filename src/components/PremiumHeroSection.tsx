@@ -141,7 +141,7 @@ const PremiumHeroSection = () => {
             <Link to="/destinations">
               <Button 
                 size="lg"
-                className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-6 text-lg rounded-full shadow-lg group transition-all font-bold"
+                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-6 text-lg rounded-full shadow-lg group transition-all font-bold"
               >
                 <Plane className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
                 اكتشف الوجهات
