@@ -513,14 +513,20 @@ const Nav3D = () => {
 
               {/* Saved Offers */}
               <button
-                onClick={() => setShowFavPanel(showFavPanel === 'offers' ? null : (offersCount > 0 ? 'offers' : null))}
+                onClick={() => {
+                  if (offersCount > 0) {
+                    setShowFavPanel(showFavPanel === 'offers' ? null : 'offers');
+                  } else {
+                    navigateRouter('/offers');
+                  }
+                }}
                 className={cn(
                   "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 relative",
                   offersCount > 0
                     ? (isScrolled ? "text-orange-600 hover:bg-orange-50" : "text-orange-400 hover:bg-white/10")
                     : (isScrolled ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal" : "text-white/90 hover:bg-white/10")
                 )}
-                title="العروض المفضلة"
+                title={offersCount > 0 ? `العروض المفضلة (${offersCount})` : "تصفح العروض"}
                 aria-label="العروض المفضلة"
               >
                 <Package className="w-5 h-5" />
