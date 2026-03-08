@@ -173,8 +173,11 @@ const Programs = () => {
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="w-12 h-12 animate-spin text-luxury-teal mb-4" />
-              <p className="text-muted-foreground">جاري تحميل البرامج...</p>
+              <div className="relative">
+                <Loader2 className="w-12 h-12 animate-spin text-primary mb-4" />
+                <div className="absolute inset-0 w-12 h-12 rounded-full bg-primary/10 animate-ping" />
+              </div>
+              <p className="text-muted-foreground mt-4">جاري تحميل البرامج...</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
