@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
@@ -17,7 +16,7 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-    dedupe: ['react', 'react-dom', 'react/jsx-runtime', 'react-router-dom', 'three', 'react-globe.gl', '@react-three/fiber', '@react-three/drei']
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime', 'react-router-dom', 'three', 'react-globe.gl']
   },
   optimizeDeps: {
     force: true,
@@ -26,6 +25,18 @@ export default defineConfig(({ mode }) => ({
     commonjsOptions: {
       include: [/node_modules/],
       transformMixedEsModules: true
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-popover', '@radix-ui/react-select', '@radix-ui/react-tabs', '@radix-ui/react-tooltip'],
+          'vendor-supabase': ['@supabase/supabase-js'],
+          'vendor-3d': ['three', 'react-globe.gl'],
+          'vendor-charts': ['recharts'],
+          'vendor-motion': ['framer-motion'],
+        }
+      }
     }
   }
 }));

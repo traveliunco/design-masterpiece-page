@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Sparkles, MapPin, Star, Play, Shield, Clock, Users } from "lucide-react";
 import HeroSearch from "./HeroSearch";
-import { InteractiveGlobe } from "./InteractiveGlobe"; // Import InteractiveGlobe
+import { lazy, Suspense } from "react";
+const InteractiveGlobe = lazy(() => import("./InteractiveGlobe"));
 
 const PremiumHero = () => {
   return <section className="relative min-h-screen overflow-hidden bg-luxury-navy">
