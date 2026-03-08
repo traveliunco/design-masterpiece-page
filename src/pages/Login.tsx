@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Lock, Mail, Eye, EyeOff, Shield, ArrowRight } from "lucide-react";
 import PageLayout from "@/layouts/PageLayout";
@@ -7,13 +7,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { user, isStaff } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate(isStaff() ? "/admin" : "/account");
+    }
+  }, [user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,7 +49,7 @@ const Login = () => {
       }
       if (data.user) {
         toast.success("تم تسجيل الدخول بنجاح!");
-        navigate("/admin");
+        // Role-based redirect will happen via useEffect
       }
     } catch {
       toast.error("حدث خطأ غير متوقع");

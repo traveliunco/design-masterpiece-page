@@ -86,6 +86,7 @@ const Register = lazy(() => import("./pages/Register"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+const Account = lazy(() => import("./pages/Account"));
 
 // Admin Pages (Lazy loaded)
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
@@ -218,6 +219,7 @@ const App = () => (
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/account" element={<Account />} />
 
               {/* Admin Routes (Protected - staff only) */}
               <Route

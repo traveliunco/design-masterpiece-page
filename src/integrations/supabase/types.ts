@@ -1999,6 +1999,48 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          nationality: string | null
+          phone: string | null
+          preferred_currency: string | null
+          preferred_language: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          nationality?: string | null
+          phone?: string | null
+          preferred_currency?: string | null
+          preferred_language?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          nationality?: string | null
+          phone?: string | null
+          preferred_currency?: string | null
+          preferred_language?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       program_dates: {
         Row: {
           available_spots: number | null
@@ -3031,6 +3073,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_favorites: {
+        Row: {
+          created_at: string | null
+          id: string
+          item_data: Json | null
+          item_id: string
+          item_image: string | null
+          item_name: string | null
+          item_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          item_data?: Json | null
+          item_id: string
+          item_image?: string | null
+          item_name?: string | null
+          item_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          item_data?: Json | null
+          item_id?: string
+          item_image?: string | null
+          item_name?: string | null
+          item_type?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
