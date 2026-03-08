@@ -91,16 +91,19 @@ const megaMenuItems = {
   },
   services: {
     title: "خدماتنا",
-    items: []
+    items: [
+      { name: "حجز الطيران", icon: Plane, path: "/flights", desc: "أفضل أسعار تذاكر الطيران" },
+      { name: "حجز الفنادق", icon: Hotel, path: "/hotels", desc: "فنادق مختارة بعناية" },
+      { name: "البرامج السياحية", icon: Calendar, path: "/programs", desc: "برامج شاملة ومتكاملة" },
+      { name: "شهر العسل", icon: Heart, path: "/honeymoon", desc: "باقات رومانسية مميزة" },
+      { name: "العروض الخاصة", icon: Sparkles, path: "/offers", desc: "خصومات حصرية", hot: true },
+    ]
   },
   more: {
     title: "المزيد",
     items: [
       { name: "الكرة الأرضية", icon: Globe, path: "/globe", desc: "استكشف العالم ثلاثي الأبعاد" },
-      { name: "المدونة", icon: "📝", path: "/blog", desc: "مقالات ونصائح السفر" },
-      // { name: "تأجير السيارات", icon: "🚗", path: "/car-rental", desc: "سيارات فاخرة" }, /* HIDDEN */
-      // { name: "التأشيرات", icon: "🛂", path: "/visas", desc: "خدمات الفيزا" }, /* HIDDEN */
-      // { name: "التأمين", icon: Shield, path: "/insurance", desc: "تأمين السفر" }, /* HIDDEN */
+      { name: "المدونة", icon: MapPinned, path: "/blog", desc: "مقالات ونصائح السفر" },
       { name: "تقسيط تابي", icon: CreditCard, path: "/tabby", desc: "ادفع على 4 دفعات" },
       { name: "تقسيط تمارا", icon: CreditCard, path: "/tamara", desc: "قسّط مشترياتك" },
       { name: "برنامج الولاء", icon: Heart, path: "/loyalty", desc: "اكسب النقاط" },
@@ -432,6 +435,7 @@ const Nav3D = () => {
               {/* Search */}
               {sysSettings.header.showSearchBar && (
                 <button
+                  onClick={() => navigateRouter('/search')}
                   className={cn(
                     "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300",
                     isScrolled
@@ -485,14 +489,20 @@ const Nav3D = () => {
 
               {/* Saved Places - Destinations */}
               <button
-                onClick={() => setShowFavPanel(showFavPanel === 'destinations' ? null : (destinationsCount > 0 ? 'destinations' : null))}
+                onClick={() => {
+                  if (destinationsCount > 0) {
+                    setShowFavPanel(showFavPanel === 'destinations' ? null : 'destinations');
+                  } else {
+                    navigateRouter('/destinations');
+                  }
+                }}
                 className={cn(
                   "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 relative",
                   destinationsCount > 0
                     ? (isScrolled ? "text-emerald-600 hover:bg-emerald-50" : "text-emerald-400 hover:bg-white/10")
                     : (isScrolled ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal" : "text-white/90 hover:bg-white/10")
                 )}
-                title="الوجهات المفضلة"
+                title={destinationsCount > 0 ? `الوجهات المفضلة (${destinationsCount})` : "تصفح الوجهات"}
                 aria-label="الوجهات المفضلة"
               >
                 <MapPinned className="w-5 h-5" />
@@ -503,14 +513,20 @@ const Nav3D = () => {
 
               {/* Saved Offers */}
               <button
-                onClick={() => setShowFavPanel(showFavPanel === 'offers' ? null : (offersCount > 0 ? 'offers' : null))}
+                onClick={() => {
+                  if (offersCount > 0) {
+                    setShowFavPanel(showFavPanel === 'offers' ? null : 'offers');
+                  } else {
+                    navigateRouter('/offers');
+                  }
+                }}
                 className={cn(
                   "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 relative",
                   offersCount > 0
                     ? (isScrolled ? "text-orange-600 hover:bg-orange-50" : "text-orange-400 hover:bg-white/10")
                     : (isScrolled ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal" : "text-white/90 hover:bg-white/10")
                 )}
-                title="العروض المفضلة"
+                title={offersCount > 0 ? `العروض المفضلة (${offersCount})` : "تصفح العروض"}
                 aria-label="العروض المفضلة"
               >
                 <Package className="w-5 h-5" />
@@ -679,15 +695,18 @@ const Nav3D = () => {
           {/* Mobile Main Links */}
           <div className="space-y-2 mb-6">
             <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4 px-4 text-center md:text-right">القائمة الرئيسية</p>
-            {activeNavLinks.filter(link => link.path !== "#").map((link, index) => (
+            {activeNavLinks
+              .filter(link => !link.hasDropdown || link.path !== "#")
+              .map((link, index) => (
               <Link
-                key={link.path}
-                to={link.path}
+                key={link.path + index}
+                to={link.hasDropdown && link.path === "#" ? (link.dropdownKey === 'services' ? '/programs' : link.dropdownKey === 'countries' ? '/destinations' : '/') : link.path}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
                   "flex items-center gap-4 text-2xl font-black text-white py-4 px-6 rounded-2xl transition-all duration-500",
                   "hover:bg-white/10 hover:scale-105 active:scale-95",
-                  "transform-gpu"
+                  "transform-gpu",
+                  location.pathname === link.path && "bg-white/10"
                 )}
                 style={{
                   transitionDelay: `${index * 50}ms`,
@@ -695,9 +714,30 @@ const Nav3D = () => {
                 }}
               >
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-400">
-                  {link.dropdownKey === 'services' ? <Globe className="w-5 h-5" /> : link.dropdownKey === 'countries' ? <MapPin className="w-5 h-5" /> : link.name === 'الرئيسية' ? <Plane className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                  {link.dropdownKey === 'services' ? <Sparkles className="w-5 h-5" /> : link.dropdownKey === 'countries' ? <MapPin className="w-5 h-5" /> : link.name === 'الرئيسية' ? <Plane className="w-5 h-5" /> : link.path === '/offers' ? <Heart className="w-5 h-5" /> : link.path === '/programs' ? <Calendar className="w-5 h-5" /> : link.path === '/flights' ? <Plane className="w-5 h-5" /> : link.path === '/hotels' ? <Hotel className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
                 </div>
                 <span>{link.name}</span>
+              </Link>
+            ))}
+
+            {/* Additional mobile links for dropdown-only items */}
+            {[
+              { name: "البرامج السياحية", path: "/programs", icon: "📋" },
+              { name: "حجز الطيران", path: "/flights", icon: "✈️" },
+              { name: "حجز الفنادق", path: "/hotels", icon: "🏨" },
+              { name: "العروض الخاصة", path: "/offers", icon: "🎁" },
+              { name: "شهر العسل", path: "/honeymoon", icon: "💕" },
+            ].filter(item => !activeNavLinks.some(l => l.path === item.path)).map((item, index) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-4 text-xl font-bold text-white/80 py-3 px-6 rounded-2xl hover:bg-white/10 active:scale-95 transition-all"
+              >
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                  <span className="text-lg">{item.icon}</span>
+                </div>
+                <span>{item.name}</span>
               </Link>
             ))}
           </div>
@@ -768,9 +808,20 @@ const Nav3D = () => {
 
             {/* Social Icons */}
             <div className="flex justify-center gap-4">
-              {[Instagram, Twitter, Facebook].map((Icon, i) => (
-                <a key={i} href="#" className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                  <Icon className="w-5 h-5" />
+              {[
+                { Icon: Instagram, url: "https://instagram.com/traveliun", label: "Instagram" },
+                { Icon: Twitter, url: "https://twitter.com/traveliun", label: "Twitter" },
+                { Icon: Facebook, url: "https://facebook.com/traveliun", label: "Facebook" },
+              ].map((social, i) => (
+                <a
+                  key={i}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-all active:scale-95"
+                >
+                  <social.Icon className="w-5 h-5" />
                 </a>
               ))}
             </div>
