@@ -489,14 +489,20 @@ const Nav3D = () => {
 
               {/* Saved Places - Destinations */}
               <button
-                onClick={() => setShowFavPanel(showFavPanel === 'destinations' ? null : (destinationsCount > 0 ? 'destinations' : null))}
+                onClick={() => {
+                  if (destinationsCount > 0) {
+                    setShowFavPanel(showFavPanel === 'destinations' ? null : 'destinations');
+                  } else {
+                    navigateRouter('/destinations');
+                  }
+                }}
                 className={cn(
                   "hidden md:flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 relative",
                   destinationsCount > 0
                     ? (isScrolled ? "text-emerald-600 hover:bg-emerald-50" : "text-emerald-400 hover:bg-white/10")
                     : (isScrolled ? "text-luxury-navy hover:bg-luxury-teal/10 hover:text-luxury-teal" : "text-white/90 hover:bg-white/10")
                 )}
-                title="الوجهات المفضلة"
+                title={destinationsCount > 0 ? `الوجهات المفضلة (${destinationsCount})` : "تصفح الوجهات"}
                 aria-label="الوجهات المفضلة"
               >
                 <MapPinned className="w-5 h-5" />
