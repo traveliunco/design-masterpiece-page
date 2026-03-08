@@ -97,6 +97,7 @@ const megaMenuItems = {
       { name: "البرامج السياحية", icon: Calendar, path: "/programs", desc: "برامج شاملة ومتكاملة" },
       { name: "شهر العسل", icon: Heart, path: "/honeymoon", desc: "باقات رومانسية مميزة" },
       { name: "العروض الخاصة", icon: Sparkles, path: "/offers", desc: "خصومات حصرية", hot: true },
+      { name: "صمم رحلتك", icon: MapPinned, path: "/trip-builder", desc: "بكج سفر مخصص بالكامل", hot: true },
     ]
   },
   more: {
