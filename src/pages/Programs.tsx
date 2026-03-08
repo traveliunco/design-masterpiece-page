@@ -33,7 +33,7 @@ interface ProgramFromDB {
   program_type: string;
   duration_days: number;
   duration_nights: number;
-  price?: number;
+  price?: number; // alias for base_price
   base_price: number | null;
   description_ar: string | null;
   description_en: string | null;

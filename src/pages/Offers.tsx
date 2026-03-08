@@ -86,7 +86,7 @@ const Offers = () => {
   const loadOffers = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("special_offers")
         .select("*")
         .eq("is_active", true)
@@ -95,9 +95,10 @@ const Offers = () => {
         .order("discount_percentage", { ascending: false });
 
       if (error) throw error;
-      setOffers((data || []) as unknown as OfferFromDB[]);
+      setOffers((data || []) as OfferFromDB[]);
     } catch (error) {
       console.error("Error loading offers:", error);
+      toast.error("حدث خطأ في تحميل العروض");
     } finally {
       setLoading(false);
     }
