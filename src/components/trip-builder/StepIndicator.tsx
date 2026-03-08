@@ -1,4 +1,5 @@
 import { Check, MapPin, Plane, Hotel, Car, Sparkles, FileText } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const steps = [
   { label: 'الوجهة', icon: MapPin },
@@ -16,42 +17,53 @@ interface StepIndicatorProps {
 
 const StepIndicator = ({ currentStep, onStepClick }: StepIndicatorProps) => {
   return (
-    <div className="flex items-center justify-between w-full max-w-3xl mx-auto mb-8">
-      {steps.map((step, index) => {
-        const Icon = step.icon;
-        const isCompleted = index < currentStep;
-        const isCurrent = index === currentStep;
+    <div className="relative mb-10">
+      {/* Progress bar background */}
+      <div className="absolute top-5 left-4 right-4 h-1 bg-muted rounded-full z-0" />
+      <div
+        className="absolute top-5 right-4 h-1 bg-gradient-to-l from-primary to-secondary rounded-full z-0 transition-all duration-500"
+        style={{ width: `${(currentStep / (steps.length - 1)) * (100 - 8)}%` }}
+      />
 
-        return (
-          <div key={index} className="flex items-center flex-1 last:flex-none">
+      <div className="relative z-10 flex items-start justify-between">
+        {steps.map((step, index) => {
+          const Icon = step.icon;
+          const isCompleted = index < currentStep;
+          const isCurrent = index === currentStep;
+          const isAccessible = index <= currentStep;
+
+          return (
             <button
-              onClick={() => index <= currentStep && onStepClick(index)}
-              disabled={index > currentStep}
-              className={`flex flex-col items-center gap-1 transition-all duration-300 ${
-                index <= currentStep ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
-              }`}
+              key={index}
+              onClick={() => isAccessible && onStepClick(index)}
+              disabled={!isAccessible}
+              className={cn(
+                'flex flex-col items-center gap-1.5 transition-all duration-300 group',
+                isAccessible ? 'cursor-pointer' : 'cursor-not-allowed'
+              )}
             >
               <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
+                className={cn(
+                  'w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-sm',
                   isCompleted
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-primary text-primary-foreground shadow-primary/30 shadow-md'
                     : isCurrent
-                    ? 'bg-secondary text-secondary-foreground ring-4 ring-secondary/30'
-                    : 'bg-muted text-muted-foreground'
-                }`}
+                    ? 'bg-secondary text-secondary-foreground shadow-secondary/40 shadow-lg scale-110'
+                    : 'bg-muted/80 text-muted-foreground'
+                )}
               >
-                {isCompleted ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
+                {isCompleted ? <Check className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
               </div>
-              <span className={`text-xs font-medium hidden sm:block ${isCurrent ? 'text-secondary-foreground' : 'text-muted-foreground'}`}>
+              <span className={cn(
+                'text-[10px] font-semibold transition-all leading-tight',
+                isCurrent ? 'text-secondary' : isCompleted ? 'text-primary' : 'text-muted-foreground/60'
+              )}>
                 {step.label}
               </span>
             </button>
-            {index < steps.length - 1 && (
-              <div className={`flex-1 h-0.5 mx-2 transition-all ${index < currentStep ? 'bg-primary' : 'bg-border'}`} />
-            )}
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };
