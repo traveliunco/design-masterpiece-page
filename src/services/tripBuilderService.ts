@@ -46,13 +46,13 @@ export const tripBuilderService = {
 
   async getCarRentals(city?: string) {
     let query = supabase
-      .from('car_rentals' as any)
+      .from('car_rentals')
       .select('*')
       .eq('is_active', true);
     if (city) query = query.ilike('city_en', `%${city}%`);
     const { data, error } = await query.order('price_per_day');
     if (error) throw error;
-    return (data || []) as any[];
+    return data || [];
   },
 
   async getTourActivities(city?: string) {
@@ -66,9 +66,32 @@ export const tripBuilderService = {
     return (data || []) as any[];
   },
 
-  async savePackage(packageData: any) {
+  async savePackage(packageData: {
+    destination?: string;
+    destination_id?: string;
+    check_in_date?: string;
+    check_out_date?: string;
+    adults_count?: number;
+    children_count?: number;
+    infants_count?: number;
+    flight_offer_id?: string | null;
+    hotel_id?: string | null;
+    room_id?: string | null;
+    car_rental_id?: string | null;
+    selected_activities?: any[];
+    extras?: any;
+    subtotal?: number;
+    taxes?: number;
+    total_price?: number;
+    customer_name?: string;
+    customer_email?: string;
+    customer_phone?: string;
+    notes?: string;
+    status?: string;
+    session_id?: string;
+  }) {
     const { data, error } = await supabase
-      .from('dynamic_packages' as any)
+      .from('dynamic_packages')
       .insert(packageData)
       .select()
       .single();
