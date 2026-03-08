@@ -95,9 +95,9 @@ const BlogPost = () => {
         if (!error && data) {
           setArticle(data as unknown as Article);
           // جلب المقالات ذات الصلة بشكل منفصل
-          void (supabase
+          void ((supabase
             .from("blog_articles" as "destinations")
-            .select("*")
+            .select("*") as any)
             .eq("category", (data as unknown as Article).category)
             .limit(4) as unknown as Promise<{data: unknown[] | null}>)
             .then(res => {

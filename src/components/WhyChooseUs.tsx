@@ -69,7 +69,10 @@ const WhyChooseUs = () => {
               className="group bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-luxury-teal/30 transition-all duration-500 hover:-translate-y-1"
             >
               <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center mb-6", feature.bgColor)}>
-                <feature.icon className={cn("w-7 h-7", feature.color)} />
+                {(() => {
+                  const IconComp = typeof feature.icon === 'string' ? iconMap[feature.icon] : feature.icon;
+                  return IconComp ? <IconComp className={cn("w-7 h-7", feature.color)} /> : null;
+                })()}
               </div>
               <h3 className="text-xl font-bold text-luxury-navy mb-3 group-hover:text-luxury-teal transition-colors">
                 {feature.title}
