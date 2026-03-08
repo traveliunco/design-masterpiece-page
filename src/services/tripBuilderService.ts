@@ -4,7 +4,7 @@ export const tripBuilderService = {
   async getDestinations() {
     const { data, error } = await supabase
       .from('destinations')
-      .select('id, name_ar, name_en, cover_image, country_ar, city_en')
+      .select('id, name_ar, name_en, cover_image, country_ar, country_en, slug')
       .eq('is_active', true)
       .order('display_order');
     if (error) throw error;
