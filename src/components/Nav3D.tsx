@@ -695,15 +695,18 @@ const Nav3D = () => {
           {/* Mobile Main Links */}
           <div className="space-y-2 mb-6">
             <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4 px-4 text-center md:text-right">القائمة الرئيسية</p>
-            {activeNavLinks.filter(link => link.path !== "#").map((link, index) => (
+            {activeNavLinks
+              .filter(link => !link.hasDropdown || link.path !== "#")
+              .map((link, index) => (
               <Link
-                key={link.path}
-                to={link.path}
+                key={link.path + index}
+                to={link.hasDropdown && link.path === "#" ? (link.dropdownKey === 'services' ? '/programs' : link.dropdownKey === 'countries' ? '/destinations' : '/') : link.path}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
                   "flex items-center gap-4 text-2xl font-black text-white py-4 px-6 rounded-2xl transition-all duration-500",
                   "hover:bg-white/10 hover:scale-105 active:scale-95",
-                  "transform-gpu"
+                  "transform-gpu",
+                  location.pathname === link.path && "bg-white/10"
                 )}
                 style={{
                   transitionDelay: `${index * 50}ms`,
@@ -711,9 +714,30 @@ const Nav3D = () => {
                 }}
               >
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-400">
-                  {link.dropdownKey === 'services' ? <Globe className="w-5 h-5" /> : link.dropdownKey === 'countries' ? <MapPin className="w-5 h-5" /> : link.name === 'الرئيسية' ? <Plane className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                  {link.dropdownKey === 'services' ? <Sparkles className="w-5 h-5" /> : link.dropdownKey === 'countries' ? <MapPin className="w-5 h-5" /> : link.name === 'الرئيسية' ? <Plane className="w-5 h-5" /> : link.path === '/offers' ? <Heart className="w-5 h-5" /> : link.path === '/programs' ? <Calendar className="w-5 h-5" /> : link.path === '/flights' ? <Plane className="w-5 h-5" /> : link.path === '/hotels' ? <Hotel className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
                 </div>
                 <span>{link.name}</span>
+              </Link>
+            ))}
+
+            {/* Additional mobile links for dropdown-only items */}
+            {[
+              { name: "البرامج السياحية", path: "/programs", icon: "📋" },
+              { name: "حجز الطيران", path: "/flights", icon: "✈️" },
+              { name: "حجز الفنادق", path: "/hotels", icon: "🏨" },
+              { name: "العروض الخاصة", path: "/offers", icon: "🎁" },
+              { name: "شهر العسل", path: "/honeymoon", icon: "💕" },
+            ].filter(item => !activeNavLinks.some(l => l.path === item.path)).map((item, index) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-4 text-xl font-bold text-white/80 py-3 px-6 rounded-2xl hover:bg-white/10 active:scale-95 transition-all"
+              >
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                  <span className="text-lg">{item.icon}</span>
+                </div>
+                <span>{item.name}</span>
               </Link>
             ))}
           </div>
