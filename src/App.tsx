@@ -60,6 +60,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const MyBookings = lazy(() => import("./pages/MyBookings"));
 const MobileHomePage = lazy(() => import("./pages/MobileHomePage"));
 const GlobePage = lazy(() => import("./pages/GlobePage"));
+const TripBuilder = lazy(() => import("./pages/TripBuilder"));
 
 // صفحة الدولة الديناميكية (تستخدم Supabase مع fallback محلي)
 const CountryPage = lazy(() => import("./pages/countries/CountryPage"));
@@ -201,6 +202,7 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/globe" element={<GlobePage />} />
+              <Route path="/trip-builder" element={<TripBuilder />} />
 
               {/* صفحة الدولة الديناميكية - تشمل جميع الدول بما فيها الجديدة */}
               <Route path="/country/:countryId" element={<CountryPage />} />
