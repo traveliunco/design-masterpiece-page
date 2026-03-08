@@ -71,6 +71,7 @@ const navItems: NavItem[] = [
   { name: "الرحلات", path: "/admin/flights", icon: Plane },
   { name: "الفنادق", path: "/admin/hotels", icon: Hotel },
   { name: "العروض", path: "/admin/offers", icon: Tag, allowedRoles: ["all"] },
+  { name: "البكجات الجاهزة", path: "/admin/ready-packages", icon: Building2, allowedRoles: ["all"] },
   {
     name: "الدول والمدن",
     path: "/admin/southeast-asia-countries",

@@ -123,6 +123,7 @@ const AdminBlog = lazy(() => import("./pages/admin/BlogAdmin"));
 const AdminBlogArticleForm = lazy(() => import("./pages/admin/BlogArticleForm"));
 const AdminNavMenu = lazy(() => import("./pages/admin/NavAdmin"));
 const AdminMobileHomepage = lazy(() => import("./pages/admin/MobileHomepageAdmin"));
+const AdminReadyPackages = lazy(() => import("./pages/admin/ReadyPackagesAdmin"));
 
 
 
@@ -237,6 +238,7 @@ const App = () => (
                 <Route path="offers" element={<AdminOffers />} />
                 <Route path="offers/new" element={<AdminOfferNew />} />
                 <Route path="offers/edit/:id" element={<AdminOfferEdit />} />
+                <Route path="ready-packages" element={<AdminReadyPackages />} />
                 <Route path="settings" element={<ProtectedRoute requiredRole="admin"><AdminSettings /></ProtectedRoute>} />
                 <Route path="ai-settings" element={<ProtectedRoute requiredRole="admin"><AdminAISettings /></ProtectedRoute>} />
                 <Route path="southeast-asia-countries" element={<ProtectedRoute requiredRole="admin"><AdminSoutheastAsiaCountries /></ProtectedRoute>} />
