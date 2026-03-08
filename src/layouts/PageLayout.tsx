@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ArrowRight, Bell, User } from "lucide-react";
+import { ArrowRight, Bell, User, Search } from "lucide-react";
 import Nav3D from "@/components/Nav3D";
 import PremiumFooter from "@/components/PremiumFooter";
 import MobileNav from "@/components/MobileNav";
