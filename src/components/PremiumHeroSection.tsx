@@ -198,7 +198,7 @@ const PremiumHeroSection = () => {
             onClick={() => setCurrentSlide(index)}
             className={`h-1.5 rounded-full transition-all duration-300 ${
               index === currentSlide 
-                ? "bg-accent w-10" 
+                ? "bg-secondary w-10" 
                 : "bg-primary-foreground/30 w-6 hover:bg-primary-foreground/50"
             }`}
             aria-label={`الذهاب إلى الشريحة ${index + 1}`}
