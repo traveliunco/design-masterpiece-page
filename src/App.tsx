@@ -238,6 +238,20 @@ const App = () => (
                 <Route path="offers/new" element={<AdminOfferNew />} />
                 <Route path="offers/edit/:id" element={<AdminOfferEdit />} />
                 <Route path="ready-packages" element={<AdminReadyPackages />} />
+                <Route path="destinations" element={<ProtectedRoute requiredRole="admin"><AdminDestinations /></ProtectedRoute>} />
+                <Route path="destinations/new" element={<ProtectedRoute requiredRole="admin"><AdminDestinationNew /></ProtectedRoute>} />
+                <Route path="destinations/edit/:id" element={<ProtectedRoute requiredRole="admin"><AdminDestinationEdit /></ProtectedRoute>} />
+                <Route path="hotels" element={<ProtectedRoute requiredRole="admin"><AdminHotels /></ProtectedRoute>} />
+                <Route path="flights" element={<ProtectedRoute requiredRole="admin"><AdminFlights /></ProtectedRoute>} />
+                <Route path="payments" element={<ProtectedRoute requiredRole="admin"><AdminPayments /></ProtectedRoute>} />
+                <Route path="reviews" element={<ProtectedRoute requiredRole="admin"><AdminReviews /></ProtectedRoute>} />
+                <Route path="users" element={<ProtectedRoute requiredRole="admin"><AdminUsers /></ProtectedRoute>} />
+                <Route path="messages" element={<ProtectedRoute requiredRole="admin"><AdminMessages /></ProtectedRoute>} />
+                <Route path="reports" element={<ProtectedRoute requiredRole="admin"><AdminReports /></ProtectedRoute>} />
+                <Route path="articles" element={<ProtectedRoute requiredRole="admin"><AdminArticles /></ProtectedRoute>} />
+                <Route path="nav-menu" element={<ProtectedRoute requiredRole="admin"><AdminNavMenu /></ProtectedRoute>} />
+                <Route path="mobile-homepage" element={<ProtectedRoute requiredRole="admin"><AdminMobileHomepage /></ProtectedRoute>} />
+                <Route path="seed-countries" element={<ProtectedRoute requiredRole="admin"><AdminSeedCountries /></ProtectedRoute>} />
                 <Route path="settings" element={<ProtectedRoute requiredRole="admin"><AdminSettings /></ProtectedRoute>} />
                 <Route path="ai-settings" element={<ProtectedRoute requiredRole="admin"><AdminAISettings /></ProtectedRoute>} />
                 <Route path="southeast-asia-countries" element={<ProtectedRoute requiredRole="admin"><AdminSoutheastAsiaCountries /></ProtectedRoute>} />
