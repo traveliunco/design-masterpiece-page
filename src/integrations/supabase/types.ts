@@ -2264,6 +2264,117 @@ export type Database = {
           },
         ]
       }
+      ready_packages: {
+        Row: {
+          badge: string | null
+          base_price_per_person: number
+          car_description_ar: string | null
+          country_ar: string
+          cover_image: string | null
+          created_at: string | null
+          description_ar: string | null
+          description_en: string | null
+          destination_id: string | null
+          destination_name_ar: string
+          display_order: number | null
+          duration_nights: number
+          flight_description_ar: string | null
+          highlights: Json | null
+          hotel_id: string | null
+          hotel_name_ar: string | null
+          id: string
+          included_activities: Json | null
+          includes_car: boolean | null
+          includes_flight: boolean | null
+          includes_hotel: boolean | null
+          includes_insurance: boolean | null
+          includes_visa: boolean | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          room_type_ar: string | null
+          title_ar: string
+          title_en: string
+          updated_at: string | null
+        }
+        Insert: {
+          badge?: string | null
+          base_price_per_person?: number
+          car_description_ar?: string | null
+          country_ar?: string
+          cover_image?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          destination_id?: string | null
+          destination_name_ar?: string
+          display_order?: number | null
+          duration_nights?: number
+          flight_description_ar?: string | null
+          highlights?: Json | null
+          hotel_id?: string | null
+          hotel_name_ar?: string | null
+          id?: string
+          included_activities?: Json | null
+          includes_car?: boolean | null
+          includes_flight?: boolean | null
+          includes_hotel?: boolean | null
+          includes_insurance?: boolean | null
+          includes_visa?: boolean | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          room_type_ar?: string | null
+          title_ar: string
+          title_en?: string
+          updated_at?: string | null
+        }
+        Update: {
+          badge?: string | null
+          base_price_per_person?: number
+          car_description_ar?: string | null
+          country_ar?: string
+          cover_image?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          destination_id?: string | null
+          destination_name_ar?: string
+          display_order?: number | null
+          duration_nights?: number
+          flight_description_ar?: string | null
+          highlights?: Json | null
+          hotel_id?: string | null
+          hotel_name_ar?: string | null
+          id?: string
+          included_activities?: Json | null
+          includes_car?: boolean | null
+          includes_flight?: boolean | null
+          includes_hotel?: boolean | null
+          includes_insurance?: boolean | null
+          includes_visa?: boolean | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          room_type_ar?: string | null
+          title_ar?: string
+          title_en?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ready_packages_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ready_packages_hotel_id_fkey"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
           booking_id: string | null
