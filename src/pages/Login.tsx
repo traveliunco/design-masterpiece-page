@@ -49,7 +49,7 @@ const Login = () => {
       }
       if (data.user) {
         toast.success("تم تسجيل الدخول بنجاح!");
-        navigate("/admin");
+        // Role-based redirect will happen via useEffect
       }
     } catch {
       toast.error("حدث خطأ غير متوقع");
