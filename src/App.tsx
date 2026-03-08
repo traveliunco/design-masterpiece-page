@@ -202,6 +202,7 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/globe" element={<GlobePage />} />
+              <Route path="/trip-builder" element={<TripBuilder />} />
 
               {/* صفحة الدولة الديناميكية - تشمل جميع الدول بما فيها الجديدة */}
               <Route path="/country/:countryId" element={<CountryPage />} />
