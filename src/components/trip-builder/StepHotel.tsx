@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Hotel, Star, BedDouble, SkipForward } from 'lucide-react';
+import { Hotel, Star, BedDouble, SkipForward, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { TripData } from '@/hooks/useTripBuilder';
@@ -45,45 +45,53 @@ const StepHotel = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-foreground mb-2">اختر الفندق والغرفة</h2>
-        <p className="text-muted-foreground">اختياري - اختر فندقك المفضل ثم نوع الغرفة</p>
+      {/* Header */}
+      <div className="bg-gradient-to-br from-amber-500/10 via-secondary/5 to-transparent rounded-3xl p-6 text-center">
+        <div className="w-14 h-14 mx-auto rounded-2xl bg-amber-500/15 flex items-center justify-center mb-3">
+          <Hotel className="w-7 h-7 text-amber-600" />
+        </div>
+        <h2 className="text-xl font-bold text-foreground">اختر الفندق والغرفة</h2>
+        <p className="text-sm text-muted-foreground mt-1">اختياري - اختر فندقك المفضل ثم نوع الغرفة</p>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[1,2,3,4].map(i => <div key={i} className="h-48 rounded-xl bg-muted animate-pulse" />)}
+        <div className="grid grid-cols-2 gap-3">
+          {[1,2,3,4].map(i => <div key={i} className="h-44 rounded-2xl bg-muted animate-pulse" />)}
         </div>
       ) : hotels.length === 0 ? (
-        <div className="text-center py-12 bg-muted/50 rounded-2xl">
-          <Hotel className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-          <p className="text-muted-foreground">لا توجد فنادق متاحة حالياً</p>
+        <div className="text-center py-16 bg-muted/30 rounded-3xl border border-dashed border-border">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-4">
+            <Hotel className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <p className="text-muted-foreground font-medium">لا توجد فنادق متاحة حالياً</p>
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {hotels.map(hotel => (
               <button
                 key={hotel.id}
                 onClick={() => selectHotel(hotel)}
                 className={cn(
-                  'rounded-xl overflow-hidden border-2 transition-all text-right',
-                  selectedHotel === hotel.id ? 'border-primary ring-2 ring-primary/20' : 'border-border hover:border-primary/40'
+                  'rounded-2xl overflow-hidden transition-all duration-300 text-right',
+                  selectedHotel === hotel.id
+                    ? 'ring-[3px] ring-primary ring-offset-2 ring-offset-background shadow-lg shadow-primary/20'
+                    : 'hover:shadow-md border border-border'
                 )}
               >
-                <div className="h-32 bg-muted">
+                <div className="h-28 bg-muted relative">
                   {hotel.main_image && <img src={hotel.main_image} alt={hotel.name_ar} className="w-full h-full object-cover" />}
+                  {hotel.star_rating && (
+                    <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-0.5 flex items-center gap-0.5">
+                      {Array.from({ length: hotel.star_rating }).map((_, i) => (
+                        <Star key={i} className="w-2.5 h-2.5 fill-secondary text-secondary" />
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div className="p-3">
-                  <h4 className="font-bold text-foreground">{hotel.name_ar}</h4>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                    <span>{hotel.city_ar}</span>
-                    {hotel.star_rating && (
-                      <span className="flex items-center gap-0.5">
-                        {Array.from({ length: hotel.star_rating }).map((_, i) => <Star key={i} className="w-3 h-3 fill-secondary text-secondary" />)}
-                      </span>
-                    )}
-                  </div>
+                <div className="p-3 bg-card">
+                  <h4 className="font-bold text-sm text-foreground leading-tight">{hotel.name_ar}</h4>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">{hotel.city_ar}</p>
                 </div>
               </button>
             ))}
@@ -91,43 +99,60 @@ const StepHotel = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
 
           {/* Rooms */}
           {selectedHotel && rooms.length > 0 && (
-            <div className="mt-6">
-              <h3 className="font-semibold text-foreground mb-3">اختر الغرفة</h3>
-              <div className="space-y-3">
-                {rooms.map(room => (
-                  <button
-                    key={room.id}
-                    onClick={() => selectRoom(room)}
-                    className={cn(
-                      'w-full p-4 rounded-xl border-2 transition-all flex items-center gap-4 text-right',
-                      tripData.roomId === room.id ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40 bg-card'
-                    )}
-                  >
-                    <BedDouble className="w-8 h-8 text-primary shrink-0" />
-                    <div className="flex-1">
-                      <p className="font-bold text-foreground">{room.name_ar}</p>
-                      <p className="text-xs text-muted-foreground">{room.bed_type || ''} · حتى {room.max_adults} بالغين</p>
-                    </div>
-                    <div className="text-left shrink-0">
-                      <p className="text-lg font-bold text-primary">{room.price_per_night?.toLocaleString()}</p>
-                      <p className="text-xs text-muted-foreground">ر.س / ليلة</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
+            <div className="bg-card rounded-2xl border border-border p-4 space-y-3">
+              <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
+                <BedDouble className="w-4 h-4 text-primary" />
+                اختر الغرفة
+              </h3>
+              {rooms.map(room => (
+                <button
+                  key={room.id}
+                  onClick={() => selectRoom(room)}
+                  className={cn(
+                    'w-full p-4 rounded-xl border-2 transition-all flex items-center gap-4 text-right',
+                    tripData.roomId === room.id
+                      ? 'border-primary bg-primary/5 shadow-sm'
+                      : 'border-border hover:border-primary/30 bg-card'
+                  )}
+                >
+                  <div className={cn(
+                    'w-12 h-12 rounded-xl flex items-center justify-center shrink-0',
+                    tripData.roomId === room.id ? 'bg-primary/15' : 'bg-muted'
+                  )}>
+                    <BedDouble className={cn('w-6 h-6', tripData.roomId === room.id ? 'text-primary' : 'text-muted-foreground')} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-sm text-foreground">{room.name_ar}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">{room.bed_type || ''} · حتى {room.max_adults} بالغين</p>
+                  </div>
+                  <div className="text-left shrink-0">
+                    <p className="text-lg font-black text-primary">{room.price_per_night?.toLocaleString()}</p>
+                    <p className="text-[10px] text-muted-foreground">ر.س / ليلة</p>
+                  </div>
+                </button>
+              ))}
             </div>
           )}
         </>
       )}
 
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onPrev}>السابق</Button>
-        <div className="flex gap-2">
-          <Button variant="ghost" onClick={skip} className="text-muted-foreground"><SkipForward className="w-4 h-4 ml-1" /> تخطي</Button>
-          <Button onClick={onNext} disabled={selectedHotel && !tripData.roomId ? true : false} className="bg-primary text-primary-foreground px-8">
-            التالي: السيارة
-          </Button>
-        </div>
+      {/* Navigation */}
+      <div className="flex gap-3">
+        <Button variant="outline" onClick={onPrev} className="rounded-xl h-12 px-4">
+          <ChevronRight className="w-4 h-4 ml-1" />
+          السابق
+        </Button>
+        <Button variant="ghost" onClick={skip} className="rounded-xl h-12 text-muted-foreground">
+          <SkipForward className="w-4 h-4 ml-1" /> تخطي
+        </Button>
+        <Button
+          onClick={onNext}
+          disabled={selectedHotel && !tripData.roomId ? true : false}
+          className="flex-1 rounded-xl h-12 bg-primary text-primary-foreground font-bold shadow-md shadow-primary/20"
+        >
+          التالي: السيارة
+          <ChevronLeft className="w-4 h-4 mr-1" />
+        </Button>
       </div>
     </div>
   );

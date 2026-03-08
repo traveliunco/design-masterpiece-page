@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MapPin, Users, Baby, Calendar } from 'lucide-react';
+import { MapPin, Users, Baby, Calendar, ChevronLeft, Minus, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarUI } from '@/components/ui/calendar';
@@ -26,39 +26,48 @@ const StepDestination = ({ tripData, updateTrip, onNext }: Props) => {
   const canProceed = tripData.destinationId && tripData.checkInDate && tripData.checkOutDate;
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-foreground mb-2">اختر وجهتك</h2>
-        <p className="text-muted-foreground">حدد الوجهة، التواريخ، وعدد المسافرين</p>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent rounded-3xl p-6 text-center">
+        <div className="w-14 h-14 mx-auto rounded-2xl bg-primary/15 flex items-center justify-center mb-3">
+          <MapPin className="w-7 h-7 text-primary" />
+        </div>
+        <h2 className="text-xl font-bold text-foreground">اختر وجهتك</h2>
+        <p className="text-sm text-muted-foreground mt-1">حدد الوجهة، التواريخ، وعدد المسافرين</p>
       </div>
 
-      {/* Destinations Grid */}
+      {/* Destinations */}
       <div>
-        <h3 className="font-semibold mb-3 text-foreground">الوجهات المتاحة</h3>
+        <h3 className="font-bold text-sm text-foreground mb-3 flex items-center gap-2">
+          <span className="w-1 h-4 bg-primary rounded-full" />
+          الوجهات المتاحة
+        </h3>
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[1,2,3,4,5,6].map(i => <div key={i} className="h-40 rounded-xl bg-muted animate-pulse" />)}
+          <div className="grid grid-cols-2 gap-3">
+            {[1,2,3,4].map(i => <div key={i} className="h-36 rounded-2xl bg-muted animate-pulse" />)}
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {destinations.map(dest => (
               <button
                 key={dest.id}
                 onClick={() => updateTrip({ destinationId: dest.id, destinationName: dest.name_ar })}
                 className={cn(
-                  'relative h-40 rounded-xl overflow-hidden group transition-all duration-300 border-2',
-                  tripData.destinationId === dest.id ? 'border-primary ring-4 ring-primary/20' : 'border-transparent hover:border-primary/50'
+                  'relative h-36 rounded-2xl overflow-hidden group transition-all duration-300',
+                  tripData.destinationId === dest.id
+                    ? 'ring-[3px] ring-primary ring-offset-2 ring-offset-background shadow-lg shadow-primary/20'
+                    : 'hover:shadow-md'
                 )}
               >
-                <img src={dest.cover_image} alt={dest.name_ar} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-3 right-3 text-white text-right">
-                  <p className="font-bold">{dest.name_ar}</p>
-                  <p className="text-xs opacity-80">{dest.country_ar}</p>
+                <img src={dest.cover_image} alt={dest.name_ar} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 right-0 left-0 p-3 text-right">
+                  <p className="font-bold text-white text-sm leading-tight">{dest.name_ar}</p>
+                  <p className="text-[11px] text-white/70">{dest.country_ar}</p>
                 </div>
                 {tripData.destinationId === dest.id && (
-                  <div className="absolute top-2 left-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                    <MapPin className="w-4 h-4 text-primary-foreground" />
+                  <div className="absolute top-2 left-2 w-7 h-7 bg-primary rounded-xl flex items-center justify-center shadow-lg">
+                    <MapPin className="w-3.5 h-3.5 text-primary-foreground" />
                   </div>
                 )}
               </button>
@@ -68,78 +77,118 @@ const StepDestination = ({ tripData, updateTrip, onNext }: Props) => {
       </div>
 
       {/* Date Pickers */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm font-medium text-foreground mb-1 block">تاريخ الوصول</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className={cn('w-full justify-start text-right', !tripData.checkInDate && 'text-muted-foreground')}>
-                <Calendar className="ml-2 h-4 w-4" />
-                {tripData.checkInDate ? format(tripData.checkInDate, 'PPP', { locale: ar }) : 'اختر التاريخ'}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <CalendarUI
-                mode="single"
-                selected={tripData.checkInDate || undefined}
-                onSelect={(d) => d && updateTrip({ checkInDate: d })}
-                disabled={(d) => d < new Date()}
-                className="p-3 pointer-events-auto"
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div>
-          <label className="text-sm font-medium text-foreground mb-1 block">تاريخ المغادرة</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className={cn('w-full justify-start text-right', !tripData.checkOutDate && 'text-muted-foreground')}>
-                <Calendar className="ml-2 h-4 w-4" />
-                {tripData.checkOutDate ? format(tripData.checkOutDate, 'PPP', { locale: ar }) : 'اختر التاريخ'}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <CalendarUI
-                mode="single"
-                selected={tripData.checkOutDate || undefined}
-                onSelect={(d) => d && updateTrip({ checkOutDate: d })}
-                disabled={(d) => d <= (tripData.checkInDate || new Date())}
-                className="p-3 pointer-events-auto"
-              />
-            </PopoverContent>
-          </Popover>
+      <div className="bg-card rounded-2xl border border-border p-4 space-y-3">
+        <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
+          <Calendar className="w-4 h-4 text-primary" />
+          تواريخ الرحلة
+        </h3>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-[11px] font-medium text-muted-foreground mb-1 block">الوصول</label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className={cn(
+                  'w-full h-12 rounded-xl border-2 flex items-center justify-center gap-2 text-sm transition-all',
+                  tripData.checkInDate
+                    ? 'border-primary/30 bg-primary/5 text-foreground font-medium'
+                    : 'border-border text-muted-foreground hover:border-primary/30'
+                )}>
+                  <Calendar className="w-4 h-4" />
+                  {tripData.checkInDate ? format(tripData.checkInDate, 'dd MMM', { locale: ar }) : 'اختر'}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarUI
+                  mode="single"
+                  selected={tripData.checkInDate || undefined}
+                  onSelect={(d) => d && updateTrip({ checkInDate: d })}
+                  disabled={(d) => d < new Date()}
+                  className="p-3 pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+          <div>
+            <label className="text-[11px] font-medium text-muted-foreground mb-1 block">المغادرة</label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className={cn(
+                  'w-full h-12 rounded-xl border-2 flex items-center justify-center gap-2 text-sm transition-all',
+                  tripData.checkOutDate
+                    ? 'border-primary/30 bg-primary/5 text-foreground font-medium'
+                    : 'border-border text-muted-foreground hover:border-primary/30'
+                )}>
+                  <Calendar className="w-4 h-4" />
+                  {tripData.checkOutDate ? format(tripData.checkOutDate, 'dd MMM', { locale: ar }) : 'اختر'}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarUI
+                  mode="single"
+                  selected={tripData.checkOutDate || undefined}
+                  onSelect={(d) => d && updateTrip({ checkOutDate: d })}
+                  disabled={(d) => d <= (tripData.checkInDate || new Date())}
+                  className="p-3 pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
       </div>
 
       {/* Passengers */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="bg-card rounded-2xl border border-border p-4 space-y-4">
+        <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
+          <Users className="w-4 h-4 text-primary" />
+          المسافرون
+        </h3>
         {[
-          { label: 'بالغين', key: 'adultsCount' as const, icon: Users, min: 1, max: 9 },
-          { label: 'أطفال', key: 'childrenCount' as const, icon: Users, min: 0, max: 6 },
-          { label: 'رضع', key: 'infantsCount' as const, icon: Baby, min: 0, max: 4 },
-        ].map(({ label, key, icon: Icon, min, max }) => (
-          <div key={key} className="text-center">
-            <label className="text-sm text-muted-foreground mb-2 block">{label}</label>
-            <div className="flex items-center justify-center gap-3">
+          { label: 'بالغين', desc: '+12 سنة', key: 'adultsCount' as const, icon: Users, min: 1, max: 9 },
+          { label: 'أطفال', desc: '2-12 سنة', key: 'childrenCount' as const, icon: Users, min: 0, max: 6 },
+          { label: 'رضع', desc: 'أقل من سنتين', key: 'infantsCount' as const, icon: Baby, min: 0, max: 4 },
+        ].map(({ label, desc, key, min, max }) => (
+          <div key={key} className="flex items-center justify-between">
+            <div>
+              <p className="font-semibold text-sm text-foreground">{label}</p>
+              <p className="text-[11px] text-muted-foreground">{desc}</p>
+            </div>
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => updateTrip({ [key]: Math.max(min, tripData[key] - 1) })}
-                className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80"
-              >-</button>
+                disabled={tripData[key] <= min}
+                className={cn(
+                  'w-9 h-9 rounded-xl flex items-center justify-center transition-all',
+                  tripData[key] <= min ? 'bg-muted text-muted-foreground/40' : 'bg-muted hover:bg-muted/80 text-foreground'
+                )}
+              >
+                <Minus className="w-4 h-4" />
+              </button>
               <span className="text-lg font-bold text-foreground w-6 text-center">{tripData[key]}</span>
               <button
                 onClick={() => updateTrip({ [key]: Math.min(max, tripData[key] + 1) })}
-                className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90"
-              >+</button>
+                disabled={tripData[key] >= max}
+                className={cn(
+                  'w-9 h-9 rounded-xl flex items-center justify-center transition-all',
+                  tripData[key] >= max ? 'bg-primary/30 text-primary/50' : 'bg-primary text-primary-foreground shadow-sm shadow-primary/30 hover:shadow-md'
+                )}
+              >
+                <Plus className="w-4 h-4" />
+              </button>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="flex justify-start">
-        <Button onClick={onNext} disabled={!canProceed} size="lg" className="bg-primary text-primary-foreground px-8">
-          التالي: اختيار الطيران
-        </Button>
-      </div>
+      {/* Next Button */}
+      <Button
+        onClick={onNext}
+        disabled={!canProceed}
+        size="lg"
+        className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-base font-bold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+      >
+        التالي: اختيار الطيران
+        <ChevronLeft className="w-5 h-5 mr-2" />
+      </Button>
     </div>
   );
 };
