@@ -1,71 +1,63 @@
 
 
-# خطة نظام الصلاحيات + إصلاح أخطاء البناء
+# تحويل جميع الصفحات لتصميم تطبيق الجوال
 
-## المهام المطلوبة
+## المشكلة
+الصفحة الرئيسية فقط (`MobileHomePage`) لها تصميم تطبيق جوال (هيدر خفيف + شريط بحث + تنقل سفلي). باقي الـ 30+ صفحة تستخدم `PageLayout` الذي يعرض `Nav3D` الثقيل و `PremiumFooter` الكبير حتى على الموبايل.
 
-### 1. إصلاح أخطاء البناء (Build Errors)
+## الحل: تعديل مركزي في 3 ملفات
 
-هناك عدة أخطاء TypeScript يجب إصلاحها أولاً:
+### 1. تعديل `PageLayout` — إضافة هيدر موبايل خفيف
+- على الموبايل: إخفاء `Nav3D` و `PremiumFooter`
+- عرض هيدر خفيف بدلاً منه (شعار + عنوان الصفحة + زر رجوع)
+- عرض فوتر بسيط مصغر
+- إبقاء `MobileNav` (الشريط السفلي)
+- على الديسكتوب: لا تغيير
 
-**A. `src/data/southeast-asia.ts`** - تعريف الأنواع (Types) لا يتطابق مع البيانات الفعلية:
-- `City.accommodation` معرف كـ `string` لكن البيانات تحتوي كائن `{ budget, midRange, luxury }`
-- `City.attractions` معرف كـ `string[]` لكن البيانات تحتوي كائنات
-- `City` ينقصها خاصية `bestTimeToVisit`
-- سيتم تحديث الـ interface ليطابق البيانات الفعلية
+### 2. تعديل `PageHeader` — تصغير على الموبايل
+- تقليل `min-h-[50vh]` إلى `min-h-[30vh]` على الموبايل
+- تصغير حجم العنوان والوصف
+- تقليل الـ padding
 
-**B. `src/pages/CityDetails.tsx`** - يستدعي `getCityById` بمعامل واحد بدل اثنين، ويستخدم خصائص غير موجودة في النوع الحالي. سيتم إصلاحه ليتوافق مع الأنواع المحدثة.
+### 3. تعديل صفحات Auth (Login, Register, ForgotPassword, ResetPassword)
+- استخدام `PageLayout` بدلاً من `Nav3D` + `Footer` المباشرة
+- لتوحيد التجربة
 
-**C. `src/components/Nav3D.tsx`** - خطأ في الوصول لـ `.items` على نوع `countries` الذي يحتوي `countries` بدلاً من `items`. سيتم إضافة type guard.
+## التفاصيل التقنية
 
-**D. `src/components/globe/CityCard.tsx`** - خطأ `nameAr` على نوع `never`. سيتم إصلاح النوع.
+### `PageLayout` الجديد:
+```
+على الموبايل:
+┌─────────────────────┐
+│ ← عنوان الصفحة  🔔 👤│  ← هيدر خفيف sticky
+├─────────────────────┤
+│                     │
+│    محتوى الصفحة     │
+│                     │
+├─────────────────────┤
+│  روابط سريعة مصغرة  │  ← فوتر بسيط
+├─────────────────────┤
+│ 🏠  🗺️  🎁  👤     │  ← MobileNav (موجود)
+└─────────────────────┘
+```
 
----
+### الصفحات المتأثرة (34 صفحة):
+كل صفحة تستخدم `PageLayout` ستتحسن تلقائياً:
+- Destinations, Programs, Hotels, Flights, Offers
+- Contact, About, Services, Blog, Honeymoon
+- Booking, MyBookings, Search, Careers, Loyalty
+- Privacy, Terms, Sitemap, وغيرها
 
-### 2. نظام الصلاحيات
+### الصفحات التي تحتاج تعديل يدوي:
+- `Login.tsx` — يستخدم `Nav3D` + `Footer` مباشرة
+- `Register.tsx` — نفس الشيء
+- `ForgotPassword.tsx`, `ResetPassword.tsx`
 
-**الوضع الحالي:**
-- جدول `user_roles` موجود لكنه فارغ
-- دالة `has_role()` موجودة وتعمل
-- `useAuth` يقرأ الأدوار من جدول `users` (خطأ أمني) بدلاً من `user_roles`
-- المستخدم `klidmorre@gmail.com` موجود بالفعل في `auth.users`
-
-**الخطوات:**
-
-**A. إدخال الأدوار في جدول `user_roles`:**
-- `klidmorre@gmail.com` → `admin` (مدير عام - صلاحيات كاملة)
-- `eng.khalid.work@gmail.com` → `moderator` (موظف - صلاحيات محدودة)
-
-ملاحظة: الأدوار المتاحة حالياً في `app_role` هي: `admin`, `moderator`, `user`. سنستخدم `moderator` للموظف.
-
-**B. تحديث `useAuth.tsx`:**
-- تغيير قراءة الدور من جدول `users` إلى `user_roles`
-- تحديث نوع `UserRole` ليطابق `app_role` enum
-
-**C. تحديث `ProtectedRoute.tsx`:**
-- إضافة دعم التحقق من الأدوار عبر `user_roles`
-
-**D. تحديث `AdminLayout.tsx`:**
-- تعديل القائمة الجانبية لإظهار العناصر حسب الدور
-- الموظف يرى فقط: لوحة التحكم، البرامج، العروض (إضافة/تعديل/حذف)
-- المدير يرى كل شيء
-
-**E. تحديث مسارات Admin في `App.tsx`:**
-- حماية المسارات بأدوار محددة
-- البرامج والعروض: متاحة للموظف والمدير
-- باقي الصفحات: مدير فقط
-
----
-
-### التفاصيل التقنية
-
-**صلاحيات الموظف (moderator):**
-| الصفحة | الصلاحية |
-|--------|----------|
-| لوحة التحكم | عرض فقط |
-| البرامج | إضافة/تعديل/حذف |
-| العروض | إضافة/تعديل/حذف |
-
-**صلاحيات المدير (admin):**
-- كل شيء بدون قيود
+## الملفات المعدلة:
+1. `src/layouts/PageLayout.tsx` — إضافة هيدر/فوتر موبايل
+2. `src/components/ui/PageHeader.tsx` — responsive sizing
+3. `src/pages/Login.tsx` — استخدام PageLayout
+4. `src/pages/Register.tsx` — استخدام PageLayout
+5. `src/pages/ForgotPassword.tsx` — استخدام PageLayout
+6. `src/pages/ResetPassword.tsx` — استخدام PageLayout
 
