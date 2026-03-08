@@ -2269,9 +2269,12 @@ export type Database = {
           badge: string | null
           base_price_per_person: number
           car_description_ar: string | null
+          car_rental_id: string | null
           country_ar: string
           cover_image: string | null
           created_at: string | null
+          default_hotel_id: string | null
+          default_room_id: string | null
           description_ar: string | null
           description_en: string | null
           destination_id: string | null
@@ -2279,6 +2282,7 @@ export type Database = {
           display_order: number | null
           duration_nights: number
           flight_description_ar: string | null
+          flight_offer_id: string | null
           highlights: Json | null
           hotel_id: string | null
           hotel_name_ar: string | null
@@ -2300,9 +2304,12 @@ export type Database = {
           badge?: string | null
           base_price_per_person?: number
           car_description_ar?: string | null
+          car_rental_id?: string | null
           country_ar?: string
           cover_image?: string | null
           created_at?: string | null
+          default_hotel_id?: string | null
+          default_room_id?: string | null
           description_ar?: string | null
           description_en?: string | null
           destination_id?: string | null
@@ -2310,6 +2317,7 @@ export type Database = {
           display_order?: number | null
           duration_nights?: number
           flight_description_ar?: string | null
+          flight_offer_id?: string | null
           highlights?: Json | null
           hotel_id?: string | null
           hotel_name_ar?: string | null
@@ -2331,9 +2339,12 @@ export type Database = {
           badge?: string | null
           base_price_per_person?: number
           car_description_ar?: string | null
+          car_rental_id?: string | null
           country_ar?: string
           cover_image?: string | null
           created_at?: string | null
+          default_hotel_id?: string | null
+          default_room_id?: string | null
           description_ar?: string | null
           description_en?: string | null
           destination_id?: string | null
@@ -2341,6 +2352,7 @@ export type Database = {
           display_order?: number | null
           duration_nights?: number
           flight_description_ar?: string | null
+          flight_offer_id?: string | null
           highlights?: Json | null
           hotel_id?: string | null
           hotel_name_ar?: string | null
@@ -2360,10 +2372,38 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "ready_packages_car_rental_id_fkey"
+            columns: ["car_rental_id"]
+            isOneToOne: false
+            referencedRelation: "car_rentals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ready_packages_default_hotel_id_fkey"
+            columns: ["default_hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ready_packages_default_room_id_fkey"
+            columns: ["default_room_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_rooms"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "ready_packages_destination_id_fkey"
             columns: ["destination_id"]
             isOneToOne: false
             referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ready_packages_flight_offer_id_fkey"
+            columns: ["flight_offer_id"]
+            isOneToOne: false
+            referencedRelation: "flight_offers"
             referencedColumns: ["id"]
           },
           {
