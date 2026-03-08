@@ -60,6 +60,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const MyBookings = lazy(() => import("./pages/MyBookings"));
 const MobileHomePage = lazy(() => import("./pages/MobileHomePage"));
 const GlobePage = lazy(() => import("./pages/GlobePage"));
+const TripBuilder = lazy(() => import("./pages/TripBuilder"));
 
 // صفحة الدولة الديناميكية (تستخدم Supabase مع fallback محلي)
 const CountryPage = lazy(() => import("./pages/countries/CountryPage"));
