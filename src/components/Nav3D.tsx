@@ -808,9 +808,20 @@ const Nav3D = () => {
 
             {/* Social Icons */}
             <div className="flex justify-center gap-4">
-              {[Instagram, Twitter, Facebook].map((Icon, i) => (
-                <a key={i} href="#" className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                  <Icon className="w-5 h-5" />
+              {[
+                { Icon: Instagram, url: "https://instagram.com/traveliun", label: "Instagram" },
+                { Icon: Twitter, url: "https://twitter.com/traveliun", label: "Twitter" },
+                { Icon: Facebook, url: "https://facebook.com/traveliun", label: "Facebook" },
+              ].map((social, i) => (
+                <a
+                  key={i}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-all active:scale-95"
+                >
+                  <social.Icon className="w-5 h-5" />
                 </a>
               ))}
             </div>
