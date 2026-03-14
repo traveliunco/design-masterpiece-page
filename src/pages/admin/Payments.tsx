@@ -322,7 +322,7 @@ const AdminPayments = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">العميل</p>
-                    <p className="font-medium">{selectedPayment.user?.full_name || "عميل"}</p>
+                    <p className="font-medium">{selectedPayment.user ? `${selectedPayment.user.first_name} ${selectedPayment.user.last_name}` : "عميل"}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">طريقة الدفع</p>
