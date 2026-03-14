@@ -412,7 +412,10 @@ export async function seedPrograms() {
     try {
       const { data, error } = await supabase
         .from("programs")
-        .insert({ ...program, created_by: user.id } as any)
+        .upsert({ ...program, created_by: user.id } as any, {
+          onConflict: "slug",
+          ignoreDuplicates: false,
+        })
         .select()
         .single();
 
