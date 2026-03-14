@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Play, Plane, ArrowLeft, Shield, X } from "lucide-react";
+import { Play, Plane, ArrowLeft, Shield, X, Star, Globe, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import heroVideo from "@/assets/malaysia.jpg";
+import heroImage from "@/assets/hero-resort.jpg";
+import heroImage2 from "@/assets/turkey.jpg";
+import heroImage3 from "@/assets/maldives.jpg";
 import { homepageService } from "@/services/adminDataService";
-import SkyscannerSearch from "@/components/SkyscannerSearch";
+import HeroSearch from "@/components/HeroSearch";
 
 interface Slide {
   title: string;
@@ -19,33 +21,31 @@ interface Slide {
 const PremiumHeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLElement>(null);
 
   const defaultSlides: Slide[] = [
     {
       title: "اكتشف", highlight: "العالم", subtitle: "معنا",
-      description: "رحلات استثنائية إلى أجمل الوجهات السياحية حول العالم",
-      image: heroVideo,
+      description: "رحلات استثنائية إلى أجمل الوجهات السياحية حول العالم مع أفضل الأسعار والخدمات",
+      image: heroImage,
       stats: { "وجهة": "50+", "عميل": "10,000+", "تقييم": "4.9" }
     },
     {
       title: "رحلة", highlight: "أحلامك", subtitle: "تبدأ هنا",
       description: "برامج سياحية مخصصة تناسب جميع الأذواق والميزانيات",
-      image: heroVideo,
+      image: heroImage2,
       stats: { "برنامج": "200+", "دولة": "25+", "سنة خبرة": "15+" }
     },
     {
       title: "شهر عسل", highlight: "لا يُنسى", subtitle: "",
-      description: "عروض رومانسية خاصة للعرسان في أفخم المنتجعات",
-      image: heroVideo,
+      description: "عروض رومانسية خاصة للعرسان في أفخم المنتجعات العالمية",
+      image: heroImage3,
       stats: { "شهر عسل": "5000+", "منتجع": "100+", "خصم حتى": "30%" }
     },
   ];
 
   const [slides, setSlides] = useState<Slide[]>(defaultSlides);
 
-  // ✅ جلب السلايدات من Supabase/localStorage
   useEffect(() => {
     homepageService.getHeroSlides().then((data: unknown[]) => {
       if (data && data.length > 0) {
@@ -57,7 +57,7 @@ const PremiumHeroSection = () => {
             highlight: (s.highlight as string) || "",
             subtitle: (s.subtitle as string) || "",
             description: (s.description as string) || "",
-            image: (s.image as string) || heroVideo,
+            image: (s.image as string) || heroImage,
             stats: (s.stats as Record<string, string>) || {}
           }));
         if (mapped.length > 0) setSlides(mapped);
@@ -65,94 +65,96 @@ const PremiumHeroSection = () => {
     }).catch(() => {});
   }, []);
 
-
-  // Mouse tracking for parallax effect
+  // Auto-slide
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect();
-        const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
-        const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
-        setMousePosition({ x, y });
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+    const timer = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % slides.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
   const currentData = slides[currentSlide];
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col overflow-hidden">
-      {/* Video Background Effect */}
+      {/* Background Images with crossfade */}
       <div className="absolute inset-0">
-        <div 
-          className={cn("absolute inset-0 bg-cover bg-center transition-all duration-1000 bg-[image:var(--hero-bg)]")}
-          style={{ "--hero-bg": `url(${currentData.image})` } as React.CSSProperties}
-        />
-        {/* Dark Overlay with Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))]/90 via-[hsl(var(--primary))]/70 to-[hsl(180,40%,15%)]/90" />
-        
-        {/* Animated Shapes */}
-        <div 
-          className="absolute top-20 right-20 w-96 h-96 bg-primary/15 rounded-full blur-3xl transition-transform duration-700 ease-out"
-          style={{ transform: `translate(${mousePosition.x * -40}px, ${mousePosition.y * -40}px)` }}
-        />
-        <div 
-          className="absolute bottom-20 left-20 w-80 h-80 bg-accent/15 rounded-full blur-3xl transition-transform duration-500 ease-out"
-          style={{ transform: `translate(${mousePosition.x * 60}px, ${mousePosition.y * 60}px)` }}
-        />
-        <div 
-          className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full blur-2xl transition-transform duration-300 ease-out"
-          style={{ transform: `translate(${mousePosition.x * 80}px, ${mousePosition.y * -50}px)` }}
-        />
+        {slides.map((slide, i) => (
+          <div
+            key={i}
+            className={cn(
+              "absolute inset-0 bg-cover bg-center transition-opacity duration-1000",
+              i === currentSlide ? "opacity-100" : "opacity-0"
+            )}
+            style={{ backgroundImage: `url(${slide.image})` }}
+          />
+        ))}
+        {/* Premium Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))]/80 via-[hsl(var(--primary))]/60 to-[hsl(180,30%,10%)]/95" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
       </div>
 
-      {/* Centered Content */}
-      <div className="container relative flex-1 flex flex-col items-center justify-center text-center py-24 pt-32 z-10">
-        <div className="w-full max-w-4xl mx-auto animate-fade-in space-y-8">
-          
-          {/* Premium Badge */}
-          <div className="flex justify-center">
-            <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20">
-              <Plane className="w-5 h-5 text-primary-foreground/80" />
-              <span className="text-sm font-medium text-primary-foreground/90">منصة السفر الأكثر ثقة في السعودية</span>
-              <Shield className="w-5 h-5 text-primary-foreground/80" />
+      {/* Floating light orbs */}
+      <div className="absolute top-20 right-[10%] w-72 h-72 bg-secondary/20 rounded-full blur-[120px] animate-pulse" />
+      <div className="absolute bottom-32 left-[10%] w-96 h-96 bg-accent/15 rounded-full blur-[140px] animate-pulse [animation-delay:3s]" />
+
+      {/* Content */}
+      <div className="container relative flex-1 flex flex-col items-center justify-center text-center pt-28 pb-12 z-10">
+        <div className="w-full max-w-5xl mx-auto space-y-8">
+
+          {/* Trust Badge */}
+          <div className="flex justify-center animate-fade-in">
+            <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md px-6 py-2.5 rounded-full border border-white/15 shadow-lg">
+              <div className="flex -space-x-1.5 rtl:space-x-reverse">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="w-6 h-6 rounded-full bg-secondary/90 border-2 border-primary flex items-center justify-center">
+                    <Star className="w-3 h-3 text-primary-foreground fill-primary-foreground" />
+                  </div>
+                ))}
+              </div>
+              <span className="text-xs font-bold text-primary-foreground/80 tracking-wide">
+                منصة السفر الأكثر ثقة في السعودية
+              </span>
+              <Shield className="w-4 h-4 text-secondary" />
             </div>
           </div>
 
-          {/* Main Title */}
-          <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-primary-foreground">
+          {/* Headline */}
+          <div className="space-y-5 animate-fade-in [animation-delay:0.15s]">
+            <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-black leading-[1.1] text-primary-foreground tracking-tight">
               {currentData.title}{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-[hsl(40,80%,70%)] to-secondary animate-shimmer">
+              <span className="text-transparent bg-clip-text bg-gradient-to-l from-secondary via-[hsl(40,85%,65%)] to-secondary">
                 {currentData.highlight}
               </span>
-              {currentData.subtitle && <span> {currentData.subtitle}</span>}
+              {currentData.subtitle && <span className="block md:inline"> {currentData.subtitle}</span>}
             </h1>
-            <p className="text-lg md:text-xl text-primary-foreground/75 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-primary-foreground/65 max-w-2xl mx-auto leading-relaxed font-medium">
               {currentData.description}
             </p>
           </div>
 
+          {/* Search Bar */}
+          <div className="w-full max-w-3xl mx-auto animate-fade-in [animation-delay:0.3s]">
+            <HeroSearch />
+          </div>
+
           {/* CTA Buttons */}
-          <div className="flex flex-wrap justify-center gap-4 pt-2">
+          <div className="flex flex-wrap justify-center gap-4 animate-fade-in [animation-delay:0.4s]">
             <Link to="/destinations">
-              <Button 
+              <Button
                 size="lg"
-                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-6 text-lg rounded-full shadow-lg group transition-all font-bold"
+                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-10 py-7 text-lg rounded-2xl shadow-[0_8px_30px_rgba(212,175,55,0.4)] group transition-all font-bold hover:shadow-[0_12px_40px_rgba(212,175,55,0.5)] hover:scale-[1.03]"
               >
                 <Plane className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
                 اكتشف الوجهات
                 <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
               </Button>
             </Link>
-            
+
             <Button
               size="lg"
               variant="outline"
-              className="bg-white/10 backdrop-blur-md border border-white/30 text-primary-foreground hover:bg-white/20 px-8 py-6 text-lg rounded-full shadow-lg transition-all"
+              className="bg-white/8 backdrop-blur-md border-2 border-white/25 text-primary-foreground hover:bg-white/15 hover:border-secondary/50 px-10 py-7 text-lg rounded-2xl shadow-lg transition-all hover:scale-[1.03]"
               onClick={() => setIsVideoPlaying(true)}
             >
               <Play className="w-5 h-5 ml-2 fill-current" />
@@ -161,23 +163,14 @@ const PremiumHeroSection = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-8 pt-8 max-w-xl mx-auto">
-            {Object.entries(currentData.stats).map(([key, value], index) => (
-              <div key={key} className={cn("text-center animate-scale-in", index === 0 ? "[animation-delay:0s]" : index === 1 ? "[animation-delay:0.1s]" : "[animation-delay:0.2s]")}>
-                <div className="text-3xl md:text-4xl font-bold text-secondary mb-1">
+          <div className="flex items-center justify-center gap-8 md:gap-12 pt-4 animate-fade-in [animation-delay:0.5s]">
+            {Object.entries(currentData.stats).map(([key, value]) => (
+              <div key={key} className="text-center">
+                <div className="text-2xl md:text-3xl font-black text-secondary mb-0.5">
                   {value}
                 </div>
-                <div className="text-sm text-primary-foreground/60 capitalize">
-                  {!["destinations","customers","rating","programs","countries","years","honeymoon","resorts","offers"].includes(key) ? key : 
-                    key === "destinations" ? "وجهة سياحية" :
-                    key === "customers" ? "عميل سعيد" :
-                    key === "rating" ? "تقييم العملاء" :
-                    key === "programs" ? "برنامج سياحي" :
-                    key === "countries" ? "دولة" :
-                    key === "years" ? "سنة خبرة" :
-                    key === "honeymoon" ? "زوجين" :
-                    key === "resorts" ? "منتجع فاخر" : "خصم"
-                  }
+                <div className="text-xs text-primary-foreground/50 font-semibold tracking-wide">
+                  {key}
                 </div>
               </div>
             ))}
@@ -185,41 +178,36 @@ const PremiumHeroSection = () => {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative z-20 container pb-8 px-4 lg:px-8 animate-fade-in [animation-delay:0.4s]">
-        <SkyscannerSearch variant="banner" />
-      </div>
-
-      {/* Slide Indicators — centered bottom */}
-      <div className="absolute bottom-28 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+      {/* Slide Indicators */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2.5 z-10">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              index === currentSlide 
-                ? "bg-secondary w-10" 
-                : "bg-primary-foreground/30 w-6 hover:bg-primary-foreground/50"
-            }`}
-            aria-label={`الذهاب إلى الشريحة ${index + 1}`}
+            className={cn(
+              "h-1.5 rounded-full transition-all duration-500",
+              index === currentSlide
+                ? "bg-secondary w-10"
+                : "bg-primary-foreground/25 w-5 hover:bg-primary-foreground/40"
+            )}
+            aria-label={`الشريحة ${index + 1}`}
           />
         ))}
       </div>
 
       {/* Video Modal */}
       {isVideoPlaying && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-fade-in"
           onClick={() => setIsVideoPlaying(false)}
         >
           <button
             onClick={() => setIsVideoPlaying(false)}
             className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all z-10"
-            title="إغلاق"
           >
             <X className="w-6 h-6" />
           </button>
-          <div 
+          <div
             className="w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
