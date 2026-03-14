@@ -276,7 +276,7 @@ const AdminBookings = () => {
                       </td>
                       <td className="py-4 px-4">
                         <div>
-                          <p className="font-medium text-sm">{booking.user?.full_name || "عميل خارجي"}</p>
+                          <p className="font-medium text-sm">{booking.user ? `${booking.user.first_name} ${booking.user.last_name}` : "عميل خارجي"}</p>
                           <p className="text-xs text-muted-foreground">{booking.user?.phone || "-"}</p>
                         </div>
                       </td>

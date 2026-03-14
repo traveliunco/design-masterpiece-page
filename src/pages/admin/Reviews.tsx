@@ -231,27 +231,27 @@ const AdminReviews = () => {
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                       <span className="font-bold text-primary">
-                        {(review.user?.full_name || "ع").charAt(0)}
+                        {(review.user?.first_name || "ع").charAt(0)}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium">{review.user?.full_name || "عميل"}</p>
+                      <p className="font-medium">{review.user ? `${review.user.first_name} ${review.user.last_name}` : "عميل"}</p>
                       <p className="text-xs text-muted-foreground">
-                        {review.destination?.name_ar || "وجهة غير محددة"}
+                        {review.reviewable_type || "تقييم عام"}
                       </p>
                     </div>
                     {getStatusBadge(review.status)}
                   </div>
 
                   <div className="flex items-center gap-2 mb-2">
-                    {renderStars(review.rating)}
+                    {renderStars(review.overall_rating)}
                     <span className="text-sm text-muted-foreground">
                       {new Date(review.created_at).toLocaleDateString("ar-SA")}
                     </span>
                   </div>
 
                   <h4 className="font-medium mb-1">{review.title || "بدون عنوان"}</h4>
-                  <p className="text-sm text-muted-foreground">{review.comment}</p>
+                  <p className="text-sm text-muted-foreground">{review.content}</p>
                 </div>
 
                 {review.status === "pending" && (
