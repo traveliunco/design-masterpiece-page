@@ -9,6 +9,9 @@ import StepExtras from '@/components/trip-builder/StepExtras';
 import StepSummary from '@/components/trip-builder/StepSummary';
 import { Helmet } from 'react-helmet';
 import { useIsMobile } from '@/hooks/use-mobile';
+import Nav3D from '@/components/Nav3D';
+import PremiumFooter from '@/components/PremiumFooter';
+import MobileNav from '@/components/MobileNav';
 
 const TripBuilder = () => {
   const {
@@ -36,6 +39,8 @@ const TripBuilder = () => {
         <title>صمم رحلتك | ترافليون</title>
         <meta name="description" content="صمم بكج سفرك المخصص - اختر الوجهة والطيران والفندق والسيارة والأنشطة بنفسك" />
       </Helmet>
+
+      <Nav3D />
 
       <div className="min-h-screen bg-background pt-20 pb-8" dir="rtl">
         <div className="container mx-auto px-4 max-w-5xl">
@@ -78,6 +83,9 @@ const TripBuilder = () => {
           )}
         </div>
       </div>
+
+      <PremiumFooter />
+      <MobileNav />
     </>
   );
 };
