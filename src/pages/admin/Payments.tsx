@@ -187,7 +187,7 @@ const AdminPayments = () => {
         <Card>
           <CardContent className="p-4 text-center">
             <Clock className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-yellow-600">{payments.filter(p => p.payment_status === "pending").length}</p>
+            <p className="text-2xl font-bold text-yellow-600">{payments.filter(p => p.status === "pending").length}</p>
             <p className="text-sm text-muted-foreground">في الانتظار</p>
           </CardContent>
         </Card>
