@@ -115,6 +115,7 @@ const navItems: NavItem[] = [
     ]
   },
   { name: "الذكاء الاصطناعي", path: "/admin/ai-settings", icon: Bot },
+  { name: "بذر البرامج", path: "/admin/seed-programs", icon: FileText },
   { name: "الإعدادات", path: "/admin/settings", icon: Settings },
 ];
 
