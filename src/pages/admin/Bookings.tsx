@@ -45,7 +45,8 @@ interface Booking {
   created_at: string;
   user?: {
     id: string;
-    full_name: string;
+    first_name: string;
+    last_name: string;
     email: string;
     phone: string;
   };
@@ -69,7 +70,7 @@ const AdminBookings = () => {
         .from("bookings")
         .select(`
           *,
-          user:users(id, full_name, email, phone)
+          user:users(id, first_name, last_name, email, phone)
         `)
         .order("created_at", { ascending: false });
 
@@ -84,7 +85,7 @@ const AdminBookings = () => {
   };
 
   const filteredBookings = bookings.filter((booking) => {
-    const customerName = booking.user?.full_name || "عميل غير معروف";
+    const customerName = booking.user ? `${booking.user.first_name} ${booking.user.last_name}` : "عميل غير معروف";
     const matchesSearch =
       booking.booking_reference.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customerName.toLowerCase().includes(searchTerm.toLowerCase());
@@ -275,7 +276,7 @@ const AdminBookings = () => {
                       </td>
                       <td className="py-4 px-4">
                         <div>
-                          <p className="font-medium text-sm">{booking.user?.full_name || "عميل خارجي"}</p>
+                          <p className="font-medium text-sm">{booking.user ? `${booking.user.first_name} ${booking.user.last_name}` : "عميل خارجي"}</p>
                           <p className="text-xs text-muted-foreground">{booking.user?.phone || "-"}</p>
                         </div>
                       </td>

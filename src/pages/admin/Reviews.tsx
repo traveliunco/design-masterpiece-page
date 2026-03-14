@@ -22,15 +22,15 @@ import { toast } from "sonner";
 
 interface Review {
   id: string;
-  user_id: string | null;
-  destination_id: string | null;
-  rating: number;
-  title: string;
-  comment: string;
+  user_id: string;
+  reviewable_id: string;
+  reviewable_type: string;
+  overall_rating: number;
+  title: string | null;
+  content: string | null;
   status: string;
   created_at: string;
-  user?: { full_name: string } | null;
-  destination?: { name_ar: string } | null;
+  user?: { first_name: string; last_name: string } | null;
 }
 
 const AdminReviews = () => {
@@ -51,8 +51,7 @@ const AdminReviews = () => {
         .from("reviews")
         .select(`
           *,
-          user:users(full_name),
-          destination:destinations(name_ar)
+          user:users(first_name, last_name)
         `)
         .order("created_at", { ascending: false });
 
@@ -82,17 +81,15 @@ const AdminReviews = () => {
   };
 
   const filteredReviews = reviews.filter((review) => {
-    const customerName = review.user?.full_name || "عميل";
-    const destName = review.destination?.name_ar || "";
-    const matchesSearch = customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      destName.toLowerCase().includes(searchTerm.toLowerCase());
+    const customerName = review.user ? `${review.user.first_name} ${review.user.last_name}` : "عميل";
+    const matchesSearch = customerName.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || review.status === statusFilter;
-    const matchesRating = ratingFilter === "all" || review.rating.toString() === ratingFilter;
+    const matchesRating = ratingFilter === "all" || review.overall_rating.toString() === ratingFilter;
     return matchesSearch && matchesStatus && matchesRating;
   });
 
   const avgRating = reviews.length > 0 
-    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+    ? (reviews.reduce((sum, r) => sum + r.overall_rating, 0) / reviews.length).toFixed(1)
     : "0.0";
 
   const getStatusBadge = (status: string) => {
@@ -118,7 +115,7 @@ const AdminReviews = () => {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={`w-4 h-4 ${i < rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+          className={`w-4 h-4 ${i < rating ? "text-yellow-500 fill-yellow-500" : "text-muted-foreground/30"}`}
         />
       ))}
     </div>
@@ -234,27 +231,27 @@ const AdminReviews = () => {
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                       <span className="font-bold text-primary">
-                        {(review.user?.full_name || "ع").charAt(0)}
+                        {(review.user?.first_name || "ع").charAt(0)}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium">{review.user?.full_name || "عميل"}</p>
+                      <p className="font-medium">{review.user ? `${review.user.first_name} ${review.user.last_name}` : "عميل"}</p>
                       <p className="text-xs text-muted-foreground">
-                        {review.destination?.name_ar || "وجهة غير محددة"}
+                        {review.reviewable_type || "تقييم عام"}
                       </p>
                     </div>
                     {getStatusBadge(review.status)}
                   </div>
 
                   <div className="flex items-center gap-2 mb-2">
-                    {renderStars(review.rating)}
+                    {renderStars(review.overall_rating)}
                     <span className="text-sm text-muted-foreground">
                       {new Date(review.created_at).toLocaleDateString("ar-SA")}
                     </span>
                   </div>
 
                   <h4 className="font-medium mb-1">{review.title || "بدون عنوان"}</h4>
-                  <p className="text-sm text-muted-foreground">{review.comment}</p>
+                  <p className="text-sm text-muted-foreground">{review.content}</p>
                 </div>
 
                 {review.status === "pending" && (

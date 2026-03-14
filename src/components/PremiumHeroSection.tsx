@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Play, Plane, ArrowLeft, Shield, X, Star, Globe, Sparkles } from "lucide-react";
+import { Play, Plane, ArrowLeft, Shield, X, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import heroImage from "@/assets/hero-resort.jpg";
 import heroImage2 from "@/assets/turkey.jpg";
 import heroImage3 from "@/assets/maldives.jpg";
 import { homepageService } from "@/services/adminDataService";
-import HeroSearch from "@/components/HeroSearch";
+import SkyscannerSearch from "@/components/SkyscannerSearch";
 
 interface Slide {
   title: string;
@@ -135,7 +135,7 @@ const PremiumHeroSection = () => {
 
           {/* Search Bar */}
           <div className="w-full max-w-3xl mx-auto animate-fade-in [animation-delay:0.3s]">
-            <HeroSearch />
+            <SkyscannerSearch variant="hero" />
           </div>
 
           {/* CTA Buttons */}

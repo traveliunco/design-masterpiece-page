@@ -32,15 +32,15 @@ import { toast } from "sonner";
 
 interface Payment {
   id: string;
-  booking_id: string | null;
-  user_id: string | null;
+  booking_id: string;
+  user_id: string;
   amount: number;
   payment_method: string;
-  payment_status: string;
+  status: string;
   transaction_id: string | null;
   created_at: string;
   booking?: { booking_reference: string } | null;
-  user?: { full_name: string; email: string } | null;
+  user?: { first_name: string; last_name: string; email: string } | null;
 }
 
 const AdminPayments = () => {
@@ -63,7 +63,7 @@ const AdminPayments = () => {
         .select(`
           *,
           booking:bookings(booking_reference),
-          user:users(full_name, email)
+          user:users(first_name, last_name, email)
         `)
         .order("created_at", { ascending: false });
 
@@ -95,17 +95,18 @@ const AdminPayments = () => {
 
   const filteredPayments = payments.filter((payment) => {
     const searchLower = searchTerm.toLowerCase();
+    const userName = payment.user ? `${payment.user.first_name} ${payment.user.last_name}` : "";
     const matchesSearch = 
       (payment.transaction_id || "").toLowerCase().includes(searchLower) ||
       (payment.booking?.booking_reference || "").toLowerCase().includes(searchLower) ||
-      (payment.user?.full_name || "").toLowerCase().includes(searchLower);
-    const matchesStatus = statusFilter === "all" || payment.payment_status === statusFilter;
+      userName.toLowerCase().includes(searchLower);
+    const matchesStatus = statusFilter === "all" || payment.status === statusFilter;
     const matchesMethod = methodFilter === "all" || payment.payment_method === methodFilter;
     return matchesSearch && matchesStatus && matchesMethod;
   });
 
   const totalAmount = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
-  const confirmedAmount = payments.filter(p => p.payment_status === "completed").reduce((sum, p) => sum + (p.amount || 0), 0);
+  const confirmedAmount = payments.filter(p => p.status === "completed").reduce((sum, p) => sum + (p.amount || 0), 0);
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
@@ -186,14 +187,14 @@ const AdminPayments = () => {
         <Card>
           <CardContent className="p-4 text-center">
             <Clock className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-yellow-600">{payments.filter(p => p.payment_status === "pending").length}</p>
+            <p className="text-2xl font-bold text-yellow-600">{payments.filter(p => p.status === "pending").length}</p>
             <p className="text-sm text-muted-foreground">في الانتظار</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <XCircle className="w-8 h-8 text-red-600 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-red-600">{payments.filter(p => p.payment_status === "failed").length}</p>
+            <p className="text-2xl font-bold text-red-600">{payments.filter(p => p.status === "failed").length}</p>
             <p className="text-sm text-muted-foreground">فشل</p>
           </CardContent>
         </Card>
@@ -264,14 +265,14 @@ const AdminPayments = () => {
                     <td className="py-4 px-4 text-sm font-mono">{payment.transaction_id || payment.id.slice(0, 8)}</td>
                     <td className="py-4 px-4">
                       <div>
-                        <p className="font-medium">{payment.user?.full_name || "عميل"}</p>
+                        <p className="font-medium">{payment.user ? `${payment.user.first_name} ${payment.user.last_name}` : "عميل"}</p>
                         <p className="text-xs text-muted-foreground">{payment.user?.email}</p>
                       </div>
                     </td>
                     <td className="py-4 px-4 text-sm font-mono">{payment.booking?.booking_reference || "-"}</td>
                     <td className="py-4 px-4 font-bold text-primary">{payment.amount?.toLocaleString()} ر.س</td>
                     <td className="py-4 px-4 text-sm">{getMethodLabel(payment.payment_method)}</td>
-                    <td className="py-4 px-4">{getStatusBadge(payment.payment_status)}</td>
+                    <td className="py-4 px-4">{getStatusBadge(payment.status || "pending")}</td>
                     <td className="py-4 px-4 text-sm text-muted-foreground">
                       {new Date(payment.created_at).toLocaleDateString("ar-SA")}
                     </td>
@@ -321,7 +322,7 @@ const AdminPayments = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">العميل</p>
-                    <p className="font-medium">{selectedPayment.user?.full_name || "عميل"}</p>
+                    <p className="font-medium">{selectedPayment.user ? `${selectedPayment.user.first_name} ${selectedPayment.user.last_name}` : "عميل"}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">طريقة الدفع</p>
@@ -329,7 +330,7 @@ const AdminPayments = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">الحالة</p>
-                    {getStatusBadge(selectedPayment.payment_status)}
+                    {getStatusBadge(selectedPayment.status || "pending")}
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">التاريخ</p>
@@ -337,7 +338,7 @@ const AdminPayments = () => {
                   </div>
                 </div>
 
-                {selectedPayment.payment_status === "pending" && (
+                {selectedPayment.status === "pending" && (
                   <div className="flex gap-2 pt-4 border-t">
                     <Button 
                       className="flex-1" 

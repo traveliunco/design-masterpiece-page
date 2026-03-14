@@ -1,85 +1,71 @@
 
 
-# خطة شاملة: استبدال شريط البحث + إصلاح لوحة التحكم
+# خطة نظام الصلاحيات + إصلاح أخطاء البناء
 
-## المهمة 1: استبدال HeroSearch بـ SkyscannerSearch في الدسكتوب
+## المهام المطلوبة
 
-**المشكلة:** شريط البحث الحالي في الهيرو (`HeroSearch`) يعرض بحث نصي بسيط مع تبويبات. المطلوب استخدام نفس مكون `SkyscannerSearch` الموجود في صفحة الموبايل.
+### 1. إصلاح أخطاء البناء (Build Errors)
 
-**التعديل:**
-- `src/components/PremiumHeroSection.tsx`: استبدال `<HeroSearch />` بـ `<SkyscannerSearch variant="hero" />` مع تنسيق مناسب للهيرو (خلفية شفافة، نصوص بيضاء).
+هناك عدة أخطاء TypeScript يجب إصلاحها أولاً:
 
----
+**A. `src/data/southeast-asia.ts`** - تعريف الأنواع (Types) لا يتطابق مع البيانات الفعلية:
+- `City.accommodation` معرف كـ `string` لكن البيانات تحتوي كائن `{ budget, midRange, luxury }`
+- `City.attractions` معرف كـ `string[]` لكن البيانات تحتوي كائنات
+- `City` ينقصها خاصية `bestTimeToVisit`
+- سيتم تحديث الـ interface ليطابق البيانات الفعلية
 
-## المهمة 2: إصلاح RLS — لوحة التحكم لا يمكنها قراءة البيانات
+**B. `src/pages/CityDetails.tsx`** - يستدعي `getCityById` بمعامل واحد بدل اثنين، ويستخدم خصائص غير موجودة في النوع الحالي. سيتم إصلاحه ليتوافق مع الأنواع المحدثة.
 
-**المشكلة الجذرية:** 5 جداول تفتقر لسياسات RLS للمسؤولين، مما يعني أن لوحة التحكم تعرض بيانات فارغة أو أخطاء:
+**C. `src/components/Nav3D.tsx`** - خطأ في الوصول لـ `.items` على نوع `countries` الذي يحتوي `countries` بدلاً من `items`. سيتم إضافة type guard.
 
-| الجدول | المشكلة | الإصلاح |
-|--------|---------|---------|
-| `bookings` | SELECT فقط لصاحب الحجز | إضافة سياسة admin ALL |
-| `contact_messages` | INSERT فقط، لا SELECT/UPDATE/DELETE | إضافة سياسات admin SELECT/UPDATE/DELETE |
-| `payments` | SELECT فقط لصاحب الدفعة | إضافة سياسة admin ALL |
-| `reviews` | لا يوجد admin policy | إضافة سياسة admin ALL |
-| `users` | SELECT/UPDATE فقط للمستخدم نفسه | إضافة سياسة admin SELECT + UPDATE |
-
-**Migration SQL:**
-```sql
--- bookings: admin full access
-CREATE POLICY "Admin manage all bookings" ON public.bookings FOR ALL
-  USING (has_role(auth.uid(), 'admin'::app_role));
-
--- contact_messages: admin full access
-CREATE POLICY "Admin manage contact_messages" ON public.contact_messages FOR ALL
-  USING (has_role(auth.uid(), 'admin'::app_role));
-
--- payments: admin full access
-CREATE POLICY "Admin manage payments" ON public.payments FOR ALL
-  USING (has_role(auth.uid(), 'admin'::app_role));
-
--- reviews: admin full access
-CREATE POLICY "Admin manage reviews" ON public.reviews FOR ALL
-  USING (has_role(auth.uid(), 'admin'::app_role));
-
--- users: admin read + update
-CREATE POLICY "Admin read all users" ON public.users FOR SELECT
-  USING (has_role(auth.uid(), 'admin'::app_role));
-CREATE POLICY "Admin update users" ON public.users FOR UPDATE
-  USING (has_role(auth.uid(), 'admin'::app_role));
-```
+**D. `src/components/globe/CityCard.tsx`** - خطأ `nameAr` على نوع `never`. سيتم إصلاح النوع.
 
 ---
 
-## المهمة 3: إصلاح صفحات Admin المعطلة بسبب جداول/أعمدة غير متطابقة
+### 2. نظام الصلاحيات
 
-**الصفحات المتأثرة والإصلاحات:**
+**الوضع الحالي:**
+- جدول `user_roles` موجود لكنه فارغ
+- دالة `has_role()` موجودة وتعمل
+- `useAuth` يقرأ الأدوار من جدول `users` (خطأ أمني) بدلاً من `user_roles`
+- المستخدم `klidmorre@gmail.com` موجود بالفعل في `auth.users`
 
-1. **`admin/Payments.tsx`** — يستعلم من `payments` مع join على `bookings(booking_reference)` و `users(full_name, email)`. جدول `users` لا يحتوي على `full_name` — يجب تعديل الـ join ليستخدم `first_name, last_name` بدلاً منه أو يستخدم `profiles`.
+**الخطوات:**
 
-2. **`admin/Reviews.tsx`** — يستعلم من `reviews` مع join على `users(full_name)` — نفس المشكلة.
+**A. إدخال الأدوار في جدول `user_roles`:**
+- `klidmorre@gmail.com` → `admin` (مدير عام - صلاحيات كاملة)
+- `eng.khalid.work@gmail.com` → `moderator` (موظف - صلاحيات محدودة)
 
-3. **`admin/Users.tsx`** — يستعلم من `users` مباشرة. يحتاج admin RLS policy.
+ملاحظة: الأدوار المتاحة حالياً في `app_role` هي: `admin`, `moderator`, `user`. سنستخدم `moderator` للموظف.
 
-4. **`admin/Bookings.tsx`** — يستعلم من `bookings` مع join على `user:users(id, full_name, email, phone)` — `full_name` غير موجود في `users`.
+**B. تحديث `useAuth.tsx`:**
+- تغيير قراءة الدور من جدول `users` إلى `user_roles`
+- تحديث نوع `UserRole` ليطابق `app_role` enum
 
-5. **`admin/Dashboard.tsx`** — يستعلم `users` count — يحتاج admin RLS.
+**C. تحديث `ProtectedRoute.tsx`:**
+- إضافة دعم التحقق من الأدوار عبر `user_roles`
 
-6. **`admin/Reports.tsx`** — يستعلم `users` count و `payments` — يحتاج admin RLS.
+**D. تحديث `AdminLayout.tsx`:**
+- تعديل القائمة الجانبية لإظهار العناصر حسب الدور
+- الموظف يرى فقط: لوحة التحكم، البرامج، العروض (إضافة/تعديل/حذف)
+- المدير يرى كل شيء
 
-**الحل للـ joins:** تعديل الاستعلامات لتستخدم `profiles(first_name, last_name)` بدلاً من `users(full_name)` حيث أن جدول `profiles` موجود ومرتبط بـ `auth.users`.
+**E. تحديث مسارات Admin في `App.tsx`:**
+- حماية المسارات بأدوار محددة
+- البرامج والعروض: متاحة للموظف والمدير
+- باقي الصفحات: مدير فقط
 
 ---
 
-## ملخص الملفات المتأثرة
+### التفاصيل التقنية
 
-| الملف | نوع التعديل |
-|-------|-------------|
-| `PremiumHeroSection.tsx` | استبدال HeroSearch بـ SkyscannerSearch |
-| Migration SQL | إضافة 7 سياسات RLS للمسؤولين |
-| `admin/Payments.tsx` | إصلاح join query |
-| `admin/Reviews.tsx` | إصلاح join query |
-| `admin/Bookings.tsx` | إصلاح join query |
-| `admin/Users.tsx` | تعديل لاستخدام profiles |
-| `admin/Dashboard.tsx` | تعديل query ليستخدم profiles count |
-| `admin/Reports.tsx` | تعديل query ليستخدم profiles count |
+**صلاحيات الموظف (moderator):**
+| الصفحة | الصلاحية |
+|--------|----------|
+| لوحة التحكم | عرض فقط |
+| البرامج | إضافة/تعديل/حذف |
+| العروض | إضافة/تعديل/حذف |
+
+**صلاحيات المدير (admin):**
+- كل شيء بدون قيود
 
