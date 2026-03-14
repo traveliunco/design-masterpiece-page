@@ -85,7 +85,7 @@ const AdminBookings = () => {
   };
 
   const filteredBookings = bookings.filter((booking) => {
-    const customerName = booking.user?.full_name || "عميل غير معروف";
+    const customerName = booking.user ? `${booking.user.first_name} ${booking.user.last_name}` : "عميل غير معروف";
     const matchesSearch =
       booking.booking_reference.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customerName.toLowerCase().includes(searchTerm.toLowerCase());
