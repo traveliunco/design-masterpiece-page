@@ -6,10 +6,14 @@ import {
   X,
   Loader2,
   RefreshCw,
+  Trash2,
+  MessageSquare,
+  Send,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -28,6 +32,8 @@ interface Review {
   overall_rating: number;
   title: string | null;
   content: string | null;
+  response: string | null;
+  responded_at: string | null;
   status: string;
   created_at: string;
   user?: { first_name: string; last_name: string } | null;
@@ -39,6 +45,9 @@ const AdminReviews = () => {
   const [ratingFilter, setRatingFilter] = useState("all");
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     loadReviews();
@@ -80,15 +89,62 @@ const AdminReviews = () => {
     }
   };
 
+  const deleteReview = async (id: string) => {
+    if (!confirm("هل أنت متأكد من حذف هذا التقييم؟")) return;
+    try {
+      const { error } = await supabase.from("reviews").delete().eq("id", id);
+      if (error) throw error;
+      setReviews(prev => prev.filter(r => r.id !== id));
+      toast.success("تم حذف التقييم");
+    } catch (error) {
+      toast.error("حدث خطأ في الحذف");
+    }
+  };
+
+  const submitReply = async (id: string) => {
+    if (!replyText.trim()) return;
+    setSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from("reviews")
+        .update({
+          response: replyText.trim(),
+          responded_at: new Date().toISOString(),
+        })
+        .eq("id", id);
+
+      if (error) throw error;
+      setReplyingTo(null);
+      setReplyText("");
+      loadReviews();
+      toast.success("تم إرسال الرد بنجاح");
+    } catch (error) {
+      toast.error("حدث خطأ في إرسال الرد");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const getReviewableLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      hotel: "فندق",
+      program: "برنامج",
+      destination: "وجهة",
+      flight: "رحلة",
+    };
+    return labels[type] || type || "تقييم عام";
+  };
+
   const filteredReviews = reviews.filter((review) => {
     const customerName = review.user ? `${review.user.first_name} ${review.user.last_name}` : "عميل";
-    const matchesSearch = customerName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (review.content || "").toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || review.status === statusFilter;
     const matchesRating = ratingFilter === "all" || review.overall_rating.toString() === ratingFilter;
     return matchesSearch && matchesStatus && matchesRating;
   });
 
-  const avgRating = reviews.length > 0 
+  const avgRating = reviews.length > 0
     ? (reviews.reduce((sum, r) => sum + r.overall_rating, 0) / reviews.length).toFixed(1)
     : "0.0";
 
@@ -143,7 +199,7 @@ const AdminReviews = () => {
             مراجعة واعتماد تقييمات العملاء ({reviews.length} تقييم)
           </p>
         </div>
-        <Button variant="outline" onClick={loadReviews} aria-label="تحديث">
+        <Button variant="outline" onClick={loadReviews}>
           <RefreshCw className="w-4 h-4 ml-2" />
           تحديث
         </Button>
@@ -187,7 +243,7 @@ const AdminReviews = () => {
             <div className="flex-1 relative">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder="بحث بالعميل أو الوجهة..."
+                placeholder="بحث بالعميل أو المحتوى..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pr-10"
@@ -237,7 +293,7 @@ const AdminReviews = () => {
                     <div>
                       <p className="font-medium">{review.user ? `${review.user.first_name} ${review.user.last_name}` : "عميل"}</p>
                       <p className="text-xs text-muted-foreground">
-                        {review.reviewable_type || "تقييم عام"}
+                        {getReviewableLabel(review.reviewable_type)}
                       </p>
                     </div>
                     {getStatusBadge(review.status)}
@@ -252,30 +308,84 @@ const AdminReviews = () => {
 
                   <h4 className="font-medium mb-1">{review.title || "بدون عنوان"}</h4>
                   <p className="text-sm text-muted-foreground">{review.content}</p>
+
+                  {/* Existing Response */}
+                  {review.response && (
+                    <div className="mt-3 p-3 bg-primary/5 border border-primary/10 rounded-lg">
+                      <p className="text-xs font-medium text-primary mb-1">رد الإدارة:</p>
+                      <p className="text-sm">{review.response}</p>
+                      {review.responded_at && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {new Date(review.responded_at).toLocaleDateString("ar-SA")}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Reply Form */}
+                  {replyingTo === review.id && (
+                    <div className="mt-3 space-y-2">
+                      <Textarea
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="اكتب ردك هنا..."
+                        rows={3}
+                      />
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={() => submitReply(review.id)} disabled={submitting}>
+                          <Send className="w-4 h-4 ml-1" />
+                          {submitting ? "جاري الإرسال..." : "إرسال الرد"}
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => { setReplyingTo(null); setReplyText(""); }}>
+                          إلغاء
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {review.status === "pending" && (
-                  <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
+                  {review.status === "pending" && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-green-600 border-green-600"
+                        onClick={() => updateReviewStatus(review.id, "approved")}
+                      >
+                        <Check className="w-4 h-4 ml-1" />
+                        اعتماد
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-red-600 border-red-600"
+                        onClick={() => updateReviewStatus(review.id, "rejected")}
+                      >
+                        <X className="w-4 h-4 ml-1" />
+                        رفض
+                      </Button>
+                    </>
+                  )}
+                  {!review.response && replyingTo !== review.id && (
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-green-600 border-green-600"
-                      onClick={() => updateReviewStatus(review.id, "approved")}
+                      onClick={() => { setReplyingTo(review.id); setReplyText(""); }}
                     >
-                      <Check className="w-4 h-4 ml-1" />
-                      اعتماد
+                      <MessageSquare className="w-4 h-4 ml-1" />
+                      رد
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-red-600 border-red-600"
-                      onClick={() => updateReviewStatus(review.id, "rejected")}
-                    >
-                      <X className="w-4 h-4 ml-1" />
-                      رفض
-                    </Button>
-                  </div>
-                )}
+                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-red-500 hover:text-red-700"
+                    onClick={() => deleteReview(review.id)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
