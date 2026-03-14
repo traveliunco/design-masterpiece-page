@@ -354,7 +354,8 @@ export const defaultNavLinks: NavLink[] = [
   { id: "4", name: "العروض",      path: "/offers",       icon: "🏷️", is_active: true, order: 4 },
   { id: "5", name: "البرامج",     path: "/programs",     icon: "✈️", is_active: true, order: 5 },
   { id: "6", name: "الخدمات",     path: "/services",     icon: "⚙️", is_active: true, order: 6 },
-  { id: "7", name: "المزيد",      path: "#",             icon: "📋", is_active: true, order: 7, hasDropdown: true, dropdownKey: "more" },
+  { id: "8", name: "صمم رحلتك",  path: "/trip-builder", icon: "🧳", is_active: true, order: 7 },
+  { id: "7", name: "المزيد",      path: "#",             icon: "📋", is_active: true, order: 8, hasDropdown: true, dropdownKey: "more" },
 ];
 
 export const navService = {

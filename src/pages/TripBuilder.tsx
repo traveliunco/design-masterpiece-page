@@ -9,6 +9,9 @@ import StepExtras from '@/components/trip-builder/StepExtras';
 import StepSummary from '@/components/trip-builder/StepSummary';
 import { Helmet } from 'react-helmet';
 import { useIsMobile } from '@/hooks/use-mobile';
+import Nav3D from '@/components/Nav3D';
+import PremiumFooter from '@/components/PremiumFooter';
+import MobileNav from '@/components/MobileNav';
 
 const TripBuilder = () => {
   const {
