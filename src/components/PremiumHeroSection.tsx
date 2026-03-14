@@ -9,6 +9,7 @@ import heroImage3 from "@/assets/maldives.jpg";
 import { homepageService } from "@/services/adminDataService";
 import SkyscannerSearch from "@/components/SkyscannerSearch";
 
+
 interface Slide {
   title: string;
   highlight: string;
