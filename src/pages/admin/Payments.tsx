@@ -265,7 +265,7 @@ const AdminPayments = () => {
                     <td className="py-4 px-4 text-sm font-mono">{payment.transaction_id || payment.id.slice(0, 8)}</td>
                     <td className="py-4 px-4">
                       <div>
-                        <p className="font-medium">{payment.user?.full_name || "عميل"}</p>
+                        <p className="font-medium">{payment.user ? `${payment.user.first_name} ${payment.user.last_name}` : "عميل"}</p>
                         <p className="text-xs text-muted-foreground">{payment.user?.email}</p>
                       </div>
                     </td>
