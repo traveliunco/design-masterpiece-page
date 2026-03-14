@@ -32,15 +32,15 @@ import { toast } from "sonner";
 
 interface Payment {
   id: string;
-  booking_id: string | null;
-  user_id: string | null;
+  booking_id: string;
+  user_id: string;
   amount: number;
   payment_method: string;
-  payment_status: string;
+  status: string;
   transaction_id: string | null;
   created_at: string;
   booking?: { booking_reference: string } | null;
-  user?: { full_name: string; email: string } | null;
+  user?: { first_name: string; last_name: string; email: string } | null;
 }
 
 const AdminPayments = () => {
