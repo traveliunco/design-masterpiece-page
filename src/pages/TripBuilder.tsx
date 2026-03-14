@@ -40,6 +40,8 @@ const TripBuilder = () => {
         <meta name="description" content="صمم بكج سفرك المخصص - اختر الوجهة والطيران والفندق والسيارة والأنشطة بنفسك" />
       </Helmet>
 
+      <Nav3D />
+
       <div className="min-h-screen bg-background pt-20 pb-8" dir="rtl">
         <div className="container mx-auto px-4 max-w-5xl">
           <StepIndicator currentStep={currentStep} onStepClick={goToStep} />
@@ -81,6 +83,9 @@ const TripBuilder = () => {
           )}
         </div>
       </div>
+
+      <PremiumFooter />
+      <MobileNav />
     </>
   );
 };
