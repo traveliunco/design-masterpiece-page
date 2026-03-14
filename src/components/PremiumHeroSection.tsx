@@ -135,7 +135,7 @@ const PremiumHeroSection = () => {
 
           {/* Search Bar */}
           <div className="w-full max-w-3xl mx-auto animate-fade-in [animation-delay:0.3s]">
-            <HeroSearch />
+            <SkyscannerSearch variant="hero" />
           </div>
 
           {/* CTA Buttons */}
