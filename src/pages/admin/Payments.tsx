@@ -95,11 +95,12 @@ const AdminPayments = () => {
 
   const filteredPayments = payments.filter((payment) => {
     const searchLower = searchTerm.toLowerCase();
+    const userName = payment.user ? `${payment.user.first_name} ${payment.user.last_name}` : "";
     const matchesSearch = 
       (payment.transaction_id || "").toLowerCase().includes(searchLower) ||
       (payment.booking?.booking_reference || "").toLowerCase().includes(searchLower) ||
-      (payment.user?.full_name || "").toLowerCase().includes(searchLower);
-    const matchesStatus = statusFilter === "all" || payment.payment_status === statusFilter;
+      userName.toLowerCase().includes(searchLower);
+    const matchesStatus = statusFilter === "all" || payment.status === statusFilter;
     const matchesMethod = methodFilter === "all" || payment.payment_method === methodFilter;
     return matchesSearch && matchesStatus && matchesMethod;
   });
