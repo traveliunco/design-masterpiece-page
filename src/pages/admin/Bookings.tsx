@@ -70,7 +70,7 @@ const AdminBookings = () => {
         .from("bookings")
         .select(`
           *,
-          user:users(id, full_name, email, phone)
+          user:users(id, first_name, last_name, email, phone)
         `)
         .order("created_at", { ascending: false });
 
