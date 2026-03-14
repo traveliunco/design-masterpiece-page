@@ -330,7 +330,7 @@ const AdminPayments = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">الحالة</p>
-                    {getStatusBadge(selectedPayment.payment_status)}
+                    {getStatusBadge(selectedPayment.status || "pending")}
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">التاريخ</p>
