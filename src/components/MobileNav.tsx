@@ -13,6 +13,7 @@ const MobileNav = () => {
   
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [navItems, setNavItems] = useState<MobileBottomNavItem[]>([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,15 +30,10 @@ const MobileNav = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  if (isAdmin) return null;
-
-  const [navItems, setNavItems] = useState<MobileBottomNavItem[]>([]);
-
   useEffect(() => {
     const data = mobileHomepageService.getData();
     const activeNav = (data.bottomNav || []).filter(item => item.is_active).sort((a, b) => a.order - b.order);
     
-    // Fallback if empty
     if (activeNav.length === 0) {
       setNavItems([
         { id: '1', icon: "🏠", label: "الرئيسية", path: "/", is_active: true, order: 1 },
@@ -48,7 +44,9 @@ const MobileNav = () => {
     } else {
       setNavItems(activeNav);
     }
-  }, [location.pathname]); // Re-fetch on navigation to ensure it's up to date
+  }, [location.pathname]);
+
+  if (isAdmin) return null;
 
   const getActiveIndex = () => {
     const path = location.pathname;
