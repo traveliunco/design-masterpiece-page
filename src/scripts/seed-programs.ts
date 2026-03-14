@@ -400,19 +400,38 @@ export async function seedPrograms() {
   console.log("🚀 بدء إضافة البرامج السياحية...");
   
   // Get current authenticated user
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     console.error("❌ يجب تسجيل الدخول أولاً كمسؤول");
     return [{ name: "Auth Error", success: false, error: "يجب تسجيل الدخول أولاً كمسؤول" }];
+  }
+
+  // Ensure created_by references an existing row in public.users to avoid FK errors
+  let creatorId: string | null = null;
+  const { data: userRow, error: userRowError } = await supabase
+    .from("users")
+    .select("id")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (userRowError) {
+    console.warn("⚠️ تعذر التحقق من المستخدم في جدول users، سيتم الإضافة بدون created_by:", userRowError.message);
+  } else {
+    creatorId = userRow?.id ?? null;
+    if (!creatorId) {
+      console.warn("⚠️ المستخدم الحالي غير موجود في جدول users، سيتم الإضافة بدون created_by");
+    }
   }
   
   const results = [];
   
   for (const program of programsData) {
     try {
+      const payload = creatorId ? ({ ...program, created_by: creatorId } as any) : (program as any);
+
       const { data, error } = await supabase
         .from("programs")
-        .upsert({ ...program, created_by: user.id } as any, {
+        .upsert(payload, {
           onConflict: "slug",
           ignoreDuplicates: false,
         })
