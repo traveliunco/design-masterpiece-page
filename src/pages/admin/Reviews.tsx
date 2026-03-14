@@ -22,15 +22,15 @@ import { toast } from "sonner";
 
 interface Review {
   id: string;
-  user_id: string | null;
-  destination_id: string | null;
-  rating: number;
-  title: string;
-  comment: string;
+  user_id: string;
+  reviewable_id: string;
+  reviewable_type: string;
+  overall_rating: number;
+  title: string | null;
+  content: string | null;
   status: string;
   created_at: string;
-  user?: { full_name: string } | null;
-  destination?: { name_ar: string } | null;
+  user?: { first_name: string; last_name: string } | null;
 }
 
 const AdminReviews = () => {
