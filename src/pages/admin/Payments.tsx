@@ -194,7 +194,7 @@ const AdminPayments = () => {
         <Card>
           <CardContent className="p-4 text-center">
             <XCircle className="w-8 h-8 text-red-600 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-red-600">{payments.filter(p => p.payment_status === "failed").length}</p>
+            <p className="text-2xl font-bold text-red-600">{payments.filter(p => p.status === "failed").length}</p>
             <p className="text-sm text-muted-foreground">فشل</p>
           </CardContent>
         </Card>
