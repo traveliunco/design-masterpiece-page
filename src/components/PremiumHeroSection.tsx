@@ -7,7 +7,7 @@ import heroImage from "@/assets/hero-resort.jpg";
 import heroImage2 from "@/assets/turkey.jpg";
 import heroImage3 from "@/assets/maldives.jpg";
 import { homepageService } from "@/services/adminDataService";
-import HeroSearch from "@/components/HeroSearch";
+import SkyscannerSearch from "@/components/SkyscannerSearch";
 
 interface Slide {
   title: string;
