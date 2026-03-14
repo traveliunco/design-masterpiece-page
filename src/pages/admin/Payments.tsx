@@ -106,7 +106,7 @@ const AdminPayments = () => {
   });
 
   const totalAmount = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
-  const confirmedAmount = payments.filter(p => p.payment_status === "completed").reduce((sum, p) => sum + (p.amount || 0), 0);
+  const confirmedAmount = payments.filter(p => p.status === "completed").reduce((sum, p) => sum + (p.amount || 0), 0);
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
