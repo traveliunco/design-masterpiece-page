@@ -106,7 +106,7 @@ const AdminDestinationNew = lazy(() => import("./pages/admin/DestinationNew"));
 const AdminProgramNew = lazy(() => import("./pages/admin/ProgramNew"));
 const AdminFlights = lazy(() => import("./pages/admin/Flights"));
 const AdminOfferNew = lazy(() => import("./pages/admin/OfferNew"));
-const AdminArticles = lazy(() => import("./pages/admin/Articles"));
+
 const AdminAISettings = lazy(() => import("./pages/admin/AISettings"));
 const AdminDestinationEdit = lazy(() => import("./pages/admin/DestinationEdit"));
 const AdminProgramEdit = lazy(() => import("./pages/admin/ProgramEdit"));
