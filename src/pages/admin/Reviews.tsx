@@ -81,12 +81,10 @@ const AdminReviews = () => {
   };
 
   const filteredReviews = reviews.filter((review) => {
-    const customerName = review.user?.full_name || "عميل";
-    const destName = review.destination?.name_ar || "";
-    const matchesSearch = customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      destName.toLowerCase().includes(searchTerm.toLowerCase());
+    const customerName = review.user ? `${review.user.first_name} ${review.user.last_name}` : "عميل";
+    const matchesSearch = customerName.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || review.status === statusFilter;
-    const matchesRating = ratingFilter === "all" || review.rating.toString() === ratingFilter;
+    const matchesRating = ratingFilter === "all" || review.overall_rating.toString() === ratingFilter;
     return matchesSearch && matchesStatus && matchesRating;
   });
 
