@@ -5,6 +5,7 @@ import "./index.css";
 if ("serviceWorker" in navigator) {
   const isPreviewOrLocalhost =
     window.location.hostname.includes("lovableproject.com") ||
+    window.location.hostname.includes("lovable.app") ||
     window.location.hostname.includes("localhost");
 
   if (isPreviewOrLocalhost) {
