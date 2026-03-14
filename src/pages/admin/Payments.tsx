@@ -63,7 +63,7 @@ const AdminPayments = () => {
         .select(`
           *,
           booking:bookings(booking_reference),
-          user:users(full_name, email)
+          user:users(first_name, last_name, email)
         `)
         .order("created_at", { ascending: false });
 
