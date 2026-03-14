@@ -89,7 +89,7 @@ const AdminReviews = () => {
   });
 
   const avgRating = reviews.length > 0 
-    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+    ? (reviews.reduce((sum, r) => sum + r.overall_rating, 0) / reviews.length).toFixed(1)
     : "0.0";
 
   const getStatusBadge = (status: string) => {
