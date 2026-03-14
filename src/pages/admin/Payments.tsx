@@ -272,7 +272,7 @@ const AdminPayments = () => {
                     <td className="py-4 px-4 text-sm font-mono">{payment.booking?.booking_reference || "-"}</td>
                     <td className="py-4 px-4 font-bold text-primary">{payment.amount?.toLocaleString()} ر.س</td>
                     <td className="py-4 px-4 text-sm">{getMethodLabel(payment.payment_method)}</td>
-                    <td className="py-4 px-4">{getStatusBadge(payment.payment_status)}</td>
+                    <td className="py-4 px-4">{getStatusBadge(payment.status || "pending")}</td>
                     <td className="py-4 px-4 text-sm text-muted-foreground">
                       {new Date(payment.created_at).toLocaleDateString("ar-SA")}
                     </td>
