@@ -338,7 +338,7 @@ const AdminPayments = () => {
                   </div>
                 </div>
 
-                {selectedPayment.payment_status === "pending" && (
+                {selectedPayment.status === "pending" && (
                   <div className="flex gap-2 pt-4 border-t">
                     <Button 
                       className="flex-1" 
