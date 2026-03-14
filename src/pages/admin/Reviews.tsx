@@ -51,8 +51,7 @@ const AdminReviews = () => {
         .from("reviews")
         .select(`
           *,
-          user:users(full_name),
-          destination:destinations(name_ar)
+          user:users(first_name, last_name)
         `)
         .order("created_at", { ascending: false });
 
