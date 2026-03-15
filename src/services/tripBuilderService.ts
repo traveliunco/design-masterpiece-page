@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 // Simple in-memory cache with TTL
 const cache = new Map<string, { data: any; ts: number }>();
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL = 5 * 60 * 1000;
 
 function getCached<T>(key: string): T | null {
   const entry = cache.get(key);
@@ -15,6 +15,7 @@ function setCache(key: string, data: any) {
 }
 
 export const tripBuilderService = {
+  /** Get active destinations (used as countries) */
   async getDestinations() {
     const cached = getCached<any[]>('destinations');
     if (cached) return cached;
@@ -30,8 +31,46 @@ export const tripBuilderService = {
     return result;
   },
 
-  async getFlightOffers(destinationCity?: string) {
-    const key = `flights_${destinationCity || 'all'}`;
+  /** Get airports in a specific country (destination cities) */
+  async getAirportsByCountry(countryAr: string) {
+    const key = `airports_country_${countryAr}`;
+    const cached = getCached<any[]>(key);
+    if (cached) return cached;
+
+    const { data, error } = await supabase
+      .from('airports')
+      .select('id, iata_code, city_ar, city_en, name_ar, name_en, country_ar')
+      .eq('is_active', true)
+      .eq('country_ar', countryAr);
+    if (error) throw error;
+    const result = data || [];
+    setCache(key, result);
+    return result;
+  },
+
+  /** Get Saudi origin airports */
+  async getOriginAirports() {
+    const cached = getCached<any[]>('origin_airports');
+    if (cached) return cached;
+
+    const { data, error } = await supabase
+      .from('airports')
+      .select('id, iata_code, city_ar, city_en, name_ar')
+      .eq('is_active', true)
+      .ilike('country_ar', '%سعود%');
+    if (error) throw error;
+    const result = data || [];
+    setCache('origin_airports', result);
+    return result;
+  },
+
+  /** Get flights filtered by origin/destination airports and date */
+  async getFlightOffers(params?: {
+    originAirportId?: string | null;
+    destinationAirportId?: string | null;
+    departureDate?: string | null;
+  }) {
+    const key = `flights_${params?.originAirportId || 'all'}_${params?.destinationAirportId || 'all'}_${params?.departureDate || 'all'}`;
     const cached = getCached<any[]>(key);
     if (cached) return cached;
 
@@ -40,6 +79,17 @@ export const tripBuilderService = {
       .select('*, airline:airlines(name_ar, logo_url, iata_code), origin:airports!flight_offers_origin_airport_id_fkey(city_ar, city_en, iata_code), destination:airports!flight_offers_destination_airport_id_fkey(city_ar, city_en, iata_code)')
       .eq('is_active', true)
       .gte('departure_date', new Date().toISOString().split('T')[0]);
+
+    if (params?.originAirportId) {
+      query = query.eq('origin_airport_id', params.originAirportId);
+    }
+    if (params?.destinationAirportId) {
+      query = query.eq('destination_airport_id', params.destinationAirportId);
+    }
+    if (params?.departureDate) {
+      query = query.eq('departure_date', params.departureDate);
+    }
+
     const { data, error } = await query.order('price_adult').limit(50);
     if (error) throw error;
     const result = data || [];
@@ -47,8 +97,9 @@ export const tripBuilderService = {
     return result;
   },
 
-  async getHotels(city?: string) {
-    const key = `hotels_${city || 'all'}`;
+  /** Get hotels filtered by city name */
+  async getHotels(cityAr?: string, countryAr?: string) {
+    const key = `hotels_${cityAr || 'all'}_${countryAr || 'all'}`;
     const cached = getCached<any[]>(key);
     if (cached) return cached;
 
@@ -56,7 +107,13 @@ export const tripBuilderService = {
       .from('hotels')
       .select('id, name_ar, name_en, city_ar, city_en, star_rating, rating, main_image, country_ar')
       .eq('is_active', true);
-    if (city) query = query.ilike('city_en', `%${city}%`);
+
+    if (cityAr) {
+      query = query.eq('city_ar', cityAr);
+    } else if (countryAr) {
+      query = query.eq('country_ar', countryAr);
+    }
+
     const { data, error } = await query.order('rating', { ascending: false }).limit(30);
     if (error) throw error;
     const result = data || [];
@@ -81,8 +138,9 @@ export const tripBuilderService = {
     return result;
   },
 
-  async getCarRentals(city?: string) {
-    const key = `cars_${city || 'all'}`;
+  /** Get car rentals filtered by city */
+  async getCarRentals(cityAr?: string, countryAr?: string) {
+    const key = `cars_${cityAr || 'all'}_${countryAr || 'all'}`;
     const cached = getCached<any[]>(key);
     if (cached) return cached;
 
@@ -90,7 +148,13 @@ export const tripBuilderService = {
       .from('car_rentals')
       .select('*')
       .eq('is_active', true);
-    if (city) query = query.ilike('city_en', `%${city}%`);
+
+    if (cityAr) {
+      query = query.eq('city_ar', cityAr);
+    } else if (countryAr) {
+      query = query.eq('country_ar', countryAr);
+    }
+
     const { data, error } = await query.order('price_per_day').limit(30);
     if (error) throw error;
     const result = data || [];
@@ -98,8 +162,9 @@ export const tripBuilderService = {
     return result;
   },
 
-  async getTourActivities(city?: string) {
-    const key = `tours_${city || 'all'}`;
+  /** Get tour activities filtered by city/country */
+  async getTourActivities(cityAr?: string, countryAr?: string) {
+    const key = `tours_${cityAr || 'all'}_${countryAr || 'all'}`;
     const cached = getCached<any[]>(key);
     if (cached) return cached;
 
@@ -107,7 +172,13 @@ export const tripBuilderService = {
       .from('tour_activities' as any)
       .select('*')
       .eq('is_active', true);
-    if (city) query = query.ilike('city_en', `%${city}%`);
+
+    if (cityAr) {
+      query = query.eq('city_ar', cityAr);
+    } else if (countryAr) {
+      query = query.eq('country_ar', countryAr);
+    }
+
     const { data, error } = await query.order('price_per_person').limit(30);
     if (error) throw error;
     const result = (data || []) as any[];
@@ -117,7 +188,10 @@ export const tripBuilderService = {
 
   async savePackage(packageData: {
     destination?: string;
-    destination_id?: string;
+    destination_id?: string | null;
+    country_id?: string | null;
+    city_name?: string;
+    origin_city?: string;
     check_in_date?: string;
     check_out_date?: string;
     adults_count?: number;
@@ -138,10 +212,11 @@ export const tripBuilderService = {
     notes?: string;
     status?: string;
     session_id?: string;
+    user_id?: string | null;
   }) {
     const { data, error } = await supabase
       .from('dynamic_packages')
-      .insert(packageData)
+      .insert(packageData as any)
       .select()
       .single();
     if (error) throw error;
