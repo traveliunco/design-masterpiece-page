@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Hotel, Star, BedDouble, SkipForward, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
+import { Hotel, Star, BedDouble, SkipForward, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { TripData } from '@/hooks/useTripBuilder';

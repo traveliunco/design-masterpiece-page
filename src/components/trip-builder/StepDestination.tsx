@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MapPin, Users, Baby, Calendar, ChevronLeft, Minus, Plus, Globe, Building2 } from 'lucide-react';
+import { MapPin, Users, Calendar, ChevronLeft, Minus, Plus, Globe, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarUI } from '@/components/ui/calendar';
