@@ -125,7 +125,8 @@ const AdminBlogArticleForm = lazy(() => import("./pages/admin/BlogArticleForm"))
 const AdminNavMenu = lazy(() => import("./pages/admin/NavAdmin"));
 const AdminMobileHomepage = lazy(() => import("./pages/admin/MobileHomepageAdmin"));
 const AdminReadyPackages = lazy(() => import("./pages/admin/ReadyPackagesAdmin"));
-
+const AdminDynamicPackages = lazy(() => import("./pages/admin/DynamicPackagesAdmin"));
+const AdminTourActivities = lazy(() => import("./pages/admin/TourActivitiesAdmin"));
 
 
 // Components
