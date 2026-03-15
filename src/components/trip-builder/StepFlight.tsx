@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plane, Clock, Luggage, SkipForward, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plane, Clock, Luggage, SkipForward, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { TripData } from '@/hooks/useTripBuilder';
@@ -17,8 +17,13 @@ const StepFlight = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    tripBuilderService.getFlightOffers().then(d => { setFlights(d); setLoading(false); }).catch(() => setLoading(false));
-  }, []);
+    setLoading(true);
+    tripBuilderService.getFlightOffers({
+      originAirportId: tripData.originAirportId,
+      destinationAirportId: tripData.destinationAirportId,
+      departureDate: tripData.checkInDate?.toISOString().split('T')[0] || null,
+    }).then(d => { setFlights(d); setLoading(false); }).catch(() => setLoading(false));
+  }, [tripData.originAirportId, tripData.destinationAirportId, tripData.checkInDate]);
 
   const selectFlight = (flight: any) => {
     updateTrip({
@@ -41,8 +46,22 @@ const StepFlight = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
           <Plane className="w-7 h-7 text-blue-500" />
         </div>
         <h2 className="text-xl font-bold text-foreground">اختر رحلة الطيران</h2>
-        <p className="text-sm text-muted-foreground mt-1">اختياري - يمكنك تخطي هذه الخطوة</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          {tripData.originCityName && tripData.cityName
+            ? `رحلات من ${tripData.originCityName} إلى ${tripData.cityName}`
+            : 'اختياري - يمكنك تخطي هذه الخطوة'}
+        </p>
       </div>
+
+      {/* Info banner */}
+      {tripData.cityName && (
+        <div className="bg-blue-500/5 border border-blue-500/20 rounded-2xl p-3 flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 text-blue-500 shrink-0" />
+          <p className="text-xs text-muted-foreground">
+            يتم عرض الرحلات المتاحة من <strong className="text-foreground">{tripData.originCityName}</strong> إلى <strong className="text-foreground">{tripData.cityName}</strong>
+          </p>
+        </div>
+      )}
 
       {loading ? (
         <div className="space-y-3">
@@ -55,7 +74,8 @@ const StepFlight = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
           <div className="w-16 h-16 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-4">
             <Plane className="w-8 h-8 text-muted-foreground" />
           </div>
-          <p className="text-muted-foreground font-medium">لا توجد رحلات متاحة حالياً</p>
+          <p className="text-muted-foreground font-medium">لا توجد رحلات متاحة لهذه الوجهة حالياً</p>
+          <p className="text-xs text-muted-foreground mt-2">يمكنك تخطي هذه الخطوة وسيتواصل معك فريقنا لترتيب الطيران</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -78,23 +98,33 @@ const StepFlight = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
                   isSelected ? 'bg-primary/10' : 'bg-muted/50'
                 )}>
                   <span className="font-bold text-foreground">{flight.airline?.name_ar || 'خطوط جوية'}</span>
-                  {flight.flight_number && (
-                    <span className="bg-background/80 px-2 py-0.5 rounded-lg text-muted-foreground">{flight.flight_number}</span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {flight.is_direct === false && (
+                      <span className="bg-orange-500/10 text-orange-600 px-2 py-0.5 rounded-lg text-[10px] font-medium">
+                        {flight.stops_count} توقف
+                      </span>
+                    )}
+                    {flight.flight_number && (
+                      <span className="bg-background/80 px-2 py-0.5 rounded-lg text-muted-foreground">{flight.flight_number}</span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="p-4 flex items-center gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 text-sm text-foreground font-medium">
-                      <span>{flight.origin?.city_ar || ''}</span>
+                      <span>{flight.origin?.city_ar || tripData.originCityName}</span>
                       <div className="flex-1 flex items-center gap-1">
                         <div className="h-px flex-1 bg-border" />
                         <Plane className="w-3.5 h-3.5 text-primary -rotate-90" />
                         <div className="h-px flex-1 bg-border" />
                       </div>
-                      <span>{flight.destination?.city_ar || ''}</span>
+                      <span>{flight.destination?.city_ar || tripData.cityName}</span>
                     </div>
                     <div className="flex items-center gap-3 text-[11px] text-muted-foreground mt-2">
+                      {flight.departure_time && (
+                        <span className="bg-muted/50 px-2 py-0.5 rounded-lg">{flight.departure_time?.substring(0, 5)}</span>
+                      )}
                       {flight.duration_minutes && (
                         <span className="flex items-center gap-1 bg-muted/50 px-2 py-0.5 rounded-lg">
                           <Clock className="w-3 h-3" />
@@ -108,6 +138,9 @@ const StepFlight = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
                     </div>
                   </div>
                   <div className="text-left shrink-0 pr-2">
+                    {flight.original_price && flight.original_price > flight.price_adult && (
+                      <p className="text-xs text-muted-foreground line-through">{flight.original_price?.toLocaleString()}</p>
+                    )}
                     <p className="text-xl font-black text-primary leading-tight">{flight.price_adult?.toLocaleString()}</p>
                     <p className="text-[10px] text-muted-foreground">ر.س / للفرد</p>
                   </div>

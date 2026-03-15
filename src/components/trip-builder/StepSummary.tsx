@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { MapPin, Plane, Hotel, Car, Shield, FileCheck, Check, Loader2, ChevronRight, Send } from 'lucide-react';
+import { MapPin, Plane, Hotel, Car, Shield, FileCheck, Check, Loader2, ChevronRight, Send, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { TripData } from '@/hooks/useTripBuilder';
 import { tripBuilderService } from '@/services/tripBuilderService';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
@@ -32,9 +33,15 @@ const StepSummary = ({ tripData, updateTrip, onPrev, getNights, getTotalPassenge
     }
     setSubmitting(true);
     try {
+      // Get current user if logged in
+      const { data: { user } } = await supabase.auth.getUser();
+
       await tripBuilderService.savePackage({
-        destination: tripData.destinationName,
+        destination: `${tripData.countryName} - ${tripData.cityName || tripData.destinationName}`,
         destination_id: tripData.destinationId,
+        country_id: tripData.destinationId,
+        city_name: tripData.cityName,
+        origin_city: tripData.originCityName,
         check_in_date: tripData.checkInDate?.toISOString().split('T')[0],
         check_out_date: tripData.checkOutDate?.toISOString().split('T')[0],
         adults_count: tripData.adultsCount,
@@ -55,6 +62,7 @@ const StepSummary = ({ tripData, updateTrip, onPrev, getNights, getTotalPassenge
         notes: tripData.notes,
         status: 'pending',
         session_id: crypto.randomUUID(),
+        user_id: user?.id || null,
       });
       setSubmitted(true);
       toast.success('تم إرسال طلب البكج بنجاح!');
@@ -121,11 +129,15 @@ const StepSummary = ({ tripData, updateTrip, onPrev, getNights, getTotalPassenge
         {/* Destination header */}
         <div className="bg-gradient-to-l from-primary/10 to-secondary/10 p-4 flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-            <MapPin className="w-5 h-5 text-primary" />
+            <Globe className="w-5 h-5 text-primary" />
           </div>
           <div className="flex-1">
-            <p className="font-bold text-foreground">{tripData.destinationName}</p>
+            <p className="font-bold text-foreground">
+              {tripData.countryName}
+              {tripData.cityName && <span className="text-muted-foreground font-normal"> · {tripData.cityName}</span>}
+            </p>
             <p className="text-[11px] text-muted-foreground">
+              {tripData.originCityName && <span>من {tripData.originCityName} · </span>}
               {tripData.checkInDate && format(tripData.checkInDate, 'dd MMM', { locale: ar })} — {tripData.checkOutDate && format(tripData.checkOutDate, 'dd MMM', { locale: ar })}
               {' · '}{getNights()} ليالي · {getTotalPassengers()} مسافرين
             </p>

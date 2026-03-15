@@ -1,4 +1,4 @@
-import { MapPin, Plane, Hotel, Car, Sparkles, Shield, FileCheck } from 'lucide-react';
+import { MapPin, Plane, Hotel, Car, Sparkles, Shield, FileCheck, Globe } from 'lucide-react';
 import { TripData } from '@/hooks/useTripBuilder';
 import { cn } from '@/lib/utils';
 
@@ -16,9 +16,15 @@ const TripSidebar = ({ tripData, getNights, getTotalPassengers, getSubtotal, get
   const passengers = getTotalPassengers();
 
   const items = [
-    tripData.destinationName && {
-      icon: MapPin, color: 'text-primary', bg: 'bg-primary/10',
-      label: tripData.destinationName, value: nights > 0 ? `${nights} ليالي` : ''
+    tripData.countryName && {
+      icon: Globe, color: 'text-primary', bg: 'bg-primary/10',
+      label: `${tripData.countryName}${tripData.cityName ? ` · ${tripData.cityName}` : ''}`,
+      value: nights > 0 ? `${nights} ليالي` : ''
+    },
+    tripData.originCityName && tripData.countryName && {
+      icon: MapPin, color: 'text-muted-foreground', bg: 'bg-muted',
+      label: `من ${tripData.originCityName}`,
+      value: ''
     },
     tripData.flightPrice > 0 && {
       icon: Plane, color: 'text-blue-500', bg: 'bg-blue-500/10',
@@ -54,7 +60,7 @@ const TripSidebar = ({ tripData, getNights, getTotalPassengers, getSubtotal, get
       {items.length === 0 ? (
         <div className="text-center py-8">
           <div className="w-14 h-14 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-3">
-            <MapPin className="w-6 h-6 text-muted-foreground" />
+            <Globe className="w-6 h-6 text-muted-foreground" />
           </div>
           <p className="text-muted-foreground text-sm">ابدأ باختيار وجهتك</p>
         </div>
@@ -66,7 +72,7 @@ const TripSidebar = ({ tripData, getNights, getTotalPassengers, getSubtotal, get
                 <item.icon className={cn('w-4 h-4', item.color)} />
               </div>
               <span className="flex-1 text-sm text-foreground truncate">{item.label}</span>
-              <span className="text-xs font-bold text-muted-foreground shrink-0">{item.value}</span>
+              {item.value && <span className="text-xs font-bold text-muted-foreground shrink-0">{item.value}</span>}
             </div>
           ))}
 
