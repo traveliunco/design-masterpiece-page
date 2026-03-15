@@ -99,7 +99,7 @@ const TourActivitiesAdmin = () => {
       toast.error("يرجى ملء الحقول المطلوبة");
       return;
     }
-    const { id, ...rest } = form as any;
+    const { id: _id, ...rest } = form as any;
     saveMutation.mutate(rest);
   };
 
