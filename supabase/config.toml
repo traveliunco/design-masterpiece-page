@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.keep-alive]
 verify_jwt = false
+
+[functions.seed-trip-data]
+verify_jwt = false
