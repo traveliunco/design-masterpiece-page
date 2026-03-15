@@ -72,6 +72,16 @@ const navItems: NavItem[] = [
   { name: "الفنادق", path: "/admin/hotels", icon: Hotel },
   { name: "العروض", path: "/admin/offers", icon: Tag, allowedRoles: ["all"] },
   { name: "البكجات الجاهزة", path: "/admin/ready-packages", icon: Building2, allowedRoles: ["all"] },
+  { 
+    name: "مصمم الرحلات",
+    path: "/admin/dynamic-packages",
+    icon: Briefcase,
+    allowedRoles: ["all"],
+    children: [
+      { name: "البكجات الديناميكية", path: "/admin/dynamic-packages" },
+      { name: "الأنشطة السياحية", path: "/admin/tour-activities" },
+    ]
+  },
   {
     name: "الدول والمدن",
     path: "/admin/southeast-asia-countries",

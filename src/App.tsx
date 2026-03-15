@@ -241,6 +241,8 @@ const App = () => (
                 <Route path="offers/new" element={<AdminOfferNew />} />
                 <Route path="offers/edit/:id" element={<AdminOfferEdit />} />
                 <Route path="ready-packages" element={<AdminReadyPackages />} />
+                <Route path="dynamic-packages" element={<AdminDynamicPackages />} />
+                <Route path="tour-activities" element={<AdminTourActivities />} />
                 <Route path="destinations" element={<ProtectedRoute requiredRole="admin"><AdminDestinations /></ProtectedRoute>} />
                 <Route path="destinations/new" element={<ProtectedRoute requiredRole="admin"><AdminDestinationNew /></ProtectedRoute>} />
                 <Route path="destinations/edit/:id" element={<ProtectedRoute requiredRole="admin"><AdminDestinationEdit /></ProtectedRoute>} />
