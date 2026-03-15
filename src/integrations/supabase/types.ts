@@ -898,6 +898,8 @@ export type Database = {
           check_in_date: string | null
           check_out_date: string | null
           children_count: number | null
+          city_name: string | null
+          country_id: string | null
           created_at: string | null
           currency: string | null
           customer_email: string | null
@@ -911,6 +913,7 @@ export type Database = {
           id: string
           infants_count: number | null
           notes: string | null
+          origin_city: string | null
           room_id: string | null
           selected_activities: Json | null
           session_id: string | null
@@ -927,6 +930,8 @@ export type Database = {
           check_in_date?: string | null
           check_out_date?: string | null
           children_count?: number | null
+          city_name?: string | null
+          country_id?: string | null
           created_at?: string | null
           currency?: string | null
           customer_email?: string | null
@@ -940,6 +945,7 @@ export type Database = {
           id?: string
           infants_count?: number | null
           notes?: string | null
+          origin_city?: string | null
           room_id?: string | null
           selected_activities?: Json | null
           session_id?: string | null
@@ -956,6 +962,8 @@ export type Database = {
           check_in_date?: string | null
           check_out_date?: string | null
           children_count?: number | null
+          city_name?: string | null
+          country_id?: string | null
           created_at?: string | null
           currency?: string | null
           customer_email?: string | null
@@ -969,6 +977,7 @@ export type Database = {
           id?: string
           infants_count?: number | null
           notes?: string | null
+          origin_city?: string | null
           room_id?: string | null
           selected_activities?: Json | null
           session_id?: string | null
@@ -985,6 +994,13 @@ export type Database = {
             columns: ["car_rental_id"]
             isOneToOne: false
             referencedRelation: "car_rentals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dynamic_packages_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
             referencedColumns: ["id"]
           },
           {

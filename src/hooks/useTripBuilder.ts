@@ -1,30 +1,35 @@
 import { useState, useCallback } from 'react';
 
 export interface TripData {
-  // Step 1
+  // Step 1 - Destination
   destinationId: string | null;
   destinationName: string;
+  countryName: string;
+  cityName: string;
+  destinationAirportId: string | null;
+  originAirportId: string | null;
+  originCityName: string;
   checkInDate: Date | null;
   checkOutDate: Date | null;
   adultsCount: number;
   childrenCount: number;
   infantsCount: number;
-  // Step 2
+  // Step 2 - Flight
   flightOfferId: string | null;
   flightDetails: any | null;
   flightPrice: number;
-  // Step 3
+  // Step 3 - Hotel
   hotelId: string | null;
   hotelName: string;
   roomId: string | null;
   roomName: string;
   hotelPricePerNight: number;
-  // Step 4
+  // Step 4 - Car Rental
   carRentalId: string | null;
   carRentalName: string;
   carRentalPricePerDay: number;
   carWithDriver: boolean;
-  // Step 5
+  // Step 5 - Extras
   selectedActivities: { id: string; name: string; price: number }[];
   extras: {
     insurance: boolean;
@@ -32,7 +37,7 @@ export interface TripData {
     insurancePrice: number;
     visaPrice: number;
   };
-  // Step 6
+  // Step 6 - Summary
   customerName: string;
   customerEmail: string;
   customerPhone: string;
@@ -42,6 +47,11 @@ export interface TripData {
 const initialTripData: TripData = {
   destinationId: null,
   destinationName: '',
+  countryName: '',
+  cityName: '',
+  destinationAirportId: null,
+  originAirportId: null,
+  originCityName: 'الرياض',
   checkInDate: null,
   checkOutDate: null,
   adultsCount: 1,

@@ -17,8 +17,11 @@ const StepExtras = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    tripBuilderService.getTourActivities().then(d => { setActivities(d); setLoading(false); }).catch(() => setLoading(false));
-  }, []);
+    setLoading(true);
+    tripBuilderService.getTourActivities(tripData.cityName || undefined, tripData.countryName || undefined)
+      .then(d => { setActivities(d); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [tripData.cityName, tripData.countryName]);
 
   const toggleActivity = (act: any) => {
     const exists = tripData.selectedActivities.find(a => a.id === act.id);
@@ -45,7 +48,11 @@ const StepExtras = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
           <Shield className="w-7 h-7 text-purple-500" />
         </div>
         <h2 className="text-xl font-bold text-foreground">خدمات إضافية</h2>
-        <p className="text-sm text-muted-foreground mt-1">أضف تأمين سفر، فيزا، أو جولات سياحية</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          {tripData.cityName
+            ? `خدمات وأنشطة في ${tripData.cityName}`
+            : 'أضف تأمين سفر، فيزا، أو جولات سياحية'}
+        </p>
       </div>
 
       {/* Insurance & Visa */}
@@ -106,6 +113,9 @@ const StepExtras = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
         <h3 className="font-bold text-sm text-foreground mb-3 flex items-center gap-2">
           <span className="w-1 h-4 bg-primary rounded-full" />
           جولات وأنشطة سياحية
+          {tripData.cityName && (
+            <span className="text-xs font-normal text-muted-foreground">في {tripData.cityName}</span>
+          )}
         </h3>
         {loading ? (
           <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-24 rounded-2xl bg-muted animate-pulse" />)}</div>
@@ -114,7 +124,7 @@ const StepExtras = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
             <div className="w-14 h-14 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-3">
               <MapPin className="w-7 h-7 text-muted-foreground" />
             </div>
-            <p className="text-muted-foreground text-sm font-medium">لا توجد جولات متاحة حالياً</p>
+            <p className="text-muted-foreground text-sm font-medium">لا توجد جولات متاحة في {tripData.cityName || tripData.countryName || 'هذه الوجهة'}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -140,11 +150,16 @@ const StepExtras = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
                   )}
                   <div className="flex-1 py-3 min-w-0">
                     <p className="font-bold text-sm text-foreground">{act.name_ar}</p>
-                    {act.duration_hours && (
-                      <p className="text-[11px] text-muted-foreground flex items-center gap-1 mt-1">
-                        <Clock className="w-3 h-3" /> {act.duration_hours} ساعات
-                      </p>
-                    )}
+                    <div className="flex items-center gap-2 mt-1">
+                      {act.duration_hours && (
+                        <p className="text-[11px] text-muted-foreground flex items-center gap-1">
+                          <Clock className="w-3 h-3" /> {act.duration_hours} ساعات
+                        </p>
+                      )}
+                      {act.category && (
+                        <span className="text-[10px] bg-muted px-2 py-0.5 rounded-md text-muted-foreground">{act.category}</span>
+                      )}
+                    </div>
                   </div>
                   <div className="text-left shrink-0 pl-3 pr-1">
                     <p className="text-base font-black text-primary">{act.price_per_person?.toLocaleString()}</p>

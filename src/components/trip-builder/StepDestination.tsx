@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MapPin, Users, Baby, Calendar, ChevronLeft, Minus, Plus } from 'lucide-react';
+import { MapPin, Users, Calendar, ChevronLeft, Minus, Plus, Globe, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarUI } from '@/components/ui/calendar';
@@ -17,11 +17,69 @@ interface Props {
 
 const StepDestination = ({ tripData, updateTrip, onNext }: Props) => {
   const [destinations, setDestinations] = useState<any[]>([]);
+  const [cityAirports, setCityAirports] = useState<any[]>([]);
+  const [originAirports, setOriginAirports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingCities, setLoadingCities] = useState(false);
 
   useEffect(() => {
-    tripBuilderService.getDestinations().then(d => { setDestinations(d); setLoading(false); }).catch(() => setLoading(false));
+    Promise.all([
+      tripBuilderService.getDestinations(),
+      tripBuilderService.getOriginAirports(),
+    ]).then(([dests, origins]) => {
+      setDestinations(dests);
+      setOriginAirports(origins);
+      // Set default origin to Riyadh
+      const riyadh = origins.find((a: any) => a.iata_code === 'RUH');
+      if (riyadh && !tripData.originAirportId) {
+        updateTrip({ originAirportId: riyadh.id, originCityName: riyadh.city_ar });
+      }
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, []);
+
+  // Load city airports when destination (country) is selected
+  useEffect(() => {
+    if (tripData.countryName) {
+      setLoadingCities(true);
+      tripBuilderService.getAirportsByCountry(tripData.countryName).then(airports => {
+        setCityAirports(airports);
+        // Auto-select if only one city
+        if (airports.length === 1) {
+          updateTrip({
+            cityName: airports[0].city_ar,
+            destinationAirportId: airports[0].id,
+          });
+        }
+        setLoadingCities(false);
+      }).catch(() => setLoadingCities(false));
+    }
+  }, [tripData.countryName]);
+
+  const selectDestination = (dest: any) => {
+    updateTrip({
+      destinationId: dest.id,
+      destinationName: dest.name_ar,
+      countryName: dest.country_ar,
+      // Reset city when changing country
+      cityName: '',
+      destinationAirportId: null,
+    });
+  };
+
+  const selectCity = (airport: any) => {
+    updateTrip({
+      cityName: airport.city_ar,
+      destinationAirportId: airport.id,
+    });
+  };
+
+  const selectOrigin = (airport: any) => {
+    updateTrip({
+      originAirportId: airport.id,
+      originCityName: airport.city_ar,
+    });
+  };
 
   const canProceed = tripData.destinationId && tripData.checkInDate && tripData.checkOutDate;
 
@@ -30,17 +88,41 @@ const StepDestination = ({ tripData, updateTrip, onNext }: Props) => {
       {/* Header */}
       <div className="bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent rounded-3xl p-6 text-center">
         <div className="w-14 h-14 mx-auto rounded-2xl bg-primary/15 flex items-center justify-center mb-3">
-          <MapPin className="w-7 h-7 text-primary" />
+          <Globe className="w-7 h-7 text-primary" />
         </div>
         <h2 className="text-xl font-bold text-foreground">اختر وجهتك</h2>
-        <p className="text-sm text-muted-foreground mt-1">حدد الوجهة، التواريخ، وعدد المسافرين</p>
+        <p className="text-sm text-muted-foreground mt-1">حدد الدولة، المدينة، التواريخ، وعدد المسافرين</p>
       </div>
 
-      {/* Destinations */}
+      {/* Origin City */}
+      <div className="bg-card rounded-2xl border border-border p-4 space-y-3">
+        <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-primary" />
+          مدينة المغادرة
+        </h3>
+        <div className="flex gap-2 flex-wrap">
+          {originAirports.map(airport => (
+            <button
+              key={airport.id}
+              onClick={() => selectOrigin(airport)}
+              className={cn(
+                'px-4 py-2.5 rounded-xl text-sm font-medium transition-all',
+                tripData.originAirportId === airport.id
+                  ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              )}
+            >
+              {airport.city_ar}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Destinations (Countries) */}
       <div>
         <h3 className="font-bold text-sm text-foreground mb-3 flex items-center gap-2">
           <span className="w-1 h-4 bg-primary rounded-full" />
-          الوجهات المتاحة
+          اختر الدولة
         </h3>
         {loading ? (
           <div className="grid grid-cols-2 gap-3">
@@ -51,7 +133,7 @@ const StepDestination = ({ tripData, updateTrip, onNext }: Props) => {
             {destinations.map(dest => (
               <button
                 key={dest.id}
-                onClick={() => updateTrip({ destinationId: dest.id, destinationName: dest.name_ar })}
+                onClick={() => selectDestination(dest)}
                 className={cn(
                   'relative h-36 rounded-2xl overflow-hidden group transition-all duration-300',
                   tripData.destinationId === dest.id
@@ -75,6 +157,37 @@ const StepDestination = ({ tripData, updateTrip, onNext }: Props) => {
           </div>
         )}
       </div>
+
+      {/* City Selection (from airports) */}
+      {tripData.destinationId && cityAirports.length > 0 && (
+        <div className="bg-card rounded-2xl border border-border p-4 space-y-3">
+          <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
+            <Building2 className="w-4 h-4 text-primary" />
+            اختر المدينة
+          </h3>
+          {loadingCities ? (
+            <div className="h-12 rounded-xl bg-muted animate-pulse" />
+          ) : (
+            <div className="flex gap-2 flex-wrap">
+              {cityAirports.map(airport => (
+                <button
+                  key={airport.id}
+                  onClick={() => selectCity(airport)}
+                  className={cn(
+                    'px-5 py-3 rounded-xl text-sm font-bold transition-all',
+                    tripData.destinationAirportId === airport.id
+                      ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20'
+                      : 'bg-muted text-foreground hover:bg-muted/80'
+                  )}
+                >
+                  {airport.city_ar}
+                  <span className="text-[10px] opacity-70 mr-1">({airport.iata_code})</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Date Pickers */}
       <div className="bg-card rounded-2xl border border-border p-4 space-y-3">
@@ -143,9 +256,9 @@ const StepDestination = ({ tripData, updateTrip, onNext }: Props) => {
           المسافرون
         </h3>
         {[
-          { label: 'بالغين', desc: '+12 سنة', key: 'adultsCount' as const, icon: Users, min: 1, max: 9 },
-          { label: 'أطفال', desc: '2-12 سنة', key: 'childrenCount' as const, icon: Users, min: 0, max: 6 },
-          { label: 'رضع', desc: 'أقل من سنتين', key: 'infantsCount' as const, icon: Baby, min: 0, max: 4 },
+          { label: 'بالغين', desc: '+12 سنة', key: 'adultsCount' as const, min: 1, max: 9 },
+          { label: 'أطفال', desc: '2-12 سنة', key: 'childrenCount' as const, min: 0, max: 6 },
+          { label: 'رضع', desc: 'أقل من سنتين', key: 'infantsCount' as const, min: 0, max: 4 },
         ].map(({ label, desc, key, min, max }) => (
           <div key={key} className="flex items-center justify-between">
             <div>

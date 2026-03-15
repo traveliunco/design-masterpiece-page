@@ -19,8 +19,11 @@ const StepHotel = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
   const [selectedHotel, setSelectedHotel] = useState<string | null>(tripData.hotelId);
 
   useEffect(() => {
-    tripBuilderService.getHotels().then(d => { setHotels(d); setLoading(false); }).catch(() => setLoading(false));
-  }, []);
+    setLoading(true);
+    tripBuilderService.getHotels(tripData.cityName || undefined, tripData.countryName || undefined)
+      .then(d => { setHotels(d); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [tripData.cityName, tripData.countryName]);
 
   useEffect(() => {
     if (selectedHotel) {
@@ -51,7 +54,9 @@ const StepHotel = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
           <Hotel className="w-7 h-7 text-amber-600" />
         </div>
         <h2 className="text-xl font-bold text-foreground">اختر الفندق والغرفة</h2>
-        <p className="text-sm text-muted-foreground mt-1">اختياري - اختر فندقك المفضل ثم نوع الغرفة</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          {tripData.cityName ? `فنادق في ${tripData.cityName}` : tripData.countryName ? `فنادق في ${tripData.countryName}` : 'اختياري - اختر فندقك المفضل'}
+        </p>
       </div>
 
       {loading ? (
@@ -63,7 +68,8 @@ const StepHotel = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
           <div className="w-16 h-16 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-4">
             <Hotel className="w-8 h-8 text-muted-foreground" />
           </div>
-          <p className="text-muted-foreground font-medium">لا توجد فنادق متاحة حالياً</p>
+          <p className="text-muted-foreground font-medium">لا توجد فنادق متاحة في {tripData.cityName || tripData.countryName || 'هذه الوجهة'}</p>
+          <p className="text-xs text-muted-foreground mt-2">يمكنك تخطي هذه الخطوة وسيتم ترتيب الفندق لاحقاً</p>
         </div>
       ) : (
         <>
@@ -126,6 +132,9 @@ const StepHotel = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
                     <p className="text-[11px] text-muted-foreground mt-0.5">{room.bed_type || ''} · حتى {room.max_adults} بالغين</p>
                   </div>
                   <div className="text-left shrink-0">
+                    {room.original_price && room.original_price > room.price_per_night && (
+                      <p className="text-[10px] text-muted-foreground line-through">{room.original_price?.toLocaleString()}</p>
+                    )}
                     <p className="text-lg font-black text-primary">{room.price_per_night?.toLocaleString()}</p>
                     <p className="text-[10px] text-muted-foreground">ر.س / ليلة</p>
                   </div>

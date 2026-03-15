@@ -1,130 +1,71 @@
 
 
-# خطة تفعيل نظام "مصمم الرحلات الديناميكي" للإنتاج الفعلي
+# خطة نظام الصلاحيات + إصلاح أخطاء البناء
 
-## الوضع الحالي
+## المهام المطلوبة
 
-النظام الحالي يعمل بشكل أساسي لكنه غير مترابط منطقيا:
-- **الخطوة 1 (الوجهة)**: تسحب من جدول `destinations` وليس من `tour_countries` / `tour_cities` -- لا يوجد ربط بالدول والمدن الفعلية
-- **الخطوة 2 (الطيران)**: تعرض كل الرحلات بدون فلترة حسب الوجهة المختارة
-- **الخطوة 3 (الفندق)**: تعرض كل الفنادق بدون فلترة حسب المدينة
-- **الخطوة 4 (السيارة)**: نفس المشكلة -- لا فلترة
-- **الخطوة 5 (الإضافات)**: تسحب من جدول `tour_activities` غير موجود فعليا
-- **الخطوة 6 (الملخص)**: تحفظ في `dynamic_packages` لكن بدون ربط بالمستخدم المسجل
-- **التسعير**: ثابت للتأمين والفيزا، لا يتغير حسب الوجهة
+### 1. إصلاح أخطاء البناء (Build Errors)
 
-## الخطة المقترحة
+هناك عدة أخطاء TypeScript يجب إصلاحها أولاً:
 
-### المرحلة 1: إعادة هيكلة خطوة الوجهة (الدول ثم المدن)
+**A. `src/data/southeast-asia.ts`** - تعريف الأنواع (Types) لا يتطابق مع البيانات الفعلية:
+- `City.accommodation` معرف كـ `string` لكن البيانات تحتوي كائن `{ budget, midRange, luxury }`
+- `City.attractions` معرف كـ `string[]` لكن البيانات تحتوي كائنات
+- `City` ينقصها خاصية `bestTimeToVisit`
+- سيتم تحديث الـ interface ليطابق البيانات الفعلية
 
-**تعديل StepDestination** ليعمل بأسلوب تسلسلي:
-1. يعرض الدول من `tour_countries` (بدل `destinations`)
-2. عند اختيار دولة، يعرض مدنها من `tour_cities`
-3. يحفظ `countryId` + `cityId` + أسماءهم في TripData
+**B. `src/pages/CityDetails.tsx`** - يستدعي `getCityById` بمعامل واحد بدل اثنين، ويستخدم خصائص غير موجودة في النوع الحالي. سيتم إصلاحه ليتوافق مع الأنواع المحدثة.
 
-**تعديل TripData** لإضافة:
-- `countryId`, `countryName`, `cityId`, `cityName`
-- `originCityCode` (مدينة المغادرة -- الرياض افتراضيا)
+**C. `src/components/Nav3D.tsx`** - خطأ في الوصول لـ `.items` على نوع `countries` الذي يحتوي `countries` بدلاً من `items`. سيتم إضافة type guard.
 
-### المرحلة 2: ربط الطيران بالوجهة المختارة
+**D. `src/components/globe/CityCard.tsx`** - خطأ `nameAr` على نوع `never`. سيتم إصلاح النوع.
 
-**تعديل StepFlight**:
-- فلترة `flight_offers` حسب `destination_airport_id` المرتبط بالمدينة/الدولة المختارة
-- إضافة خيار اختيار مدينة المغادرة (من المطارات السعودية)
-- فلترة حسب التاريخ المختار
-- عرض تفاصيل أكثر (شركة الطيران، المدة، التوقفات)
+---
 
-### المرحلة 3: ربط الفنادق بالمدينة المختارة
+### 2. نظام الصلاحيات
 
-**تعديل StepHotel**:
-- فلترة `hotels` حسب `city_en` أو `city_ar` المطابقة للمدينة المختارة
-- عرض التصنيف والتقييم والصور
-- عرض الغرف المتاحة مع الأسعار الديناميكية
+**الوضع الحالي:**
+- جدول `user_roles` موجود لكنه فارغ
+- دالة `has_role()` موجودة وتعمل
+- `useAuth` يقرأ الأدوار من جدول `users` (خطأ أمني) بدلاً من `user_roles`
+- المستخدم `klidmorre@gmail.com` موجود بالفعل في `auth.users`
 
-### المرحلة 4: ربط السيارات بالمدينة
+**الخطوات:**
 
-**تعديل StepCarRental**:
-- فلترة `car_rentals` حسب المدينة المختارة
-- تحسين عرض خيار السائق والسعر
+**A. إدخال الأدوار في جدول `user_roles`:**
+- `klidmorre@gmail.com` → `admin` (مدير عام - صلاحيات كاملة)
+- `eng.khalid.work@gmail.com` → `moderator` (موظف - صلاحيات محدودة)
 
-### المرحلة 5: إنشاء جدول الأنشطة السياحية
+ملاحظة: الأدوار المتاحة حالياً في `app_role` هي: `admin`, `moderator`, `user`. سنستخدم `moderator` للموظف.
 
-**إنشاء جدول `tour_activities` في Supabase**:
+**B. تحديث `useAuth.tsx`:**
+- تغيير قراءة الدور من جدول `users` إلى `user_roles`
+- تحديث نوع `UserRole` ليطابق `app_role` enum
 
-```text
-tour_activities
-├── id (uuid, PK)
-├── name_ar, name_en (varchar)
-├── description_ar, description_en (text)
-├── city_id (uuid, FK → tour_cities)
-├── country_id (uuid, FK → tour_countries)
-├── image_url (text)
-├── price_per_person (numeric)
-├── duration_hours (numeric)
-├── category (varchar: مغامرة/ثقافة/ترفيه/طبيعة)
-├── is_active (boolean)
-├── display_order (integer)
-└── created_at, updated_at (timestamptz)
-```
+**C. تحديث `ProtectedRoute.tsx`:**
+- إضافة دعم التحقق من الأدوار عبر `user_roles`
 
-- ربط الأنشطة بالمدينة المختارة في StepExtras
-- تسعير ديناميكي للتأمين والفيزا حسب الوجهة
+**D. تحديث `AdminLayout.tsx`:**
+- تعديل القائمة الجانبية لإظهار العناصر حسب الدور
+- الموظف يرى فقط: لوحة التحكم، البرامج، العروض (إضافة/تعديل/حذف)
+- المدير يرى كل شيء
 
-### المرحلة 6: تحسين الملخص والحفظ
+**E. تحديث مسارات Admin في `App.tsx`:**
+- حماية المسارات بأدوار محددة
+- البرامج والعروض: متاحة للموظف والمدير
+- باقي الصفحات: مدير فقط
 
-**تعديل StepSummary**:
-- ربط بالمستخدم المسجل (`auth.uid()`) إن وجد
-- حفظ `country_id` و `city_id` في `dynamic_packages`
-- إرسال إشعار واتساب أو بريد إلكتروني (اختياري مستقبلا)
-- إضافة زر "مشاركة البكج" كرابط
+---
 
-### المرحلة 7: تعديل tripBuilderService
+### التفاصيل التقنية
 
-تحديث كل دالة في الخدمة لتقبل فلاتر المدينة والدولة:
+**صلاحيات الموظف (moderator):**
+| الصفحة | الصلاحية |
+|--------|----------|
+| لوحة التحكم | عرض فقط |
+| البرامج | إضافة/تعديل/حذف |
+| العروض | إضافة/تعديل/حذف |
 
-```text
-tripBuilderService
-├── getCountries()          → tour_countries (is_active)
-├── getCities(countryId)    → tour_cities (by country)
-├── getFlights(airportId, date)  → flight_offers (filtered)
-├── getHotels(cityName)     → hotels (by city)
-├── getHotelRooms(hotelId)  → hotel_rooms (unchanged)
-├── getCarRentals(cityName) → car_rentals (by city)
-├── getActivities(cityId)   → tour_activities (by city)
-└── savePackage(data)       → dynamic_packages (enhanced)
-```
-
-### المرحلة 8: تعديل `dynamic_packages` schema
-
-إضافة أعمدة جديدة:
-- `country_id` (uuid, FK)
-- `city_id` (uuid, FK)
-- `origin_city` (varchar)
-
-## ملخص التعديلات حسب الملف
-
-| الملف | التعديل |
-|---|---|
-| `useTripBuilder.ts` | إضافة حقول country/city/origin |
-| `tripBuilderService.ts` | إعادة كتابة مع فلاتر ذكية |
-| `StepDestination.tsx` | دولة → مدينة بأسلوب تسلسلي |
-| `StepFlight.tsx` | فلترة حسب الوجهة + مدينة المغادرة |
-| `StepHotel.tsx` | فلترة حسب المدينة |
-| `StepCarRental.tsx` | فلترة حسب المدينة |
-| `StepExtras.tsx` | جدول أنشطة جديد + فلترة |
-| `StepSummary.tsx` | ربط بالمستخدم + حقول جديدة |
-| `TripSidebar.tsx` | عرض الدولة والمدينة |
-| Migration | جدول `tour_activities` + أعمدة `dynamic_packages` |
-
-## ترتيب التنفيذ
-
-1. Migration: إنشاء `tour_activities` + تعديل `dynamic_packages`
-2. تحديث `TripData` interface و `useTripBuilder`
-3. إعادة كتابة `tripBuilderService`
-4. تحديث `StepDestination` (دولة → مدينة)
-5. تحديث `StepFlight` (فلترة + مدينة مغادرة)
-6. تحديث `StepHotel` (فلترة بالمدينة)
-7. تحديث `StepCarRental` (فلترة بالمدينة)
-8. تحديث `StepExtras` (أنشطة بالمدينة + تسعير ديناميكي)
-9. تحديث `StepSummary` + `TripSidebar`
+**صلاحيات المدير (admin):**
+- كل شيء بدون قيود
 

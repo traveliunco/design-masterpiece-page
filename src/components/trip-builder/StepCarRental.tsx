@@ -17,8 +17,11 @@ const StepCarRental = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    tripBuilderService.getCarRentals().then(d => { setCars(d); setLoading(false); }).catch(() => setLoading(false));
-  }, []);
+    setLoading(true);
+    tripBuilderService.getCarRentals(tripData.cityName || undefined, tripData.countryName || undefined)
+      .then(d => { setCars(d); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [tripData.cityName, tripData.countryName]);
 
   const selectCar = (car: any) => {
     const pricePerDay = tripData.carWithDriver ? (car.price_with_driver || car.price_per_day) : car.price_per_day;
@@ -38,7 +41,9 @@ const StepCarRental = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
           <Car className="w-7 h-7 text-emerald-600" />
         </div>
         <h2 className="text-xl font-bold text-foreground">تأجير سيارة</h2>
-        <p className="text-sm text-muted-foreground mt-1">اختياري - أضف سيارة لرحلتك</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          {tripData.cityName ? `سيارات في ${tripData.cityName}` : 'اختياري - أضف سيارة لرحلتك'}
+        </p>
       </div>
 
       {/* Driver toggle */}
@@ -78,7 +83,7 @@ const StepCarRental = ({ tripData, updateTrip, onNext, onPrev }: Props) => {
           <div className="w-16 h-16 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-4">
             <Car className="w-8 h-8 text-muted-foreground" />
           </div>
-          <p className="text-muted-foreground font-medium">لا توجد سيارات متاحة حالياً</p>
+          <p className="text-muted-foreground font-medium">لا توجد سيارات متاحة في {tripData.cityName || tripData.countryName || 'هذه الوجهة'}</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-3">
