@@ -125,7 +125,8 @@ const AdminBlogArticleForm = lazy(() => import("./pages/admin/BlogArticleForm"))
 const AdminNavMenu = lazy(() => import("./pages/admin/NavAdmin"));
 const AdminMobileHomepage = lazy(() => import("./pages/admin/MobileHomepageAdmin"));
 const AdminReadyPackages = lazy(() => import("./pages/admin/ReadyPackagesAdmin"));
-
+const AdminDynamicPackages = lazy(() => import("./pages/admin/DynamicPackagesAdmin"));
+const AdminTourActivities = lazy(() => import("./pages/admin/TourActivitiesAdmin"));
 
 
 // Components
@@ -240,6 +241,8 @@ const App = () => (
                 <Route path="offers/new" element={<AdminOfferNew />} />
                 <Route path="offers/edit/:id" element={<AdminOfferEdit />} />
                 <Route path="ready-packages" element={<AdminReadyPackages />} />
+                <Route path="dynamic-packages" element={<AdminDynamicPackages />} />
+                <Route path="tour-activities" element={<AdminTourActivities />} />
                 <Route path="destinations" element={<ProtectedRoute requiredRole="admin"><AdminDestinations /></ProtectedRoute>} />
                 <Route path="destinations/new" element={<ProtectedRoute requiredRole="admin"><AdminDestinationNew /></ProtectedRoute>} />
                 <Route path="destinations/edit/:id" element={<ProtectedRoute requiredRole="admin"><AdminDestinationEdit /></ProtectedRoute>} />
