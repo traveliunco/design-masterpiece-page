@@ -208,7 +208,7 @@ const ProgramDetails = () => {
             {/* Info Bar */}
             <div className="flex flex-wrap items-center gap-6">
               <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-luxury-gold" />
+                <Calendar className="w-5 h-5 text-secondary" />
                 <span className="text-white font-semibold">{program.duration_days} أيام / {program.duration_nights} ليالي</span>
               </div>
               {program.average_rating && (
