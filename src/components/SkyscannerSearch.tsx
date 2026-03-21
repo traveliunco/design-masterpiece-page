@@ -159,9 +159,9 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
   const isBanner = variant === "banner";
 
   const containerCls = cn(
-    "rounded-2xl overflow-visible",
+    "rounded-3xl overflow-visible",
     isHero ?
-    "bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl" :
+    "bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_20px_60px_rgba(0,0,0,0.3)]" :
     isBanner ?
     "bg-white shadow-2xl" :
     isMobile ?
