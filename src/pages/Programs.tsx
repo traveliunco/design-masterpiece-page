@@ -269,7 +269,7 @@ const Programs = () => {
                           {program.name_ar}
                         </h3>
                         <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-luxury-gold fill-luxury-gold" />
+                          <Star className="w-4 h-4 text-secondary fill-secondary" />
                           <span className="font-bold text-sm">{program.average_rating || "جديد"}</span>
                         </div>
                       </div>
