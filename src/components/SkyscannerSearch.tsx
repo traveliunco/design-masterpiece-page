@@ -518,14 +518,14 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
                 onClick={handleSearch}
                 disabled={!origin || !destination}
                 className={cn(
-                  "mr-auto flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-lg",
+                  "mr-auto flex items-center gap-2 px-8 py-3 rounded-2xl font-bold text-base transition-all shadow-lg",
                   !origin || !destination ?
                   "opacity-50 cursor-not-allowed bg-gray-300 text-gray-500" :
-                  "bg-gradient-to-r from-primary to-teal-500 hover:from-primary/90 hover:to-teal-400 text-white hover:shadow-primary/30 hover:scale-105 active:scale-95"
+                  "bg-gradient-to-r from-primary to-teal-500 hover:from-primary/90 hover:to-teal-400 text-white hover:shadow-primary/30 hover:scale-[1.03] active:scale-95"
                 )}>
                 
-                  <Search className="w-4 h-4" />
-                  بحث
+                  <Search className="w-5 h-5" />
+                  بحث عن رحلات
                 </button>
               </div>
             </>)
