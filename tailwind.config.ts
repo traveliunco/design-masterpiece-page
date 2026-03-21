@@ -86,8 +86,8 @@ export default {
       boxShadow: {
         'luxury': '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
         'luxury-lg': '0 35px 80px -20px rgba(0, 0, 0, 0.2)',
-        'glow-teal': '0 0 60px -15px rgba(20, 184, 166, 0.4)',
-        'glow-gold': '0 0 40px -10px rgba(234, 179, 8, 0.5)',
+        'glow-teal': '0 0 60px -15px rgba(30, 58, 95, 0.4)',
+        'glow-gold': '0 0 40px -10px rgba(59, 130, 246, 0.5)',
         'glass': '0 8px 32px rgba(0, 0, 0, 0.08)',
       },
       keyframes: {
