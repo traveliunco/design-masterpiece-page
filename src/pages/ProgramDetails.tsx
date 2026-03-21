@@ -170,7 +170,7 @@ const ProgramDetails = () => {
           <div className="container px-4">
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-white/80 mb-4 text-sm">
-              <Link to="/" className="hover:text-luxury-gold transition-colors">الرئيسية</Link>
+              <Link to="/" className="hover:text-secondary transition-colors">الرئيسية</Link>
               <span>/</span>
               <Link to="/programs" className="hover:text-luxury-gold transition-colors">البرامج</Link>
               <span>/</span>
