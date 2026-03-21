@@ -205,7 +205,7 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
         )}
       </div>
 
-      <div className={cn(isBanner ? "px-5 pt-3 pb-5" : "p-4 space-y-4")}>
+      <div className={cn(isBanner ? "px-5 pt-3 pb-5" : isHero ? "p-5 md:p-6 space-y-4" : "p-4 space-y-4")}>
         {/* Flight search body */}
         {activeTab === "flights" &&
         <>
