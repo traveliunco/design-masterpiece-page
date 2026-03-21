@@ -115,9 +115,9 @@ const AdminOfferEdit = () => {
           is_hot: data.is_hot ?? false,
           is_active: data.is_active ?? true,
           is_featured: data.is_featured ?? false,
-          countries: data.countries || [],
-          highlights: data.highlights || [],
-          includes: data.includes || [],
+          countries: (data.countries as string[]) || [],
+          highlights: (data.highlights as string[]) || [],
+          includes: (data.includes as string[]) || [],
           terms: data.terms || "",
         });
       }
