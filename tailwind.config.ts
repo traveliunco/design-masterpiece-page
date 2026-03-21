@@ -108,8 +108,8 @@ export default {
           "50%": { transform: "translateY(-10px)" },
         },
         "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(20, 184, 166, 0.4)" },
-          "50%": { boxShadow: "0 0 40px rgba(20, 184, 166, 0.6)" },
+          "0%, 100%": { boxShadow: "0 0 20px rgba(59, 130, 246, 0.4)" },
+          "50%": { boxShadow: "0 0 40px rgba(59, 130, 246, 0.6)" },
         },
         "iconBounce": {
           "0%, 100%": { transform: "translateY(0)" },
