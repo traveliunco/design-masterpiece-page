@@ -172,7 +172,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <ScrollToTop />
-            <AIChat />
+            <Suspense fallback={null}><AIChat /></Suspense>
           <MobileNav />
           <Suspense fallback={<PageLoader />}>
             <Routes>
