@@ -560,9 +560,9 @@ const Nav3D = () => {
                 rel="noopener noreferrer"
                 className={cn(
                   "hidden sm:flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300",
-                  "bg-gradient-to-r from-teal-500 to-cyan-500 text-white",
-                  "shadow-[0_4px_20px_rgba(20,184,166,0.4),inset_0_1px_0_rgba(255,255,255,0.3)]",
-                  "hover:shadow-[0_8px_30px_rgba(20,184,166,0.5)] hover:scale-105",
+                  "bg-gradient-to-r from-blue-600 to-blue-500 text-white",
+                  "shadow-[0_4px_20px_rgba(59,130,246,0.4),inset_0_1px_0_rgba(255,255,255,0.3)]",
+                  "hover:shadow-[0_8px_30px_rgba(59,130,246,0.5)] hover:scale-105",
                   "transform-gpu"
                 )}
                 aria-label="تواصل معنا عبر واتساب للحجز"
