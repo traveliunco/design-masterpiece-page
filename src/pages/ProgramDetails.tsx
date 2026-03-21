@@ -274,15 +274,15 @@ const ProgramDetails = () => {
               {countries.length > 1 && (
                 <div className="card-3d p-8">
                    <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-                      <Globe className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 bg-secondary/10 rounded-xl flex items-center justify-center">
+                      <Globe className="w-5 h-5 text-secondary" />
                     </div>
                     الدول المشمولة ({countries.length} دول)
                   </h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {countries.map((country: string, i: number) => (
-                      <div key={i} className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl text-center border border-blue-100">
-                        <Globe className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                      <div key={i} className="p-4 bg-gradient-to-br from-secondary/5 to-accent/5 rounded-2xl text-center border border-secondary/10">
+                        <Globe className="w-8 h-8 text-secondary mx-auto mb-2" />
                         <span className="font-bold text-foreground">{country}</span>
                       </div>
                     ))}
