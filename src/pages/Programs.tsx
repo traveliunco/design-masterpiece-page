@@ -118,7 +118,7 @@ const Programs = () => {
       {/* Hero */}
       <PageHeader
         badge="برامج سياحية متكاملة"
-        badgeIcon={<Plane className="w-4 h-4 text-luxury-gold" />}
+        badgeIcon={<Plane className="w-4 h-4 text-secondary" />}
         title="البرامج السياحية"
         subtitle="برامج مصممة بعناية تشمل كل ما تحتاجه لرحلة مثالية"
       />
