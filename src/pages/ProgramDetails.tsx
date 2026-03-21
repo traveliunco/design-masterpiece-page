@@ -213,8 +213,8 @@ const ProgramDetails = () => {
               </div>
               {program.average_rating && (
                 <div className="flex items-center gap-2">
-                  <Star className="w-5 h-5 text-luxury-gold fill-luxury-gold" />
-                  <span className="text-white font-bold text-lg">{program.average_rating}</span>
+                   <Star className="w-5 h-5 text-secondary fill-secondary" />
+                   <span className="text-white font-bold text-lg">{program.average_rating}</span>
                   <span className="text-white/70">({program.total_bookings || 0} حجز)</span>
                 </div>
               )}
