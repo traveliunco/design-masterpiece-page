@@ -59,7 +59,7 @@ const AdminOffers = () => {
   const loadOffers = async () => {
     setLoading(true);
     try {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("special_offers")
         .select("*")
         .order("created_at", { ascending: false });
