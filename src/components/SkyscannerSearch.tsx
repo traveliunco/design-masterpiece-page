@@ -209,7 +209,7 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
         {/* Flight search body */}
         {activeTab === "flights" &&
         <>
-            {/* Trip type + direct toggle */}
+            {/* Trip type + passengers + hotel toggle row */}
             <div className={cn("flex items-center gap-3 flex-wrap", isBanner ? "pb-3" : "")}>
               {([
             { value: "roundtrip", label: "ذهاب وإياب" },
@@ -245,7 +245,7 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
             )}
 
               {/* Direct flights toggle */}
-              <label className={cn("flex items-center gap-2 text-sm cursor-pointer mr-auto", mutedText)}>
+              <label className={cn("flex items-center gap-2 text-sm cursor-pointer", mutedText)}>
                 <div
                 onClick={() => setDirectOnly(!directOnly)}
                 className={cn(
@@ -263,6 +263,35 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
                 
                 </div>
                 رحلات مباشرة فقط
+              </label>
+
+              {/* Passengers - moved here */}
+              <div ref={!isBanner ? passRef : undefined} className="relative mr-auto">
+                <button
+                onClick={() => {setShowPassengers(!showPassengers);setShowOriginDropdown(false);setShowDestDropdown(false);}}
+                className={cn("flex items-center gap-2 px-3 py-1.5 rounded-full text-sm transition-all border", 
+                  isHero ? "border-white/20 bg-white/10 text-white/90 hover:bg-white/20" : "border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100"
+                )}>
+                
+                  <svg className={cn("w-3.5 h-3.5", isHero ? "text-teal-300" : "text-primary")} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                  </svg>
+                  <span className="font-medium">
+                    {totalPassengers} {totalPassengers === 1 ? "بالغ" : "مسافرون"}
+                  </span>
+                  <span className={cn("text-xs", isHero ? "text-white/60" : "text-gray-500")}>{cabinLabels[cabinClass]}</span>
+                  <ChevronDown className="w-3 h-3" />
+                </button>
+                {showPassengers && !isBanner &&
+              <PassengersDropdown passengers={passengers} cabinClass={cabinClass} cabinLabels={cabinLabels} onAdjust={adjustPassenger} onCabinChange={setCabinClass} onClose={() => setShowPassengers(false)} isHero={isHero} />
+              }
+              </div>
+
+              {/* Add hotel */}
+              <label className={cn("flex items-center gap-2 text-sm cursor-pointer", mutedText)}>
+                <input type="checkbox" checked={addHotel} onChange={(e) => setAddHotel(e.target.checked)} className="w-3.5 h-3.5 rounded accent-primary" />
+                <Building2 className="w-3.5 h-3.5" />
+                أضف فندقًا
               </label>
             </div>
 
