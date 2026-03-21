@@ -304,7 +304,7 @@ const Offers = () => {
                       {highlights.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-4">
                           {highlights.slice(0, 3).map((h, idx) => (
-                            <span key={idx} className="bg-luxury-teal/8 text-luxury-teal px-3 py-1 rounded-xl text-xs font-medium border border-luxury-teal/15">
+                            <span key={idx} className="bg-secondary/8 text-secondary px-3 py-1 rounded-xl text-xs font-medium border border-secondary/15">
                               {h}
                             </span>
                           ))}
