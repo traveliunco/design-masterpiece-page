@@ -311,7 +311,7 @@ const Programs = () => {
                             {(program.base_price || program.price || 0).toLocaleString()} ر.س
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 text-luxury-teal font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-2 text-secondary font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
                           <span>التفاصيل</span>
                           <ArrowLeft className="w-4 h-4" />
                         </div>
