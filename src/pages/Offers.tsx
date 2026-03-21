@@ -162,7 +162,7 @@ const Offers = () => {
       </section>
 
       {/* Offers Grid */}
-      <section className="py-12 bg-gradient-to-b from-background via-luxury-cream/20 to-background">
+      <section className="py-12 bg-gradient-to-b from-background via-muted/20 to-background">
         <div className="container px-4">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
