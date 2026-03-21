@@ -500,7 +500,7 @@ const ProgramDetails = () => {
                   </Button>
                   
                   <a href={`https://api.whatsapp.com/send?phone=966569222111&text=${encodeURIComponent(`استفسار عن برنامج "${program.name_ar}"`)}`} target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline" className="w-full py-5 rounded-xl border-luxury-teal text-luxury-teal hover:bg-luxury-teal/10">
+                    <Button variant="outline" className="w-full py-5 rounded-xl border-secondary text-secondary hover:bg-secondary/10">
                       <Phone className="w-5 h-5 ml-2" />
                       استفسار فقط
                     </Button>
