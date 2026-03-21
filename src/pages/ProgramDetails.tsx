@@ -145,7 +145,7 @@ const ProgramDetails = () => {
         {coverImage ? (
           <img src={coverImage} alt={program.name_ar} className="absolute inset-0 w-full h-full object-cover" />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-luxury-teal/20 to-luxury-gold/20 flex items-center justify-center text-9xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-secondary/20 to-accent/20 flex items-center justify-center text-9xl">
             🗺️
           </div>
         )}
