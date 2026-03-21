@@ -490,8 +490,8 @@ const ProgramDetails = () => {
                       </div>
                     )}
                     <div className="flex justify-between items-center mt-4 pt-3 border-t">
-                      <span className="text-lg font-bold text-luxury-navy">الإجمالي</span>
-                      <span className="text-2xl font-bold text-luxury-teal">{totalPrice.toLocaleString()} <span className="text-sm">ر.س</span></span>
+                       <span className="text-lg font-bold text-foreground">الإجمالي</span>
+                       <span className="text-2xl font-bold text-secondary">{totalPrice.toLocaleString()} <span className="text-sm">ر.س</span></span>
                     </div>
                   </div>
 
