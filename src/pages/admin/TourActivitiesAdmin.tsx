@@ -59,7 +59,7 @@ const TourActivitiesAdmin = () => {
         const { error } = await supabase.from("tour_activities").update(formData).eq("id", editId);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("tour_activities").insert(formData);
+        const { error } = await supabase.from("tour_activities").insert([formData]);
         if (error) throw error;
       }
     },
