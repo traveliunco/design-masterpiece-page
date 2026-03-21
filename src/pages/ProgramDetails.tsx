@@ -263,7 +263,7 @@ const ProgramDetails = () => {
                         <div className="w-8 h-8 bg-luxury-gold/20 rounded-lg flex items-center justify-center flex-shrink-0">
                           <MapPin className="w-4 h-4 text-luxury-gold" />
                         </div>
-                        <span className="text-luxury-navy font-medium">{item}</span>
+                        <span className="text-foreground font-medium">{item}</span>
                       </div>
                     ))}
                   </div>
