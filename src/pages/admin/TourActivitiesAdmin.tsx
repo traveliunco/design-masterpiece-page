@@ -49,7 +49,7 @@ const TourActivitiesAdmin = () => {
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data || []) as unknown as Activity[];
+      return (data || []) as Activity[];
     },
   });
 
