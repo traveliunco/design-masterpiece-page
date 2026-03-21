@@ -259,9 +259,9 @@ const ProgramDetails = () => {
                   </h2>
                   <div className="grid md:grid-cols-2 gap-3">
                     {highlights.map((item: string, i: number) => (
-                      <div key={i} className="flex items-center gap-3 p-4 bg-luxury-gold/5 rounded-xl border border-luxury-gold/10">
-                        <div className="w-8 h-8 bg-luxury-gold/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <MapPin className="w-4 h-4 text-luxury-gold" />
+                      <div key={i} className="flex items-center gap-3 p-4 bg-secondary/5 rounded-xl border border-secondary/10">
+                        <div className="w-8 h-8 bg-secondary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <MapPin className="w-4 h-4 text-secondary" />
                         </div>
                         <span className="text-foreground font-medium">{item}</span>
                       </div>
