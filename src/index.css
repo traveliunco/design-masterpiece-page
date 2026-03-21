@@ -11,24 +11,24 @@
 
 @layer base {
   :root {
-    /* Premium Color Palette */
+    /* Premium Color Palette - Unified Blue */
     --background: 220 20% 97%;
     --foreground: 222 47% 11%;
 
-    /* Luxury Accents */
-    --luxury-gold: 45 93% 58%;
-    --luxury-teal: 175 84% 32%;
+    /* Luxury Accents - Blue Spectrum */
+    --luxury-gold: 217 91% 60%;
+    --luxury-teal: 213 52% 25%;
     --luxury-navy: 222 47% 11%;
-    --luxury-cream: 40 40% 96%;
+    --luxury-cream: 220 20% 97%;
 
     /* System Colors */
-    --primary: 175 84% 32%;
+    --primary: 213 52% 25%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 45 93% 58%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 0 0% 100%;
 
-    --accent: 175 84% 32%;
+    --accent: 217 92% 68%;
     --accent-foreground: 0 0% 100%;
 
     --card: 0 0% 100%;
@@ -45,7 +45,7 @@
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 175 84% 32%;
+    --ring: 217 91% 60%;
 
     --radius: 1rem;
 

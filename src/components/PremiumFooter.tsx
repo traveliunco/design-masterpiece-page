@@ -10,9 +10,6 @@ const PremiumFooter = () => {
       { name: "حجز طيران", path: "/amadeus-flights" },
       { name: "فنادق ومنتجعات", path: "/hotels" },
       { name: "برامج سياحية", path: "/programs" },
-      // { name: "تأجير سيارات", path: "/car-rental" }, /* HIDDEN */
-      // { name: "تأشيرات", path: "/visas" }, /* HIDDEN */
-      // { name: "تأمين سفر", path: "/insurance" }, /* HIDDEN */
     ],
     company: [
       { name: "من نحن", path: "/about" },
@@ -38,9 +35,9 @@ const PremiumFooter = () => {
 
   return (
     <footer className="bg-gradient-to-b from-luxury-navy to-[#0a1628] text-white relative overflow-hidden pb-24 md:pb-0">
-      {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-luxury-teal/10 rounded-full blur-[200px]" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-luxury-gold/10 rounded-full blur-[150px]" />
+      {/* Decorative Elements - Blue */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[200px]" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-400/10 rounded-full blur-[150px]" />
       
       {/* Main Footer */}
       <div className="container px-4 py-20 relative z-10">
@@ -48,7 +45,7 @@ const PremiumFooter = () => {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-6">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-luxury-teal to-emerald-600 flex items-center justify-center shadow-glow-teal">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center shadow-[0_8px_30px_rgba(59,130,246,0.4)]">
                 <Plane className="w-7 h-7 text-white" />
               </div>
               <div>
@@ -63,11 +60,11 @@ const PremiumFooter = () => {
 
             {/* Contact Info */}
             <div className="space-y-4 mb-8">
-              <a href="tel:+966569222111" className="flex items-center gap-3 text-white/70 hover:text-luxury-gold transition-colors">
+              <a href="tel:+966569222111" className="flex items-center gap-3 text-white/70 hover:text-blue-400 transition-colors">
                 <Phone className="w-5 h-5" />
                 <span>+966 56 922 2111</span>
               </a>
-              <a href="mailto:info@traveliun.com" className="flex items-center gap-3 text-white/70 hover:text-luxury-gold transition-colors">
+              <a href="mailto:info@traveliun.com" className="flex items-center gap-3 text-white/70 hover:text-blue-400 transition-colors">
                 <Mail className="w-5 h-5" />
                 <span>info@traveliun.com</span>
               </a>
@@ -86,7 +83,7 @@ const PremiumFooter = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="w-12 h-12 rounded-xl glass-button flex items-center justify-center hover:bg-luxury-teal hover:border-luxury-teal transition-all"
+                  className="w-12 h-12 rounded-xl glass-button flex items-center justify-center hover:bg-blue-500 hover:border-blue-500 transition-all"
                 >
                   <social.Icon className="w-5 h-5" />
                 </a>
@@ -102,7 +99,7 @@ const PremiumFooter = () => {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-white/60 hover:text-luxury-gold transition-colors"
+                    className="text-white/60 hover:text-blue-400 transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -119,7 +116,7 @@ const PremiumFooter = () => {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-white/60 hover:text-luxury-gold transition-colors"
+                    className="text-white/60 hover:text-blue-400 transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -136,7 +133,7 @@ const PremiumFooter = () => {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-white/60 hover:text-luxury-gold transition-colors"
+                    className="text-white/60 hover:text-blue-400 transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -154,13 +151,13 @@ const PremiumFooter = () => {
             © {currentYear} ترافليون للسفر والسياحة. جميع الحقوق محفوظة.
           </p>
           <div className="flex flex-wrap justify-center gap-6 text-sm">
-            <Link to="/privacy" className="text-white/50 hover:text-luxury-gold transition-colors">
+            <Link to="/privacy" className="text-white/50 hover:text-blue-400 transition-colors">
               سياسة الخصوصية
             </Link>
-            <Link to="/terms" className="text-white/50 hover:text-luxury-gold transition-colors">
+            <Link to="/terms" className="text-white/50 hover:text-blue-400 transition-colors">
               الشروط والأحكام
             </Link>
-            <Link to="/sitemap" className="text-white/50 hover:text-luxury-gold transition-colors">
+            <Link to="/sitemap" className="text-white/50 hover:text-blue-400 transition-colors">
               خريطة الموقع
             </Link>
             <Link

@@ -22,11 +22,11 @@ const InteractiveDestinations = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 bg-luxury-navy/5 px-5 py-2 rounded-full mb-6">
-            <Globe className="w-4 h-4 text-luxury-teal" />
+            <Globe className="w-4 h-4 text-blue-500" />
             <span className="text-sm font-bold text-luxury-navy">وجهاتنا المميزة</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-bold text-luxury-navy mb-6">
-            استكشف <span className="text-luxury-teal">أجمل بقاع العالم</span>
+            استكشف <span className="text-blue-500">أجمل بقاع العالم</span>
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed">
             اختر وجهتك القادمة من بين أفضل الدول والمدن السياحية التي نغطيها بخدماتنا
@@ -53,7 +53,7 @@ const InteractiveDestinations = () => {
         </div>
 
         {/* Active Country Info */}
-        <div className="bg-gradient-to-r from-teal-800 via-cyan-800 to-blue-800 rounded-2xl p-6 md:p-8 mb-8">
+        <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900 rounded-2xl p-6 md:p-8 mb-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
@@ -67,7 +67,7 @@ const InteractiveDestinations = () => {
             </div>
             <Link 
               to={`/country/${activeCountryId}`}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-400 to-cyan-400 text-teal-900 px-6 py-3 rounded-full font-bold hover:from-teal-300 hover:to-cyan-300 transition-colors"
+              className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-full font-bold transition-colors"
             >
               عرض الكل
               <ArrowLeft className="w-4 h-4" />
@@ -92,13 +92,13 @@ const InteractiveDestinations = () => {
                 />
                 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-teal-900 via-teal-900/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
                 
                 {/* Rating Badge */}
                 <div className="absolute top-4 left-4 z-10">
                   <div className="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full shadow-md">
-                    <Star className="w-3.5 h-3.5 text-teal-500 fill-teal-500" />
-                    <span className="text-teal-800 font-bold text-sm">4.9</span>
+                    <Star className="w-3.5 h-3.5 text-blue-500 fill-blue-500" />
+                    <span className="text-blue-800 font-bold text-sm">4.9</span>
                   </div>
                 </div>
 
@@ -119,7 +119,7 @@ const InteractiveDestinations = () => {
         <div className="text-center mt-12">
           <Link 
             to="/destinations"
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:from-teal-500 hover:to-cyan-500 transition-all shadow-[0_8px_30px_rgba(20,184,166,0.4)]"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-700 to-blue-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:from-blue-600 hover:to-blue-400 transition-all shadow-[0_8px_30px_rgba(59,130,246,0.4)]"
           >
             <Globe className="w-5 h-5" />
             اكتشف كافة الوجهات السياحية

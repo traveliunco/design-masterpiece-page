@@ -54,18 +54,15 @@ const MarqueeBanner = ({
 
       posRef.current -= speedRef.current;
 
-      // Wrap around seamlessly
       if (posRef.current <= -trackWidth) {
         posRef.current += trackWidth;
       } else if (posRef.current >= trackWidth) {
         posRef.current -= trackWidth;
       }
 
-      // Two identical tracks side by side, shifted so one always fills the gap
       track1.style.transform = `translate3d(${posRef.current}px, 0, 0)`;
       track2.style.transform = `translate3d(${posRef.current + trackWidth}px, 0, 0)`;
 
-      // When going right (reverse), the second track goes behind
       if (posRef.current > 0) {
         track2.style.transform = `translate3d(${posRef.current - trackWidth}px, 0, 0)`;
       }
@@ -85,7 +82,7 @@ const MarqueeBanner = ({
           key={index}
           className="flex items-center gap-3 mx-8 text-white font-bold flex-shrink-0 cursor-default"
         >
-          <item.icon className="w-5 h-5 text-cyan-200" />
+          <item.icon className="w-5 h-5 text-blue-200" />
           <span className="text-sm md:text-base tracking-wide">{item.text}</span>
           <span className="text-white/50 mx-4">•</span>
         </div>
@@ -96,7 +93,7 @@ const MarqueeBanner = ({
   return (
     <div 
       ref={containerRef}
-      className={`overflow-hidden bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 py-4 shadow-[0_4px_20px_rgba(20,184,166,0.3)] relative ${className}`}
+      className={`overflow-hidden bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 py-4 shadow-[0_4px_20px_rgba(59,130,246,0.3)] relative ${className}`}
     >
       <div 
         ref={track1Ref}

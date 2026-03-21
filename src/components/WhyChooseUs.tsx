@@ -12,12 +12,12 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 const WhyChooseUs = () => {
   const defaultFeatures = [
-    { id: "1", icon: "Shield", title: "حجز آمن ومضمون", description: "نظام دفع آمن 100% مع ضمان استرداد كامل", color: "text-teal-500", bgColor: "bg-gradient-to-br from-teal-500/20 to-cyan-500/10" },
-    { id: "2", icon: "Trophy", title: "15 سنة من التميز", description: "خبرة طويلة في تنظيم أفضل الرحلات السياحية", color: "text-cyan-500", bgColor: "bg-gradient-to-br from-cyan-500/20 to-blue-500/10" },
-    { id: "3", icon: "HeartHandshake", title: "خدمة عملاء متميزة", description: "فريق محترف متاح 24/7 لخدمتك", color: "text-blue-500", bgColor: "bg-gradient-to-br from-blue-500/20 to-indigo-500/10" },
-    { id: "4", icon: "Clock", title: "أسعار تنافسية", description: "أفضل الأسعار مع عروض حصرية طوال العام", color: "text-emerald-500", bgColor: "bg-gradient-to-br from-emerald-500/20 to-teal-500/10" },
-    { id: "5", icon: "Globe", title: "وجهات متنوعة", description: "أكثر من 50 وجهة سياحية حول العالم", color: "text-indigo-500", bgColor: "bg-gradient-to-br from-indigo-500/20 to-blue-500/10" },
-    { id: "6", icon: "ThumbsUp", title: "تجربة استثنائية", description: "كل تفصيلة مصممة لراحتك وسعادتك", color: "text-teal-600", bgColor: "bg-gradient-to-br from-teal-600/20 to-emerald-500/10" },
+    { id: "1", icon: "Shield", title: "حجز آمن ومضمون", description: "نظام دفع آمن 100% مع ضمان استرداد كامل", color: "text-blue-500", bgColor: "bg-gradient-to-br from-blue-500/20 to-blue-400/10" },
+    { id: "2", icon: "Trophy", title: "15 سنة من التميز", description: "خبرة طويلة في تنظيم أفضل الرحلات السياحية", color: "text-blue-600", bgColor: "bg-gradient-to-br from-blue-600/20 to-blue-500/10" },
+    { id: "3", icon: "HeartHandshake", title: "خدمة عملاء متميزة", description: "فريق محترف متاح 24/7 لخدمتك", color: "text-blue-400", bgColor: "bg-gradient-to-br from-blue-400/20 to-blue-300/10" },
+    { id: "4", icon: "Clock", title: "أسعار تنافسية", description: "أفضل الأسعار مع عروض حصرية طوال العام", color: "text-blue-500", bgColor: "bg-gradient-to-br from-blue-500/20 to-blue-400/10" },
+    { id: "5", icon: "Globe", title: "وجهات متنوعة", description: "أكثر من 50 وجهة سياحية حول العالم", color: "text-blue-700", bgColor: "bg-gradient-to-br from-blue-700/20 to-blue-600/10" },
+    { id: "6", icon: "ThumbsUp", title: "تجربة استثنائية", description: "كل تفصيلة مصممة لراحتك وسعادتك", color: "text-blue-600", bgColor: "bg-gradient-to-br from-blue-600/20 to-blue-500/10" },
   ];
   const defaultStats = [
     { id: "1", number: "10,000+", label: "عميل سعيد" },
@@ -50,11 +50,11 @@ const WhyChooseUs = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 bg-luxury-navy/5 px-5 py-2 rounded-full mb-6">
-            <Trophy className="w-4 h-4 text-teal-500" />
+            <Trophy className="w-4 h-4 text-blue-500" />
             <span className="text-sm font-bold text-luxury-navy">لماذا ترافليون؟</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-bold text-luxury-navy mb-6">
-            نجعل <span className="text-luxury-teal">أحلامك</span> حقيقة
+            نجعل <span className="text-blue-500">أحلامك</span> حقيقة
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed">
             نفخر بكوننا الخيار الأول للمسافرين السعوديين، بفضل التزامنا بالتميز والجودة في كل تفصيلة
@@ -66,7 +66,7 @@ const WhyChooseUs = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-luxury-teal/30 transition-all duration-500 hover:-translate-y-1"
+              className="group bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all duration-500 hover:-translate-y-1"
             >
               <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center mb-6", feature.bgColor)}>
                 {(() => {
@@ -74,7 +74,7 @@ const WhyChooseUs = () => {
                   return IconComp ? <IconComp className={cn("w-7 h-7", feature.color)} /> : null;
                 })()}
               </div>
-              <h3 className="text-xl font-bold text-luxury-navy mb-3 group-hover:text-luxury-teal transition-colors">
+              <h3 className="text-xl font-bold text-luxury-navy mb-3 group-hover:text-blue-500 transition-colors">
                 {feature.title}
               </h3>
               <p className="text-gray-600 leading-relaxed">
@@ -85,14 +85,14 @@ const WhyChooseUs = () => {
         </div>
 
         {/* Stats */}
-        <div className="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 rounded-3xl p-8 md:p-12 shadow-[0_10px_50px_rgba(20,184,166,0.3)]">
+        <div className="bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 rounded-3xl p-8 md:p-12 shadow-[0_10px_50px_rgba(59,130,246,0.3)]">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-5xl font-bold text-white mb-2">
                   {stat.number}
                 </div>
-                <div className="text-cyan-100 font-medium">{stat.label}</div>
+                <div className="text-blue-200 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>

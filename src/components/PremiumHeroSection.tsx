@@ -93,14 +93,14 @@ const PremiumHeroSection = () => {
             style={{ backgroundImage: `url(${slide.image})` }}
           />
         ))}
-        {/* Premium Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--primary))]/80 via-[hsl(var(--primary))]/60 to-[hsl(180,30%,10%)]/95" />
+        {/* Premium Overlay - Blue */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(222,47%,11%)]/85 via-[hsl(213,52%,25%)]/70 to-[hsl(222,47%,11%)]/95" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
       </div>
 
-      {/* Floating light orbs */}
-      <div className="absolute top-20 right-[10%] w-72 h-72 bg-secondary/20 rounded-full blur-[120px] animate-pulse" />
-      <div className="absolute bottom-32 left-[10%] w-96 h-96 bg-accent/15 rounded-full blur-[140px] animate-pulse [animation-delay:3s]" />
+      {/* Floating light orbs - Blue */}
+      <div className="absolute top-20 right-[10%] w-72 h-72 bg-blue-500/15 rounded-full blur-[120px] animate-pulse" />
+      <div className="absolute bottom-32 left-[10%] w-96 h-96 bg-blue-400/10 rounded-full blur-[140px] animate-pulse [animation-delay:3s]" />
 
       {/* Content */}
       <div className="container relative flex-1 flex flex-col items-center justify-center text-center pt-28 pb-12 z-10">
@@ -111,28 +111,28 @@ const PremiumHeroSection = () => {
             <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md px-6 py-2.5 rounded-full border border-white/15 shadow-lg">
               <div className="flex -space-x-1.5 rtl:space-x-reverse">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="w-6 h-6 rounded-full bg-secondary/90 border-2 border-primary flex items-center justify-center">
-                    <Star className="w-3 h-3 text-primary-foreground fill-primary-foreground" />
+                  <div key={i} className="w-6 h-6 rounded-full bg-blue-500/90 border-2 border-blue-900 flex items-center justify-center">
+                    <Star className="w-3 h-3 text-white fill-white" />
                   </div>
                 ))}
               </div>
-              <span className="text-xs font-bold text-primary-foreground/80 tracking-wide">
+              <span className="text-xs font-bold text-white/80 tracking-wide">
                 منصة السفر الأكثر ثقة في السعودية
               </span>
-              <Shield className="w-4 h-4 text-secondary" />
+              <Shield className="w-4 h-4 text-blue-400" />
             </div>
           </div>
 
           {/* Headline */}
           <div className="space-y-5 animate-fade-in [animation-delay:0.15s]">
-            <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-black leading-[1.1] text-primary-foreground tracking-tight">
+            <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-black leading-[1.1] text-white tracking-tight">
               {currentData.title}{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-l from-secondary via-[hsl(40,85%,65%)] to-secondary">
+              <span className="text-transparent bg-clip-text bg-gradient-to-l from-blue-300 via-blue-400 to-blue-500">
                 {currentData.highlight}
               </span>
               {currentData.subtitle && <span className="block md:inline"> {currentData.subtitle}</span>}
             </h1>
-            <p className="text-lg md:text-xl text-primary-foreground/65 max-w-2xl mx-auto leading-relaxed font-medium">
+            <p className="text-lg md:text-xl text-white/65 max-w-2xl mx-auto leading-relaxed font-medium">
               {currentData.description}
             </p>
           </div>
@@ -147,7 +147,7 @@ const PremiumHeroSection = () => {
             <Link to="/destinations">
               <Button
                 size="lg"
-                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-10 py-7 text-lg rounded-2xl shadow-[0_8px_30px_rgba(212,175,55,0.4)] group transition-all font-bold hover:shadow-[0_12px_40px_rgba(212,175,55,0.5)] hover:scale-[1.03]"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-10 py-7 text-lg rounded-2xl shadow-[0_8px_30px_rgba(59,130,246,0.4)] group transition-all font-bold hover:shadow-[0_12px_40px_rgba(59,130,246,0.5)] hover:scale-[1.03]"
               >
                 <Plane className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
                 اكتشف الوجهات
@@ -158,7 +158,7 @@ const PremiumHeroSection = () => {
             <Button
               size="lg"
               variant="outline"
-              className="bg-white/8 backdrop-blur-md border-2 border-white/25 text-primary-foreground hover:bg-white/15 hover:border-secondary/50 px-10 py-7 text-lg rounded-2xl shadow-lg transition-all hover:scale-[1.03]"
+              className="bg-white/8 backdrop-blur-md border-2 border-white/25 text-white hover:bg-white/15 hover:border-blue-400/50 px-10 py-7 text-lg rounded-2xl shadow-lg transition-all hover:scale-[1.03]"
               onClick={() => setIsVideoPlaying(true)}
             >
               <Play className="w-5 h-5 ml-2 fill-current" />
@@ -170,10 +170,10 @@ const PremiumHeroSection = () => {
           <div className="flex items-center justify-center gap-8 md:gap-12 pt-4 animate-fade-in [animation-delay:0.5s]">
             {Object.entries(currentData.stats).map(([key, value]) => (
               <div key={key} className="text-center">
-                <div className="text-2xl md:text-3xl font-black text-secondary mb-0.5">
+                <div className="text-2xl md:text-3xl font-black text-blue-400 mb-0.5">
                   {value}
                 </div>
-                <div className="text-xs text-primary-foreground/50 font-semibold tracking-wide">
+                <div className="text-xs text-white/50 font-semibold tracking-wide">
                   {key}
                 </div>
               </div>
@@ -191,8 +191,8 @@ const PremiumHeroSection = () => {
             className={cn(
               "h-1.5 rounded-full transition-all duration-500",
               index === currentSlide
-                ? "bg-secondary w-10"
-                : "bg-primary-foreground/25 w-5 hover:bg-primary-foreground/40"
+                ? "bg-blue-400 w-10"
+                : "bg-white/25 w-5 hover:bg-white/40"
             )}
             aria-label={`الشريحة ${index + 1}`}
           />
