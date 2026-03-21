@@ -219,9 +219,9 @@ const Nav3D = () => {
               <div className="relative transition-all duration-300 group-hover:scale-110">
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center overflow-hidden
-                    bg-gradient-to-br from-primary via-teal-500 to-teal-600
-                    shadow-[0_8px_30px_rgba(20,184,166,0.5)]
-                    group-hover:shadow-[0_12px_40px_rgba(20,184,166,0.7)]
+                    bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800
+                    shadow-[0_8px_30px_rgba(59,130,246,0.5)]
+                    group-hover:shadow-[0_12px_40px_rgba(59,130,246,0.7)]
                     transition-shadow duration-300"
                 >
                   <img 
