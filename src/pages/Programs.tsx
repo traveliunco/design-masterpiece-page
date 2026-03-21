@@ -195,7 +195,7 @@ const Programs = () => {
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Image */}
-                    <div className="relative h-52 overflow-hidden bg-gradient-to-br from-luxury-teal/20 to-luxury-gold/20">
+                    <div className="relative h-52 overflow-hidden bg-gradient-to-br from-secondary/20 to-accent/20">
                       {program.cover_image ? (
                         <img
                           src={program.cover_image}
