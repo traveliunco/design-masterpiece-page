@@ -167,7 +167,7 @@ const Programs = () => {
         <div className="container px-4">
           <div className="flex items-center justify-between mb-8">
             <p className="text-muted-foreground">
-              تم العثور على <span className="font-bold text-luxury-teal">{filteredPrograms.length}</span> برنامج
+              تم العثور على <span className="font-bold text-secondary">{filteredPrograms.length}</span> برنامج
             </p>
           </div>
 
