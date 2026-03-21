@@ -46,8 +46,11 @@ const PremiumHeroSection = () => {
   ];
 
   const [slides, setSlides] = useState<Slide[]>(defaultSlides);
+  const slidesFetchedRef = useRef(false);
 
   useEffect(() => {
+    if (slidesFetchedRef.current) return;
+    slidesFetchedRef.current = true;
     homepageService.getHeroSlides().then((data: unknown[]) => {
       if (data && data.length > 0) {
         const mapped: Slide[] = (data as Array<Record<string, unknown>>)

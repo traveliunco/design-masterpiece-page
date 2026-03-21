@@ -104,10 +104,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // ✅ أوقف loading فوراً
         setLoading(false);
 
-        if (event === "SIGNED_IN" && session?.user) {
-          // جلب الـ Role في الخلفية
+        if (event === "SIGNED_IN" && session?.user && roleFetchedForRef.current !== session.user.id) {
+          roleFetchedForRef.current = session.user.id;
           fetchUserRole(session.user.id, session.user.email || undefined).then(setUserRole);
         } else if (event === "SIGNED_OUT") {
+          roleFetchedForRef.current = null;
           setUserRole(null);
         }
       }
