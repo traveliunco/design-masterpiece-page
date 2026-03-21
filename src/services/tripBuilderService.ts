@@ -169,7 +169,7 @@ export const tripBuilderService = {
     if (cached) return cached;
 
     let query = supabase
-      .from('tour_activities' as any)
+      .from('tour_activities')
       .select('*')
       .eq('is_active', true);
 
