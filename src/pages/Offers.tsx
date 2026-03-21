@@ -134,7 +134,7 @@ const Offers = () => {
       </section>
 
       {/* Filter Tabs */}
-      <section className="py-8 bg-gradient-to-b from-luxury-cream/50 to-transparent">
+      <section className="py-8 bg-gradient-to-b from-muted/50 to-transparent">
         <div className="container px-4">
           <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
             {offerTypes.map((type) => (
