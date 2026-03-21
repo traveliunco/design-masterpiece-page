@@ -163,7 +163,7 @@ const Programs = () => {
       </section>
 
       {/* Programs Grid */}
-      <section className="py-16 bg-gradient-to-b from-background via-luxury-cream/30 to-background">
+      <section className="py-16 bg-gradient-to-b from-background via-muted/30 to-background">
         <div className="container px-4">
           <div className="flex items-center justify-between mb-8">
             <p className="text-muted-foreground">
