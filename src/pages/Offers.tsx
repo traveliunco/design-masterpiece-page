@@ -350,8 +350,8 @@ const Offers = () => {
                               <span className="text-sm text-muted-foreground">ر.س</span>
                             </div>
                           </div>
-                          <div className="bg-luxury-gold/10 px-3 py-1 rounded-full">
-                            <span className="text-luxury-gold font-bold text-sm">وفر {(offer.original_price - offer.discounted_price).toLocaleString()} ر.س</span>
+                          <div className="bg-secondary/10 px-3 py-1 rounded-full">
+                            <span className="text-secondary font-bold text-sm">وفر {(offer.original_price - offer.discounted_price).toLocaleString()} ر.س</span>
                           </div>
                         </div>
                         <div className="flex gap-2">
