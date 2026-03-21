@@ -265,7 +265,7 @@ const Programs = () => {
                     {/* Content */}
                     <div className="p-6 bg-white">
                       <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-bold text-lg text-luxury-navy group-hover:text-luxury-teal transition-colors line-clamp-1">
+                        <h3 className="font-bold text-lg text-foreground group-hover:text-secondary transition-colors line-clamp-1">
                           {program.name_ar}
                         </h3>
                         <div className="flex items-center gap-1">
