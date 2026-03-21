@@ -355,7 +355,7 @@ const Programs = () => {
           {!loading && filteredPrograms.length === 0 && (
             <div className="text-center py-20">
               <Plane className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-luxury-navy mb-2">لم يتم العثور على برامج</h3>
+              <h3 className="text-xl font-bold text-foreground mb-2">لم يتم العثور على برامج</h3>
               <p className="text-muted-foreground mb-4">جرب تغيير معايير البحث</p>
               <button
                 onClick={() => { setSelectedType("all"); setSearchQuery(""); }}
