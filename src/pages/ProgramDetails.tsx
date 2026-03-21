@@ -220,7 +220,7 @@ const ProgramDetails = () => {
               )}
               {program.destination?.name_ar && (
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-luxury-gold" />
+                  <MapPin className="w-5 h-5 text-secondary" />
                   <span className="text-white font-semibold">{program.destination.name_ar}</span>
                 </div>
               )}
