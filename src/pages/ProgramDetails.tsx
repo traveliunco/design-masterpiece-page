@@ -172,7 +172,7 @@ const ProgramDetails = () => {
             <div className="flex items-center gap-2 text-white/80 mb-4 text-sm">
               <Link to="/" className="hover:text-secondary transition-colors">الرئيسية</Link>
               <span>/</span>
-              <Link to="/programs" className="hover:text-luxury-gold transition-colors">البرامج</Link>
+              <Link to="/programs" className="hover:text-secondary transition-colors">البرامج</Link>
               <span>/</span>
               <span className="text-luxury-gold font-semibold line-clamp-1">{program.name_ar}</span>
             </div>
