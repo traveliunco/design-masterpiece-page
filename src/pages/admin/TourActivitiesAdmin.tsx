@@ -45,7 +45,7 @@ const TourActivitiesAdmin = () => {
     queryKey: ["admin-tour-activities"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("tour_activities" as any)
+        .from("tour_activities")
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
