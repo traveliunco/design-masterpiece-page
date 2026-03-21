@@ -228,4 +228,4 @@ const PremiumHeroSection = () => {
   );
 };
 
-export default PremiumHeroSection;
+export default memo(PremiumHeroSection);
