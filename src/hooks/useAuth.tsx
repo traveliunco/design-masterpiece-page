@@ -87,8 +87,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // ✅ أوقف loading هنا فوراً — لا ننتظر جلب الـ Role
       setLoading(false);
 
-      // جلب الـ Role في الخلفية بدون تأخير
-      if (session?.user) {
+      // جلب الـ Role في الخلفية - مرة واحدة فقط
+      if (session?.user && roleFetchedForRef.current !== session.user.id) {
+        roleFetchedForRef.current = session.user.id;
         fetchUserRole(session.user.id, session.user.email || undefined).then(setUserRole);
       }
     }).catch(() => {
