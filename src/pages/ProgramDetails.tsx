@@ -283,7 +283,7 @@ const ProgramDetails = () => {
                     {countries.map((country: string, i: number) => (
                       <div key={i} className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl text-center border border-blue-100">
                         <Globe className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                        <span className="font-bold text-luxury-navy">{country}</span>
+                        <span className="font-bold text-foreground">{country}</span>
                       </div>
                     ))}
                   </div>
