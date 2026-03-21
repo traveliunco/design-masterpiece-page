@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data, error } = await supabase
         .from("user_roles")
         .select("role")
-        .eq("id", userId)
+        .eq("user_id", userId)
         .maybeSingle();
 
       if (error || !data) return getFallbackRole();
