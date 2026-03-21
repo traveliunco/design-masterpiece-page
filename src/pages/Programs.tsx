@@ -213,7 +213,7 @@ const Programs = () => {
                       {/* Badges */}
                       <div className="absolute top-4 right-4 flex gap-2">
                         {program.is_featured && (
-                          <span className="bg-luxury-gold text-luxury-navy px-3 py-1 rounded-full text-xs font-bold">
+                          <span className="bg-secondary text-white px-3 py-1 rounded-full text-xs font-bold">
                             مميز
                           </span>
                         )}
