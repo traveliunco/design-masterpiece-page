@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Menu, X, Phone, ChevronDown, Sparkles, 
@@ -837,4 +837,4 @@ const Nav3D = () => {
   );
 };
 
-export default Nav3D;
+export default memo(Nav3D);

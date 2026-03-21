@@ -129,8 +129,8 @@ const AdminDynamicPackages = lazy(() => import("./pages/admin/DynamicPackagesAdm
 const AdminTourActivities = lazy(() => import("./pages/admin/TourActivitiesAdmin"));
 
 
-// Components
-import AIChat from "./components/AIChat";
+// Components - lazy load heavy ones
+const AIChat = lazy(() => import("./components/AIChat"));
 import MobileNav from "./components/MobileNav";
 import ScrollToTop from "./components/ScrollToTop";
 import { useEffect } from "react";
@@ -138,7 +138,16 @@ import { systemSettingsService } from "./services/adminDataService";
 import { useSystemSettings } from "./hooks/useSystemSettings";
 import { useSupabaseKeepAlive } from "./hooks/useSupabaseKeepAlive";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes - avoid refetching on navigation
+      gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 // مكوّن داخلي يُفعَّل الـ hook فقط داخل AuthProvider
 const AppInner = () => {
@@ -163,7 +172,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <ScrollToTop />
-            <AIChat />
+            <Suspense fallback={null}><AIChat /></Suspense>
           <MobileNav />
           <Suspense fallback={<PageLoader />}>
             <Routes>

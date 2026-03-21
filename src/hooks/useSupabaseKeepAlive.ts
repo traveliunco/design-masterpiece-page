@@ -31,12 +31,12 @@ export function useSupabaseKeepAlive() {
       }
     };
 
-    // نبضة فورية عند بدء الجلسة
-    ping();
+    // نبضة متأخرة عند بدء الجلسة (لا تحمّل التطبيق عند الفتح)
+    const initialDelay = setTimeout(ping, 30_000);
 
     // نبضة دورية كل ساعة
     const interval = setInterval(ping, PING_INTERVAL_MS);
 
-    return () => clearInterval(interval);
+    return () => { clearTimeout(initialDelay); clearInterval(interval); };
   }, []);
 }

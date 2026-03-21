@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin, Plane, ShieldCheck } from "lucide-react";
 
@@ -177,4 +178,4 @@ const PremiumFooter = () => {
   );
 };
 
-export default PremiumFooter;
+export default memo(PremiumFooter);
