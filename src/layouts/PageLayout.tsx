@@ -4,6 +4,7 @@ import { ArrowRight, Bell, User, Search } from "lucide-react";
 import Nav3D from "@/components/Nav3D";
 import PremiumFooter from "@/components/PremiumFooter";
 import MobileNav from "@/components/MobileNav";
+import AppSidebar from "@/components/AppSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PageLayoutProps {
