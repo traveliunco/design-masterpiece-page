@@ -28,6 +28,7 @@ const IndexPremium = () => {
           <main className="overflow-hidden pb-20 lg:pb-0">
             <PremiumHeroSection />
             <MarqueeBanner />
+            <ExclusiveDeals />
             <WhyChooseUs />
             <InteractiveDestinations />
             <MarqueeBanner 
