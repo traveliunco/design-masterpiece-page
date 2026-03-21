@@ -485,7 +485,7 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
               </div>
 
               {/* Passengers + Class + Add hotel row */}
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3 pt-1">
                 <div ref={passRef} className="relative">
                   <button
                   onClick={() => {setShowPassengers(!showPassengers);setShowOriginDropdown(false);setShowDestDropdown(false);}}
