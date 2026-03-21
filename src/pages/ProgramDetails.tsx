@@ -174,7 +174,7 @@ const ProgramDetails = () => {
               <span>/</span>
               <Link to="/programs" className="hover:text-secondary transition-colors">البرامج</Link>
               <span>/</span>
-              <span className="text-luxury-gold font-semibold line-clamp-1">{program.name_ar}</span>
+              <span className="text-secondary font-semibold line-clamp-1">{program.name_ar}</span>
             </div>
 
             {/* Tags */}
