@@ -459,8 +459,8 @@ const ProgramDetails = () => {
                         value={travelers.adults}
                         onChange={(e) => setTravelers({...travelers, adults: Number(e.target.value)})}
                         aria-label="عدد البالغين"
-                        className="w-full p-3 border rounded-xl bg-white focus:ring-2 focus:ring-luxury-teal/50 focus:border-luxury-teal transition-all"
-                      >
+                         className="w-full p-3 border rounded-xl bg-white focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all"
+                       >
                         {[1,2,3,4,5,6,7,8].map(n => <option key={n} value={n}>{n} بالغ</option>)}
                       </select>
                     </div>
