@@ -518,8 +518,8 @@ const ProgramDetails = () => {
                       { icon: Check, text: "برنامج شامل ومتكامل" },
                     ].map((item, i) => (
                       <li key={i} className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-luxury-teal/10 rounded-lg flex items-center justify-center">
-                          <item.icon className="w-4 h-4 text-luxury-teal" />
+                         <div className="w-8 h-8 bg-secondary/10 rounded-lg flex items-center justify-center">
+                           <item.icon className="w-4 h-4 text-secondary" />
                         </div>
                         <span className="text-sm font-medium">{item.text}</span>
                       </li>
