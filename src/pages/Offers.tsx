@@ -86,7 +86,7 @@ const Offers = () => {
   const loadOffers = async () => {
     setLoading(true);
     try {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("special_offers")
         .select("*")
         .eq("is_active", true)

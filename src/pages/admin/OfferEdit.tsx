@@ -138,7 +138,7 @@ const AdminOfferEdit = () => {
 
     setSaving(true);
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from("special_offers")
         .update({
           title_ar: formData.title_ar,

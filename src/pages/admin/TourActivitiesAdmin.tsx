@@ -73,7 +73,7 @@ const TourActivitiesAdmin = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await (supabase.from("tour_activities" as any) as any).delete().eq("id", id);
+      const { error } = await supabase.from("tour_activities").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

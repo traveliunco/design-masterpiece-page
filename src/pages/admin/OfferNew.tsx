@@ -96,7 +96,7 @@ const AdminOfferNew = () => {
     setSaving(true);
     try {
       const slug = formData.slug || generateSlug(formData.title_en || formData.title_ar);
-      const { error } = await (supabase as any).from("special_offers").insert({
+      const { error } = await supabase.from("special_offers").insert({
         title_ar: formData.title_ar,
         title_en: formData.title_en || null,
         slug,

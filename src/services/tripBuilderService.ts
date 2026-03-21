@@ -216,7 +216,7 @@ export const tripBuilderService = {
   }) {
     const { data, error } = await supabase
       .from('dynamic_packages')
-      .insert(packageData as any)
+      .insert(packageData)
       .select()
       .single();
     if (error) throw error;

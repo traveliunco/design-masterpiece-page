@@ -88,7 +88,7 @@ const AdminOffers = () => {
 
   const toggleStatus = async (id: string, currentStatus: boolean) => {
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from("special_offers")
         .update({ is_active: !currentStatus })
         .eq("id", id);

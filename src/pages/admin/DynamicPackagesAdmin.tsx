@@ -13,6 +13,7 @@ import { Package, Eye, Search, Filter, RefreshCw, TrendingUp, FileText, Send, Ch
 
 const statusMap: Record<string, { label: string; color: string; bg: string }> = {
   draft: { label: "مسودة", color: "text-[hsl(220,9%,46%)]", bg: "bg-[hsl(220,14%,96%)] border border-[hsl(220,13%,91%)]" },
+  pending: { label: "قيد الانتظار", color: "text-[hsl(217,91%,60%)]", bg: "bg-[hsl(217,91%,60%)]/10 border border-[hsl(217,91%,60%)]/20" },
   submitted: { label: "مرسل", color: "text-[hsl(217,91%,60%)]", bg: "bg-[hsl(217,91%,60%)]/10 border border-[hsl(217,91%,60%)]/20" },
   confirmed: { label: "مؤكد", color: "text-[hsl(222,47%,11%)]", bg: "bg-[hsl(222,47%,11%)]/10 border border-[hsl(222,47%,11%)]/20" },
   cancelled: { label: "ملغي", color: "text-destructive", bg: "bg-destructive/10 border border-destructive/20" },
