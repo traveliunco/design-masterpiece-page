@@ -419,10 +419,10 @@ const Offers = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-luxury-navy relative overflow-hidden">
+      <section className="py-20 bg-foreground relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-luxury-teal/10 rounded-full blur-[200px]" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-luxury-gold/10 rounded-full blur-[150px]" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[200px]" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[150px]" />
         </div>
         <div className="container px-4 text-center relative z-10">
           <Sparkles className="w-16 h-16 text-luxury-gold mx-auto mb-6" />
