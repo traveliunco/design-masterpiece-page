@@ -178,4 +178,4 @@ const PremiumFooter = () => {
   );
 };
 
-export default PremiumFooter;
+export default memo(PremiumFooter);

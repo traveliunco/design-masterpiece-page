@@ -113,4 +113,4 @@ const MobileNav = () => {
   );
 };
 
-export default MobileNav;
+export default memo(MobileNav);
