@@ -37,6 +37,6 @@ export function useSupabaseKeepAlive() {
     // نبضة دورية كل ساعة
     const interval = setInterval(ping, PING_INTERVAL_MS);
 
-    return () => clearInterval(interval);
+    return () => { clearTimeout(initialDelay); clearInterval(interval); };
   }, []);
 }
