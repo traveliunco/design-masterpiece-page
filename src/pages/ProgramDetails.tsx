@@ -388,7 +388,7 @@ const ProgramDetails = () => {
                     {excludes.map((item: string, i: number) => (
                       <div key={i} className="flex items-start gap-3 p-4 bg-red-50/50 rounded-xl border border-red-100">
                         <X className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-luxury-navy">{item}</span>
+                        <span className="text-foreground">{item}</span>
                       </div>
                     ))}
                   </div>
