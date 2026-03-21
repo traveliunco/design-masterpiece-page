@@ -1,4 +1,4 @@
-import { Star, Quote, CheckCircle } from "lucide-react";
+import { Star, CheckCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { homepageService } from "@/services/adminDataService";
 

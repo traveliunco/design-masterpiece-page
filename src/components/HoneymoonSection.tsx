@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Heart, Sparkles, CheckCircle } from "lucide-react";
+import { ArrowLeft, Heart, CheckCircle } from "lucide-react";
 import honeymoonImg from "@/assets/honeymoon.jpg";
 
 const HoneymoonSection = () => {

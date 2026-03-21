@@ -36,7 +36,7 @@ const IndexPremium = () => {
 
         {/* Second Marquee - Teal Theme */}
         <MarqueeBanner 
-          className="bg-gradient-to-r from-primary via-teal-600 to-primary" 
+          className="bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900" 
         />
 
         {/* Honeymoon Section - Premium */}

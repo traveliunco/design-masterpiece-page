@@ -772,8 +772,8 @@ const Nav3D = () => {
               rel="noopener noreferrer"
               className={cn(
                 "flex items-center justify-center gap-3 w-full py-5 rounded-3xl font-black text-lg transition-all",
-                "bg-gradient-to-r from-teal-500 to-cyan-500 text-white",
-                "shadow-[0_8px_30px_rgba(20,184,166,0.5)]",
+                "bg-gradient-to-r from-blue-600 to-blue-500 text-white",
+                "shadow-[0_8px_30px_rgba(59,130,246,0.5)]",
                 "hover:scale-105 active:scale-95 transform-gpu"
               )}
             >
