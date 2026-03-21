@@ -401,7 +401,7 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
           /* ── STANDARD GRID LAYOUT (hero / mobile / page) ────────────── */
           <>
               <div className={cn(
-              "grid gap-2",
+              "grid gap-3",
               isMobile ? "grid-cols-1" : tripType === "roundtrip" ? "grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr_1fr]" : "grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr]"
             )}>
                 {/* Origin */}
