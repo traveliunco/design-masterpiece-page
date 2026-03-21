@@ -378,7 +378,7 @@ const ProgramDetails = () => {
               {/* Excludes */}
               {excludes.length > 0 && (
                 <div className="card-3d p-8">
-                  <h2 className="text-2xl font-bold text-luxury-navy mb-6 flex items-center gap-3">
+                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                     <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
                       <X className="w-5 h-5 text-red-500" />
                     </div>
