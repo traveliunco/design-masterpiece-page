@@ -33,10 +33,10 @@ export default {
         '8xl': ['6rem', { lineHeight: '1.1', letterSpacing: '-0.03em' }],
       },
       colors: {
-        'luxury-gold': 'hsl(45, 93%, 58%)',
-        'luxury-teal': 'hsl(175, 84%, 32%)',
+        'luxury-gold': 'hsl(217, 91%, 60%)',
+        'luxury-teal': 'hsl(213, 52%, 25%)',
         'luxury-navy': 'hsl(222, 47%, 11%)',
-        'luxury-cream': 'hsl(40, 40%, 96%)',
+        'luxury-cream': 'hsl(220, 20%, 97%)',
         
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
