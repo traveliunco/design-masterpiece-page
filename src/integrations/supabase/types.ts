@@ -1026,6 +1026,54 @@ export type Database = {
           },
         ]
       }
+      exclusive_deals: {
+        Row: {
+          code: string | null
+          created_at: string | null
+          description: string | null
+          discount: string
+          display_order: number | null
+          expiry: string | null
+          gradient: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          link: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string | null
+          description?: string | null
+          discount: string
+          display_order?: number | null
+          expiry?: string | null
+          gradient?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          link?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string | null
+          created_at?: string | null
+          description?: string | null
+          discount?: string
+          display_order?: number | null
+          expiry?: string | null
+          gradient?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          link?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       flight_bookings: {
         Row: {
           additional_services: Json | null
