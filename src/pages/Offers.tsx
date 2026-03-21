@@ -281,7 +281,7 @@ const Offers = () => {
                     <div className="p-6 pt-10">
                       {/* Title & Duration */}
                       <div className="flex items-start justify-between mb-3">
-                        <h3 className="font-bold text-xl text-luxury-navy group-hover:text-luxury-teal transition-colors leading-tight">
+                        <h3 className="font-bold text-xl text-foreground group-hover:text-secondary transition-colors leading-tight">
                           {offer.title_ar}
                         </h3>
                       </div>
