@@ -344,7 +344,7 @@ const ProgramDetails = () => {
                           key={i}
                           onClick={() => setActiveGalleryIndex(i)}                          aria-label={`معاينة الصورة ${i + 1}`}                          className={cn(
                             "rounded-lg overflow-hidden border-2 transition-all",
-                            i === activeGalleryIndex ? "border-luxury-teal" : "border-transparent opacity-60 hover:opacity-100"
+                            i === activeGalleryIndex ? "border-secondary" : "border-transparent opacity-60 hover:opacity-100"
                           )}
                         >
                           <img src={img} alt={`thumb-${i}`} className="w-full h-16 object-cover" />
