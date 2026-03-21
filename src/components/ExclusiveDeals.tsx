@@ -1,54 +1,33 @@
 import { Link } from "react-router-dom";
-import { Percent, Sparkles, Clock, ArrowLeft } from "lucide-react";
+import { Percent, Sparkles, Clock, ArrowLeft, Gift, Plane, Heart } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
-const EXCLUSIVE_DEALS = [
-  {
-    id: 1,
-    title: "خصم 25% على أول حجز فندقي",
-    description: "استمتع بخصم حصري على حجزك الأول في أفضل الفنادق",
-    discount: "25%",
-    code: "WELCOME25",
-    gradient: "from-primary to-blue-600",
-    icon: Sparkles,
-    link: "/hotels",
-    expiry: "عرض محدود",
-  },
-  {
-    id: 2,
-    title: "وفّر حتى 500 ر.س على الطيران",
-    description: "على رحلاتك الدولية الأولى مع ترافليون",
-    discount: "500 ر.س",
-    code: "FLY500",
-    gradient: "from-emerald-600 to-teal-500",
-    icon: Percent,
-    link: "/flights",
-    expiry: "ينتهي قريباً",
-  },
-  {
-    id: 3,
-    title: "باقة شهر عسل بخصم 30%",
-    description: "رحلة أحلامك بأسعار لا تُقاوم للأزواج الجدد",
-    discount: "30%",
-    code: "HONEY30",
-    gradient: "from-rose-500 to-pink-600",
-    icon: Sparkles,
-    link: "/honeymoon",
-    expiry: "عرض موسمي",
-  },
-  {
-    id: 4,
-    title: "خصم 20% على البرامج السياحية",
-    description: "استكشف وجهات جديدة بأسعار مميزة للمسافرين الجدد",
-    discount: "20%",
-    code: "TRIP20",
-    gradient: "from-amber-500 to-orange-500",
-    icon: Clock,
-    link: "/programs",
-    expiry: "لفترة محدودة",
-  },
-];
+const ICON_MAP: Record<string, React.ElementType> = {
+  Sparkles,
+  Percent,
+  Clock,
+  Gift,
+  Plane,
+  Heart,
+};
 
 const ExclusiveDeals = () => {
+  const { data: deals = [], isLoading } = useQuery({
+    queryKey: ["exclusive-deals"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("exclusive_deals")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order");
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  if (isLoading || deals.length === 0) return null;
+
   return (
     <section className="py-12 lg:py-16 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -72,14 +51,14 @@ const ExclusiveDeals = () => {
           </Link>
         </div>
 
-        {/* Deals Grid - horizontal scrollable on mobile, grid on desktop */}
+        {/* Deals Grid */}
         <div className="flex gap-4 overflow-x-auto pb-4 lg:pb-0 lg:grid lg:grid-cols-4 scrollbar-hide snap-x snap-mandatory">
-          {EXCLUSIVE_DEALS.map((deal) => {
-            const Icon = deal.icon;
+          {deals.map((deal) => {
+            const Icon = ICON_MAP[deal.icon || "Sparkles"] || Sparkles;
             return (
               <Link
                 key={deal.id}
-                to={deal.link}
+                to={deal.link || "/offers"}
                 className="min-w-[280px] lg:min-w-0 snap-start group"
               >
                 <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${deal.gradient} p-5 h-[180px] flex flex-col justify-between transition-transform duration-300 group-hover:scale-[1.02] group-hover:shadow-lg`}>
@@ -108,9 +87,11 @@ const ExclusiveDeals = () => {
                     <p className="text-white/80 text-xs max-w-[70%] leading-relaxed">{deal.description}</p>
                     <div className="flex flex-col items-center gap-1">
                       <span className="text-white font-extrabold text-2xl leading-none">{deal.discount}</span>
-                      <span className="bg-white/25 backdrop-blur-sm rounded-md px-2 py-0.5 text-[10px] text-white font-mono tracking-wider">
-                        {deal.code}
-                      </span>
+                      {deal.code && (
+                        <span className="bg-white/25 backdrop-blur-sm rounded-md px-2 py-0.5 text-[10px] text-white font-mono tracking-wider">
+                          {deal.code}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
