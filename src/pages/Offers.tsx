@@ -144,8 +144,8 @@ const Offers = () => {
                 className={cn(
                   "flex items-center gap-2 px-5 py-3 rounded-2xl transition-all duration-300 whitespace-nowrap font-medium text-sm",
                   selectedType === type.id
-                    ? `bg-gradient-to-r ${type.color} text-white shadow-lg shadow-luxury-teal/20 scale-105`
-                    : "bg-white/80 backdrop-blur-sm text-gray-600 hover:bg-white hover:shadow-md border border-gray-100"
+                    ? `bg-gradient-to-r ${type.color} text-white shadow-lg shadow-secondary/20 scale-105`
+                    : "bg-white/80 backdrop-blur-sm text-gray-600 hover:bg-white hover:shadow-md border border-border"
                 )}
               >
                 <span className="text-lg">{type.icon}</span>
