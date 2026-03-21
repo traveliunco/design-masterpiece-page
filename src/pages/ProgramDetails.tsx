@@ -230,7 +230,7 @@ const ProgramDetails = () => {
       </section>
 
       {/* Main Content */}
-      <section className="py-16 bg-gradient-to-b from-background via-luxury-cream/30 to-background">
+      <section className="py-16 bg-gradient-to-b from-background via-muted/30 to-background">
         <div className="container px-4">
           <div className="grid lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-10">
