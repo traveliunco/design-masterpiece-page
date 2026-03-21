@@ -385,9 +385,9 @@ const Offers = () => {
                     </div>
 
                     {/* Featured Ribbon */}
-                    {offer.is_featured && (
-                      <div className="absolute top-0 left-0 w-0 h-0 border-t-[60px] border-t-luxury-gold border-r-[60px] border-r-transparent z-10">
-                        <Star className="absolute -top-[50px] left-[10px] w-5 h-5 text-luxury-navy fill-luxury-navy" />
+                     {offer.is_featured && (
+                      <div className="absolute top-0 left-0 w-0 h-0 border-t-[60px] border-t-secondary border-r-[60px] border-r-transparent z-10">
+                        <Star className="absolute -top-[50px] left-[10px] w-5 h-5 text-white fill-white" />
                       </div>
                     )}
                   </div>
