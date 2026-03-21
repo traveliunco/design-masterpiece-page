@@ -257,9 +257,9 @@ const Offers = () => {
                       </button>
 
                       {/* Discount Circle */}
-                      <div className="absolute -bottom-6 left-6 w-16 h-16 bg-gradient-to-br from-luxury-gold to-yellow-400 rounded-full flex flex-col items-center justify-center shadow-xl shadow-luxury-gold/30 border-4 border-white z-10">
-                        <span className="text-luxury-navy font-black text-lg leading-none">{offer.discount_percentage}%</span>
-                        <span className="text-luxury-navy text-[8px] font-bold">خصم</span>
+                      <div className="absolute -bottom-6 left-6 w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-full flex flex-col items-center justify-center shadow-xl shadow-secondary/30 border-4 border-white z-10">
+                        <span className="text-white font-black text-lg leading-none">{offer.discount_percentage}%</span>
+                        <span className="text-white text-[8px] font-bold">خصم</span>
                       </div>
 
                       {/* Destination */}
