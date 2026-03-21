@@ -157,11 +157,8 @@ const Nav3D = () => {
   }, []);
 
 
-  // ✅ روابط القائمة من localStorage (تتحدث عند كل تنقل)
-  const [navLinks, setNavLinks] = useState<NavLink[]>(() => navService.getNavLinks());
-  useEffect(() => {
-    setNavLinks(navService.getNavLinks());
-  }, [location.pathname]);
+  // ✅ روابط القائمة من localStorage - مرة واحدة فقط
+  const [navLinks] = useState<NavLink[]>(() => navService.getNavLinks());
   const activeNavLinks = navLinks.filter(l => l.is_active).sort((a, b) => a.order - b.order);
 
 
