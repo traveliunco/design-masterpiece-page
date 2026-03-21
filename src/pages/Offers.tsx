@@ -113,7 +113,7 @@ const Offers = () => {
     <PageLayout>
       <PageHeader
         badge="عروض حصرية لفترة محدودة"
-        badgeIcon={<Zap className="w-4 h-4 text-luxury-gold" />}
+        badgeIcon={<Zap className="w-4 h-4 text-secondary" />}
         title="أقوى العروض"
         subtitle="استفد من خصومات تصل إلى 38% على أفضل الوجهات السياحية - العروض محدودة!"
       />
