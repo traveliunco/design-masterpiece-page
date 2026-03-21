@@ -688,7 +688,7 @@ const Nav3D = () => {
                   transform: isMobileMenuOpen ? "translateX(0)" : "translateX(20px)"
                 }}
               >
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-400">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-blue-400">
                   {link.dropdownKey === 'services' ? <Sparkles className="w-5 h-5" /> : link.dropdownKey === 'countries' ? <MapPin className="w-5 h-5" /> : link.name === 'الرئيسية' ? <Plane className="w-5 h-5" /> : link.path === '/offers' ? <Heart className="w-5 h-5" /> : link.path === '/programs' ? <Calendar className="w-5 h-5" /> : link.path === '/flights' ? <Plane className="w-5 h-5" /> : link.path === '/hotels' ? <Hotel className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
                 </div>
                 <span>{link.name}</span>
