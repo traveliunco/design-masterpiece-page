@@ -183,7 +183,7 @@ const ProgramDetails = () => {
                 {typeLabels[program.program_type] || program.program_type}
               </span>
               {program.is_featured && (
-                <span className="bg-luxury-gold text-luxury-navy px-4 py-1.5 rounded-full text-sm font-bold">
+                <span className="bg-secondary text-white px-4 py-1.5 rounded-full text-sm font-bold">
                   ⭐ مميز
                 </span>
               )}
