@@ -45,7 +45,7 @@ const TourActivitiesAdmin = () => {
     queryKey: ["admin-tour-activities"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("tour_activities" as any)
+        .from("tour_activities")
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -56,10 +56,10 @@ const TourActivitiesAdmin = () => {
   const saveMutation = useMutation({
     mutationFn: async (formData: Partial<Activity>) => {
       if (editId) {
-        const { error } = await (supabase.from("tour_activities" as any) as any).update(formData).eq("id", editId);
+        const { error } = await supabase.from("tour_activities").update(formData as any).eq("id", editId);
         if (error) throw error;
       } else {
-        const { error } = await (supabase.from("tour_activities" as any) as any).insert(formData);
+        const { error } = await supabase.from("tour_activities").insert(formData as any);
         if (error) throw error;
       }
     },
@@ -73,7 +73,7 @@ const TourActivitiesAdmin = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await (supabase.from("tour_activities" as any) as any).delete().eq("id", id);
+      const { error } = await supabase.from("tour_activities").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

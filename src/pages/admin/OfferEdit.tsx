@@ -91,7 +91,7 @@ const AdminOfferEdit = () => {
     if (!id) return;
     setLoading(true);
     try {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("special_offers")
         .select("*")
         .eq("id", id)
@@ -115,9 +115,9 @@ const AdminOfferEdit = () => {
           is_hot: data.is_hot ?? false,
           is_active: data.is_active ?? true,
           is_featured: data.is_featured ?? false,
-          countries: data.countries || [],
-          highlights: data.highlights || [],
-          includes: data.includes || [],
+          countries: (data.countries as string[]) || [],
+          highlights: (data.highlights as string[]) || [],
+          includes: (data.includes as string[]) || [],
           terms: data.terms || "",
         });
       }
@@ -138,7 +138,7 @@ const AdminOfferEdit = () => {
 
     setSaving(true);
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from("special_offers")
         .update({
           title_ar: formData.title_ar,

@@ -59,7 +59,7 @@ const AdminOffers = () => {
   const loadOffers = async () => {
     setLoading(true);
     try {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("special_offers")
         .select("*")
         .order("created_at", { ascending: false });
@@ -77,7 +77,7 @@ const AdminOffers = () => {
   const handleDelete = async (id: string) => {
     if (!confirm("هل أنت متأكد من حذف هذا العرض؟")) return;
     try {
-      const { error } = await (supabase as any).from("special_offers").delete().eq("id", id);
+      const { error } = await supabase.from("special_offers").delete().eq("id", id);
       if (error) throw error;
       toast.success("تم حذف العرض بنجاح");
       loadOffers();
@@ -88,7 +88,7 @@ const AdminOffers = () => {
 
   const toggleStatus = async (id: string, currentStatus: boolean) => {
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from("special_offers")
         .update({ is_active: !currentStatus })
         .eq("id", id);

@@ -60,7 +60,7 @@ const StepSummary = ({ tripData, updateTrip, onPrev, getNights, getTotalPassenge
         customer_email: tripData.customerEmail,
         customer_phone: tripData.customerPhone,
         notes: tripData.notes,
-        status: 'pending',
+        status: 'submitted',
         session_id: crypto.randomUUID(),
         user_id: user?.id || null,
       });

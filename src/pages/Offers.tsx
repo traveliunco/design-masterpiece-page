@@ -86,7 +86,7 @@ const Offers = () => {
   const loadOffers = async () => {
     setLoading(true);
     try {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("special_offers")
         .select("*")
         .eq("is_active", true)
@@ -113,7 +113,7 @@ const Offers = () => {
     <PageLayout>
       <PageHeader
         badge="عروض حصرية لفترة محدودة"
-        badgeIcon={<Zap className="w-4 h-4 text-luxury-gold" />}
+        badgeIcon={<Zap className="w-4 h-4 text-secondary" />}
         title="أقوى العروض"
         subtitle="استفد من خصومات تصل إلى 38% على أفضل الوجهات السياحية - العروض محدودة!"
       />
@@ -134,7 +134,7 @@ const Offers = () => {
       </section>
 
       {/* Filter Tabs */}
-      <section className="py-8 bg-gradient-to-b from-luxury-cream/50 to-transparent">
+      <section className="py-8 bg-gradient-to-b from-muted/50 to-transparent">
         <div className="container px-4">
           <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
             {offerTypes.map((type) => (
@@ -144,8 +144,8 @@ const Offers = () => {
                 className={cn(
                   "flex items-center gap-2 px-5 py-3 rounded-2xl transition-all duration-300 whitespace-nowrap font-medium text-sm",
                   selectedType === type.id
-                    ? `bg-gradient-to-r ${type.color} text-white shadow-lg shadow-luxury-teal/20 scale-105`
-                    : "bg-white/80 backdrop-blur-sm text-gray-600 hover:bg-white hover:shadow-md border border-gray-100"
+                    ? `bg-gradient-to-r ${type.color} text-white shadow-lg shadow-secondary/20 scale-105`
+                    : "bg-white/80 backdrop-blur-sm text-gray-600 hover:bg-white hover:shadow-md border border-border"
                 )}
               >
                 <span className="text-lg">{type.icon}</span>
@@ -162,7 +162,7 @@ const Offers = () => {
       </section>
 
       {/* Offers Grid */}
-      <section className="py-12 bg-gradient-to-b from-background via-luxury-cream/20 to-background">
+      <section className="py-12 bg-gradient-to-b from-background via-muted/20 to-background">
         <div className="container px-4">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
@@ -211,7 +211,7 @@ const Offers = () => {
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-luxury-teal/20 to-luxury-gold/20 flex items-center justify-center text-6xl">
+                        <div className="w-full h-full bg-gradient-to-br from-secondary/20 to-accent/20 flex items-center justify-center text-6xl">
                           🏷️
                         </div>
                       )}
@@ -257,9 +257,9 @@ const Offers = () => {
                       </button>
 
                       {/* Discount Circle */}
-                      <div className="absolute -bottom-6 left-6 w-16 h-16 bg-gradient-to-br from-luxury-gold to-yellow-400 rounded-full flex flex-col items-center justify-center shadow-xl shadow-luxury-gold/30 border-4 border-white z-10">
-                        <span className="text-luxury-navy font-black text-lg leading-none">{offer.discount_percentage}%</span>
-                        <span className="text-luxury-navy text-[8px] font-bold">خصم</span>
+                      <div className="absolute -bottom-6 left-6 w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-full flex flex-col items-center justify-center shadow-xl shadow-secondary/30 border-4 border-white z-10">
+                        <span className="text-white font-black text-lg leading-none">{offer.discount_percentage}%</span>
+                        <span className="text-white text-[8px] font-bold">خصم</span>
                       </div>
 
                       {/* Destination */}
@@ -281,7 +281,7 @@ const Offers = () => {
                     <div className="p-6 pt-10">
                       {/* Title & Duration */}
                       <div className="flex items-start justify-between mb-3">
-                        <h3 className="font-bold text-xl text-luxury-navy group-hover:text-luxury-teal transition-colors leading-tight">
+                        <h3 className="font-bold text-xl text-foreground group-hover:text-secondary transition-colors leading-tight">
                           {offer.title_ar}
                         </h3>
                       </div>
@@ -304,7 +304,7 @@ const Offers = () => {
                       {highlights.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-4">
                           {highlights.slice(0, 3).map((h, idx) => (
-                            <span key={idx} className="bg-luxury-teal/8 text-luxury-teal px-3 py-1 rounded-xl text-xs font-medium border border-luxury-teal/15">
+                            <span key={idx} className="bg-secondary/8 text-secondary px-3 py-1 rounded-xl text-xs font-medium border border-secondary/15">
                               {h}
                             </span>
                           ))}
@@ -346,12 +346,12 @@ const Offers = () => {
                           <div>
                             <span className="text-muted-foreground line-through text-sm block">{offer.original_price.toLocaleString()} ر.س</span>
                             <div className="flex items-baseline gap-1">
-                              <span className="text-3xl font-black text-luxury-teal">{offer.discounted_price.toLocaleString()}</span>
+                              <span className="text-3xl font-black text-secondary">{offer.discounted_price.toLocaleString()}</span>
                               <span className="text-sm text-muted-foreground">ر.س</span>
                             </div>
                           </div>
-                          <div className="bg-luxury-gold/10 px-3 py-1 rounded-full">
-                            <span className="text-luxury-gold font-bold text-sm">وفر {(offer.original_price - offer.discounted_price).toLocaleString()} ر.س</span>
+                          <div className="bg-secondary/10 px-3 py-1 rounded-full">
+                            <span className="text-secondary font-bold text-sm">وفر {(offer.original_price - offer.discounted_price).toLocaleString()} ر.س</span>
                           </div>
                         </div>
                         <div className="flex gap-2">
@@ -385,9 +385,9 @@ const Offers = () => {
                     </div>
 
                     {/* Featured Ribbon */}
-                    {offer.is_featured && (
-                      <div className="absolute top-0 left-0 w-0 h-0 border-t-[60px] border-t-luxury-gold border-r-[60px] border-r-transparent z-10">
-                        <Star className="absolute -top-[50px] left-[10px] w-5 h-5 text-luxury-navy fill-luxury-navy" />
+                     {offer.is_featured && (
+                      <div className="absolute top-0 left-0 w-0 h-0 border-t-[60px] border-t-secondary border-r-[60px] border-r-transparent z-10">
+                        <Star className="absolute -top-[50px] left-[10px] w-5 h-5 text-white fill-white" />
                       </div>
                     )}
                   </div>
@@ -399,7 +399,7 @@ const Offers = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-luxury-navy via-luxury-navy/95 to-luxury-navy">
+      <section className="py-16 bg-gradient-to-r from-[hsl(var(--background))] via-foreground/95 to-[hsl(var(--background))]">
         <div className="container px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
@@ -409,7 +409,7 @@ const Offers = () => {
               { icon: <Users className="w-8 h-8" />, value: "+2,500", label: "عميل سعيد" },
             ].map((stat, idx) => (
               <div key={idx} className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors">
-                <div className="text-luxury-gold mb-3 flex justify-center">{stat.icon}</div>
+                <div className="text-secondary mb-3 flex justify-center">{stat.icon}</div>
                 <p className="text-3xl font-black text-white mb-1">{stat.value}</p>
                 <p className="text-white/60 text-sm">{stat.label}</p>
               </div>
@@ -419,13 +419,13 @@ const Offers = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-luxury-navy relative overflow-hidden">
+      <section className="py-20 bg-foreground relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-luxury-teal/10 rounded-full blur-[200px]" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-luxury-gold/10 rounded-full blur-[150px]" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[200px]" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[150px]" />
         </div>
         <div className="container px-4 text-center relative z-10">
-          <Sparkles className="w-16 h-16 text-luxury-gold mx-auto mb-6" />
+          <Sparkles className="w-16 h-16 text-secondary mx-auto mb-6" />
           <h2 className="text-4xl font-black text-white mb-4">لم تجد العرض المناسب؟</h2>
           <p className="text-white/60 text-lg mb-8 max-w-xl mx-auto">
             تواصل معنا وسنصمم لك عرضاً خاصاً يناسب ميزانيتك وتفضيلاتك

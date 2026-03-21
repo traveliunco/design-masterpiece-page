@@ -118,7 +118,7 @@ const Programs = () => {
       {/* Hero */}
       <PageHeader
         badge="برامج سياحية متكاملة"
-        badgeIcon={<Plane className="w-4 h-4 text-luxury-gold" />}
+        badgeIcon={<Plane className="w-4 h-4 text-secondary" />}
         title="البرامج السياحية"
         subtitle="برامج مصممة بعناية تشمل كل ما تحتاجه لرحلة مثالية"
       />
@@ -148,8 +148,8 @@ const Programs = () => {
                     className={cn(
                       "px-5 py-3 rounded-xl text-sm font-semibold transition-all",
                       selectedType === type.id
-                        ? "bg-luxury-teal text-white shadow-glow-teal"
-                        : "bg-white text-luxury-navy/70 hover:bg-luxury-teal/10 border border-border"
+                        ? "bg-secondary text-white shadow-lg shadow-secondary/20"
+                        : "bg-white text-foreground/70 hover:bg-secondary/10 border border-border"
                     )}
                   >
                     <span className="ml-2">{type.icon}</span>
@@ -163,11 +163,11 @@ const Programs = () => {
       </section>
 
       {/* Programs Grid */}
-      <section className="py-16 bg-gradient-to-b from-background via-luxury-cream/30 to-background">
+      <section className="py-16 bg-gradient-to-b from-background via-muted/30 to-background">
         <div className="container px-4">
           <div className="flex items-center justify-between mb-8">
             <p className="text-muted-foreground">
-              تم العثور على <span className="font-bold text-luxury-teal">{filteredPrograms.length}</span> برنامج
+              تم العثور على <span className="font-bold text-secondary">{filteredPrograms.length}</span> برنامج
             </p>
           </div>
 
@@ -195,7 +195,7 @@ const Programs = () => {
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Image */}
-                    <div className="relative h-52 overflow-hidden bg-gradient-to-br from-luxury-teal/20 to-luxury-gold/20">
+                    <div className="relative h-52 overflow-hidden bg-gradient-to-br from-secondary/20 to-accent/20">
                       {program.cover_image ? (
                         <img
                           src={program.cover_image}
@@ -208,12 +208,12 @@ const Programs = () => {
                           🗺️
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/80 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 to-transparent" />
 
                       {/* Badges */}
                       <div className="absolute top-4 right-4 flex gap-2">
                         {program.is_featured && (
-                          <span className="bg-luxury-gold text-luxury-navy px-3 py-1 rounded-full text-xs font-bold">
+                          <span className="bg-secondary text-white px-3 py-1 rounded-full text-xs font-bold">
                             مميز
                           </span>
                         )}
@@ -256,7 +256,7 @@ const Programs = () => {
                       {/* Countries */}
                       {countries.length > 0 && (
                         <div className="absolute bottom-4 left-4 glass-dark rounded-lg px-3 py-1 flex items-center gap-1">
-                          <Globe className="w-3 h-3 text-luxury-gold" />
+                          <Globe className="w-3 h-3 text-secondary" />
                           <span className="text-white text-xs">{countries.length} دول</span>
                         </div>
                       )}
@@ -265,11 +265,11 @@ const Programs = () => {
                     {/* Content */}
                     <div className="p-6 bg-white">
                       <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-bold text-lg text-luxury-navy group-hover:text-luxury-teal transition-colors line-clamp-1">
+                        <h3 className="font-bold text-lg text-foreground group-hover:text-secondary transition-colors line-clamp-1">
                           {program.name_ar}
                         </h3>
                         <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-luxury-gold fill-luxury-gold" />
+                          <Star className="w-4 h-4 text-secondary fill-secondary" />
                           <span className="font-bold text-sm">{program.average_rating || "جديد"}</span>
                         </div>
                       </div>
@@ -287,7 +287,7 @@ const Programs = () => {
                       {highlights.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-4">
                           {highlights.slice(0, 3).map((h: string, i: number) => (
-                            <span key={i} className="text-xs bg-luxury-teal/10 text-luxury-teal px-2 py-1 rounded-md">
+                            <span key={i} className="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-md">
                               {h}
                             </span>
                           ))}
@@ -307,11 +307,11 @@ const Programs = () => {
                               {originalPrice.toLocaleString()} ر.س
                             </span>
                           )}
-                          <div className="text-luxury-teal font-bold text-xl">
+                          <div className="text-secondary font-bold text-xl">
                             {(program.base_price || program.price || 0).toLocaleString()} ر.س
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 text-luxury-teal font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-2 text-secondary font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
                           <span>التفاصيل</span>
                           <ArrowLeft className="w-4 h-4" />
                         </div>
@@ -355,7 +355,7 @@ const Programs = () => {
           {!loading && filteredPrograms.length === 0 && (
             <div className="text-center py-20">
               <Plane className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-luxury-navy mb-2">لم يتم العثور على برامج</h3>
+              <h3 className="text-xl font-bold text-foreground mb-2">لم يتم العثور على برامج</h3>
               <p className="text-muted-foreground mb-4">جرب تغيير معايير البحث</p>
               <button
                 onClick={() => { setSelectedType("all"); setSearchQuery(""); }}
@@ -369,7 +369,7 @@ const Programs = () => {
       </section>
 
       {/* What's Included */}
-      <section className="py-20 bg-luxury-cream/50">
+      <section className="py-20 bg-muted/50">
         <div className="container px-4">
           <SectionTitle
             badge="مزايا البرامج"
@@ -392,7 +392,7 @@ const Programs = () => {
                 <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
                   <item.icon className="w-7 h-7 text-white" />
                 </div>
-                <p className="font-semibold text-luxury-navy">{item.label}</p>
+                <p className="font-semibold text-foreground">{item.label}</p>
               </div>
             ))}
           </div>
@@ -400,10 +400,10 @@ const Programs = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-luxury-navy relative overflow-hidden">
+       <section className="py-20 bg-foreground relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-luxury-teal/10 rounded-full blur-[150px]" />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-luxury-gold/10 rounded-full blur-[100px]" />
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[150px]" />
+          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/10 rounded-full blur-[100px]" />
         </div>
         
         <div className="container px-4 relative z-10 text-center">

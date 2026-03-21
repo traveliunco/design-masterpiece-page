@@ -169,7 +169,7 @@ export const tripBuilderService = {
     if (cached) return cached;
 
     let query = supabase
-      .from('tour_activities' as any)
+      .from('tour_activities')
       .select('*')
       .eq('is_active', true);
 
@@ -181,7 +181,7 @@ export const tripBuilderService = {
 
     const { data, error } = await query.order('price_per_person').limit(30);
     if (error) throw error;
-    const result = (data || []) as any[];
+    const result = data || [];
     setCache(key, result);
     return result;
   },
@@ -216,7 +216,7 @@ export const tripBuilderService = {
   }) {
     const { data, error } = await supabase
       .from('dynamic_packages')
-      .insert(packageData as any)
+      .insert(packageData)
       .select()
       .single();
     if (error) throw error;
