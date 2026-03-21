@@ -107,7 +107,7 @@ const ProgramDetails = () => {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <Plane className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-luxury-navy mb-2">لم يتم العثور على البرنامج</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-2">لم يتم العثور على البرنامج</h2>
             <p className="text-muted-foreground mb-6">البرنامج المطلوب غير موجود أو تم حذفه</p>
             <Link to="/programs">
               <Button className="btn-luxury">العودة للبرامج</Button>
