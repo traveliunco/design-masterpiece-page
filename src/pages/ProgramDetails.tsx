@@ -470,8 +470,8 @@ const ProgramDetails = () => {
                         value={travelers.children}
                         onChange={(e) => setTravelers({...travelers, children: Number(e.target.value)})}
                         aria-label="عدد الأطفال"
-                        className="w-full p-3 border rounded-xl bg-white focus:ring-2 focus:ring-luxury-teal/50 focus:border-luxury-teal transition-all"
-                      >
+                         className="w-full p-3 border rounded-xl bg-white focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all"
+                       >
                         {[0,1,2,3,4,5].map(n => <option key={n} value={n}>{n} طفل</option>)}
                       </select>
                     </div>
