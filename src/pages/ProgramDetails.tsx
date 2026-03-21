@@ -149,7 +149,7 @@ const ProgramDetails = () => {
             🗺️
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/95 via-luxury-navy/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/95 via-foreground/60 to-transparent" />
 
         {/* Favorite Button on Hero */}
         <button
