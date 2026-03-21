@@ -8,6 +8,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
 import PremiumFooter from "@/components/PremiumFooter";
 import MobileNav from "@/components/MobileNav";
+import AppSidebar from "@/components/AppSidebar";
 import { useSEO } from "@/hooks/useSEO";
 
 const IndexPremium = () => {
@@ -21,35 +22,25 @@ const IndexPremium = () => {
     <div className="min-h-screen bg-background">
       <Nav3D />
       
-      <main className="overflow-hidden pb-20 md:pb-0">
-        {/* Hero Section - Full Screen Premium */}
-        <PremiumHeroSection />
+      <div className="flex">
+        <div className="flex-1 min-w-0">
+          <main className="overflow-hidden pb-20 lg:pb-0">
+            <PremiumHeroSection />
+            <MarqueeBanner />
+            <WhyChooseUs />
+            <InteractiveDestinations />
+            <MarqueeBanner 
+              className="bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900" 
+            />
+            <HoneymoonSection />
+            <TestimonialsSection />
+            <CTASection />
+          </main>
+          <PremiumFooter />
+        </div>
+        <AppSidebar />
+      </div>
 
-        {/* Animated Marquee Banner - Gold Theme */}
-        <MarqueeBanner />
-
-        {/* Why Choose Us Section */}
-        <WhyChooseUs />
-
-        {/* Interactive Destinations with 3D Effects */}
-        <InteractiveDestinations />
-
-        {/* Second Marquee - Teal Theme */}
-        <MarqueeBanner 
-          className="bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900" 
-        />
-
-        {/* Honeymoon Section - Premium */}
-        <HoneymoonSection />
-
-        {/* Testimonials - Social Proof */}
-        <TestimonialsSection />
-
-        {/* Final CTA */}
-        <CTASection />
-      </main>
-
-      <PremiumFooter />
       <MobileNav />
     </div>
   );

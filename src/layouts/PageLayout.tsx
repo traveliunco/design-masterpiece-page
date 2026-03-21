@@ -4,6 +4,7 @@ import { ArrowRight, Bell, User, Search } from "lucide-react";
 import Nav3D from "@/components/Nav3D";
 import PremiumFooter from "@/components/PremiumFooter";
 import MobileNav from "@/components/MobileNav";
+import AppSidebar from "@/components/AppSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PageLayoutProps {
@@ -126,8 +127,13 @@ const PageLayout = ({ children, className = "", pageTitle, hideBackButton, hideS
   return (
     <div className={`min-h-screen bg-background overflow-x-hidden ${className}`}>
       <Nav3D />
-      <main className="pb-0">{children}</main>
-      <PremiumFooter />
+      <div className="flex">
+        <div className="flex-1 min-w-0">
+          <main className="pb-0">{children}</main>
+          <PremiumFooter />
+        </div>
+        <AppSidebar />
+      </div>
       <MobileNav />
     </div>
   );
