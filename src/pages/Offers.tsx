@@ -399,7 +399,7 @@ const Offers = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-luxury-navy via-luxury-navy/95 to-luxury-navy">
+      <section className="py-16 bg-gradient-to-r from-[hsl(var(--background))] via-foreground/95 to-[hsl(var(--background))]">
         <div className="container px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
