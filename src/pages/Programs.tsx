@@ -287,7 +287,7 @@ const Programs = () => {
                       {highlights.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-4">
                           {highlights.slice(0, 3).map((h: string, i: number) => (
-                            <span key={i} className="text-xs bg-luxury-teal/10 text-luxury-teal px-2 py-1 rounded-md">
+                            <span key={i} className="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-md">
                               {h}
                             </span>
                           ))}
