@@ -431,7 +431,7 @@ const ProgramDetails = () => {
                 {/* Booking Card */}
                 <div className="card-3d p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold text-xl text-luxury-navy">احجز الآن</h3>
+                    <h3 className="font-bold text-xl text-foreground">احجز الآن</h3>
                     {discount > 0 && (
                       <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-bold">
                         -{discount}%
