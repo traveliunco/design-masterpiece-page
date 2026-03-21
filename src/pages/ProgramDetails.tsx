@@ -440,7 +440,7 @@ const ProgramDetails = () => {
                   </div>
 
                   {/* Price Display */}
-                  <div className="bg-luxury-cream/50 rounded-2xl p-4 mb-6">
+                  <div className="bg-muted/50 rounded-2xl p-4 mb-6">
                     {discount > 0 && originalPrice && (
                       <p className="text-muted-foreground line-through text-sm">
                         {originalPrice.toLocaleString()} ر.س للشخص
