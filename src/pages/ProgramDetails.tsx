@@ -446,8 +446,8 @@ const ProgramDetails = () => {
                         {originalPrice.toLocaleString()} ر.س للشخص
                       </p>
                     )}
-                    <p className="text-3xl font-bold text-luxury-teal">
-                      {price.toLocaleString()} <span className="text-sm font-normal text-muted-foreground">ر.س / للشخص</span>
+                     <p className="text-3xl font-bold text-secondary">
+                       {price.toLocaleString()} <span className="text-sm font-normal text-muted-foreground">ر.س / للشخص</span>
                     </p>
                   </div>
                   
