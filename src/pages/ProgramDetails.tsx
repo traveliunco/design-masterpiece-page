@@ -179,7 +179,7 @@ const ProgramDetails = () => {
 
             {/* Tags */}
             <div className="flex flex-wrap items-center gap-3 mb-4">
-              <span className="bg-luxury-gold/20 text-luxury-gold backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold">
+               <span className="bg-secondary/20 text-secondary backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold">
                 {typeLabels[program.program_type] || program.program_type}
               </span>
               {program.is_featured && (
