@@ -91,7 +91,7 @@ const AdminOfferEdit = () => {
     if (!id) return;
     setLoading(true);
     try {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("special_offers")
         .select("*")
         .eq("id", id)
