@@ -171,7 +171,7 @@ const Nav3D = () => {
     <>
       {/* Top Bar */}
       {sysSettings.header.showTopBar && (
-        <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-teal-600 to-cyan-500 text-white text-xs py-2 px-4 flex items-center justify-between z-[calc(var(--z-navigation)+1)] shadow-md">
+        <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-blue-700 to-blue-500 text-white text-xs py-2 px-4 flex items-center justify-between z-[calc(var(--z-navigation)+1)] shadow-md">
           <div className="flex-1 text-center font-bold tracking-wide animate-pulse-slow">
             {sysSettings.header.topBarText}
           </div>
