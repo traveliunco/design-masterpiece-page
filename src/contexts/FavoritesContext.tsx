@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -34,6 +34,7 @@ const STORAGE_KEY = 'traveliun_favorites_v2';
 
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
+  const syncedUserRef = useRef<string | null>(null);
   const [favorites, setFavorites] = useState<FavoriteItem[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -41,9 +42,10 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
     } catch { return []; }
   });
 
-  // Sync from DB when user logs in
+  // Sync from DB when user logs in - only once per user
   useEffect(() => {
-    if (!user) return;
+    if (!user || syncedUserRef.current === user.id) return;
+    syncedUserRef.current = user.id;
     const syncFromDB = async () => {
       const { data } = await supabase
         .from('user_favorites')

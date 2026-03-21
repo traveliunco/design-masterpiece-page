@@ -157,11 +157,8 @@ const Nav3D = () => {
   }, []);
 
 
-  // ✅ روابط القائمة من localStorage (تتحدث عند كل تنقل)
-  const [navLinks, setNavLinks] = useState<NavLink[]>(() => navService.getNavLinks());
-  useEffect(() => {
-    setNavLinks(navService.getNavLinks());
-  }, [location.pathname]);
+  // ✅ روابط القائمة من localStorage - مرة واحدة فقط
+  const [navLinks] = useState<NavLink[]>(() => navService.getNavLinks());
   const activeNavLinks = navLinks.filter(l => l.is_active).sort((a, b) => a.order - b.order);
 
 
@@ -219,44 +216,21 @@ const Nav3D = () => {
 
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3 group relative z-10">
-              <div className="relative transform-gpu transition-all duration-500 group-hover:scale-110">
-                {/* 3D Animated Logo Container */}
+              <div className="relative transition-all duration-300 group-hover:scale-110">
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center overflow-hidden
                     bg-gradient-to-br from-primary via-teal-500 to-teal-600
-                    shadow-[0_8px_30px_rgba(20,184,166,0.5),0_0_60px_rgba(20,184,166,0.3)]
-                    animate-[float3d_4s_ease-in-out_infinite]
-                    group-hover:shadow-[0_12px_40px_rgba(20,184,166,0.7),0_0_80px_rgba(20,184,166,0.4)]
-                    transition-all duration-500"
-                  style={{
-                    transformStyle: 'preserve-3d',
-                    animation: 'float3d 4s ease-in-out infinite, rotate3d 8s linear infinite',
-                  }}
+                    shadow-[0_8px_30px_rgba(20,184,166,0.5)]
+                    group-hover:shadow-[0_12px_40px_rgba(20,184,166,0.7)]
+                    transition-shadow duration-300"
                 >
-                  {/* Inner glow layer */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/30 via-transparent to-transparent rounded-2xl" />
-                  
-                  {/* Logo image */}
                   <img 
                     src="/logo-white.png" 
                     alt="Traveliun Logo" 
-                    className="w-10 h-10 object-contain relative z-10 drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
-                    style={{
-                      filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))',
-                    }}
-                  />
-                  
-                  {/* Shine effect */}
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12 animate-[shine_3s_ease-in-out_infinite]"
-                    style={{ transform: 'translateX(-100%)' }}
+                    className="w-10 h-10 object-contain relative z-10"
                   />
                 </div>
-                
-                {/* Floating particles around logo */}
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-luxury-gold rounded-full animate-[pulse_2s_ease-in-out_infinite] shadow-[0_0_15px_rgba(234,179,8,0.8)]" />
-                <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-cyan-400 rounded-full animate-[pulse_2.5s_ease-in-out_infinite_0.5s] shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
-                <div className="absolute top-1/2 -right-2 w-1.5 h-1.5 bg-white rounded-full animate-[pulse_3s_ease-in-out_infinite_1s] shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-luxury-gold rounded-full shadow-[0_0_15px_rgba(234,179,8,0.8)]" />
               </div>
               <div>
                 <span className={cn(

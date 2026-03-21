@@ -44,20 +44,19 @@ const MobileNav = () => {
     } else {
       setNavItems(activeNav);
     }
-  }, [location.pathname]);
+  }, []);
 
   if (isAdmin) return null;
 
-  const getActiveIndex = () => {
+  const activeIdx = (() => {
     const path = location.pathname;
-    return navItems.findIndex(item => {
+    const idx = navItems.findIndex(item => {
       if (item.path === '/' && path !== '/') return false;
       if (item.path === '/m' && path !== '/m') return false;
       return path.startsWith(item.path);
     });
-  };
-
-  const activeIdx = getActiveIndex() !== -1 ? getActiveIndex() : 0; // Default to first if none match
+    return idx !== -1 ? idx : 0;
+  })();
 
 
   return (

@@ -135,8 +135,7 @@
   }
 
   html {
-    scroll-behavior: smooth;
-    /* Optimize font rendering */
+    scroll-behavior: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -170,19 +169,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Speed up transitions globally */
-  a, button, input, select, textarea,
-  [class*="transition"],
-  [class*="animate"] {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    will-change: auto;
-  }
-
-  /* Offscreen section optimizations */
-  section, article, main > div {
+  /* Offscreen section optimizations - only for main content sections */
+  main > section {
     content-visibility: auto;
-    contain-intrinsic-size: auto 600px;
+    contain-intrinsic-size: auto 500px;
   }
 
   /* Respect user preference for reduced motion */

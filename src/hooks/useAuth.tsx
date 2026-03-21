@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, createContext, ReactNode } from "react";
+import { useState, useEffect, useRef, useContext, createContext, ReactNode } from "react";
 import { User, Session, AuthError } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -35,6 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<UserRole>(null);
+  const roleFetchedForRef = useRef<string | null>(null);
 
   // Fetch user role من مصادر بالأولوية:
   // 1. جدول users في Supabase
@@ -55,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data, error } = await supabase
         .from("user_roles")
         .select("role")
-        .eq("id", userId)
+        .eq("user_id", userId)
         .maybeSingle();
 
       if (error || !data) return getFallbackRole();
@@ -86,8 +87,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // ✅ أوقف loading هنا فوراً — لا ننتظر جلب الـ Role
       setLoading(false);
 
-      // جلب الـ Role في الخلفية بدون تأخير
-      if (session?.user) {
+      // جلب الـ Role في الخلفية - مرة واحدة فقط
+      if (session?.user && roleFetchedForRef.current !== session.user.id) {
+        roleFetchedForRef.current = session.user.id;
         fetchUserRole(session.user.id, session.user.email || undefined).then(setUserRole);
       }
     }).catch(() => {
@@ -102,10 +104,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // ✅ أوقف loading فوراً
         setLoading(false);
 
-        if (event === "SIGNED_IN" && session?.user) {
-          // جلب الـ Role في الخلفية
+        if (event === "SIGNED_IN" && session?.user && roleFetchedForRef.current !== session.user.id) {
+          roleFetchedForRef.current = session.user.id;
           fetchUserRole(session.user.id, session.user.email || undefined).then(setUserRole);
         } else if (event === "SIGNED_OUT") {
+          roleFetchedForRef.current = null;
           setUserRole(null);
         }
       }
