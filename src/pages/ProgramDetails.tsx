@@ -410,8 +410,8 @@ const ProgramDetails = () => {
                          <div className="absolute -right-[18px] top-0 w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
                            {day.day}
                          </div>
-                        <div className="bg-luxury-cream/30 rounded-2xl p-5">
-                          <h3 className="text-lg font-bold text-luxury-navy mb-2">
+                         <div className="bg-muted/30 rounded-2xl p-5">
+                           <h3 className="text-lg font-bold text-foreground mb-2">
                             اليوم {day.day}: {day.title}
                           </h3>
                           <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
