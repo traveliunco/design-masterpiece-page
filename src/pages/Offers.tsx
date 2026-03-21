@@ -211,7 +211,7 @@ const Offers = () => {
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-luxury-teal/20 to-luxury-gold/20 flex items-center justify-center text-6xl">
+                        <div className="w-full h-full bg-gradient-to-br from-secondary/20 to-accent/20 flex items-center justify-center text-6xl">
                           🏷️
                         </div>
                       )}
