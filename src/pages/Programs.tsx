@@ -256,7 +256,7 @@ const Programs = () => {
                       {/* Countries */}
                       {countries.length > 0 && (
                         <div className="absolute bottom-4 left-4 glass-dark rounded-lg px-3 py-1 flex items-center gap-1">
-                          <Globe className="w-3 h-3 text-luxury-gold" />
+                          <Globe className="w-3 h-3 text-secondary" />
                           <span className="text-white text-xs">{countries.length} دول</span>
                         </div>
                       )}
