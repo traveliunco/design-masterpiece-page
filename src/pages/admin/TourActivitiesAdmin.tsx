@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+type TourActivityInsert = Database['public']['Tables']['tour_activities']['Insert'];
+type TourActivityUpdate = Database['public']['Tables']['tour_activities']['Update'];
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -49,17 +52,17 @@ const TourActivitiesAdmin = () => {
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data || []) as unknown as Activity[];
+      return (data || []) as Activity[];
     },
   });
 
   const saveMutation = useMutation({
     mutationFn: async (formData: Partial<Activity>) => {
       if (editId) {
-        const { error } = await supabase.from("tour_activities").update(formData as any).eq("id", editId);
+        const { error } = await supabase.from("tour_activities").update(formData as TourActivityUpdate).eq("id", editId);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("tour_activities").insert(formData as any);
+        const { error } = await supabase.from("tour_activities").insert([formData as TourActivityInsert]);
         if (error) throw error;
       }
     },

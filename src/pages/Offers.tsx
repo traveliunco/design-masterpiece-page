@@ -437,7 +437,7 @@ const Offers = () => {
               </Button>
             </a>
             <Link to="/destinations">
-              <Button className="bg-transparent border-2 border-white/30 text-white hover:bg-white hover:text-luxury-navy px-10 py-6 text-lg rounded-2xl font-bold flex items-center gap-2 transition-all">
+              <Button className="bg-transparent border-2 border-white/30 text-white hover:bg-white hover:text-foreground px-10 py-6 text-lg rounded-2xl font-bold flex items-center gap-2 transition-all">
                 تصفح الوجهات<ChevronLeft className="w-5 h-5" />
               </Button>
             </Link>
