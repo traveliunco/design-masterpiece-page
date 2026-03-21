@@ -238,9 +238,9 @@ const ProgramDetails = () => {
               {/* Description */}
               {program.description_ar && (
                 <div className="card-3d p-8">
-                  <h2 className="text-2xl font-bold text-luxury-navy mb-6 flex items-center gap-3">
-                    <div className="w-10 h-10 bg-luxury-teal/10 rounded-xl flex items-center justify-center">
-                      <Plane className="w-5 h-5 text-luxury-teal" />
+                   <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                    <div className="w-10 h-10 bg-secondary/10 rounded-xl flex items-center justify-center">
+                      <Plane className="w-5 h-5 text-secondary" />
                     </div>
                     نظرة عامة
                   </h2>
