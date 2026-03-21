@@ -529,7 +529,7 @@ const ProgramDetails = () => {
 
                 {/* Program Info Summary */}
                 <div className="card-3d p-6">
-                  <h3 className="font-bold text-luxury-navy mb-4">معلومات البرنامج</h3>
+                  <h3 className="font-bold text-foreground mb-4">معلومات البرنامج</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">المدة</span>
