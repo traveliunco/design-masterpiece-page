@@ -1,71 +1,80 @@
 
 
-# خطة نظام الصلاحيات + إصلاح أخطاء البناء
+# خطة تحسين سرعة التطبيق الشاملة
 
-## المهام المطلوبة
+## المشاكل المكتشفة
 
-### 1. إصلاح أخطاء البناء (Build Errors)
+### 1. استعلامات Supabase مكررة عند كل تنقل
+- `user_roles` و `user_favorites` تُستدعى مرتين عند كل تنقل (ظاهرة في Network requests)
+- `MobileNav` يستدعي `mobileHomepageService.getData()` عند كل تغيير في `location.pathname`
+- `Nav3D` يعيد جلب `navLinks` عند كل تغيير في `location.pathname`
+- `FavoritesContext` يعيد الجلب من Supabase عند كل تغيير في `user`
 
-هناك عدة أخطاء TypeScript يجب إصلاحها أولاً:
+### 2. Nav3D ثقيل جداً (840 سطر)
+- يستورد 18 أيقونة من lucide-react
+- يحتوي على mega menu بحجم كبير ثابت في الذاكرة
+- أنيميشن `float3d` و `rotate3d` تعمل بشكل دائم على اللوغو (GPU drain)
+- 3 عناصر "floating particles" بأنيميشن `pulse` دائمة حول اللوغو
+- يعيد حساب `activeNavLinks` عند كل render
 
-**A. `src/data/southeast-asia.ts`** - تعريف الأنواع (Types) لا يتطابق مع البيانات الفعلية:
-- `City.accommodation` معرف كـ `string` لكن البيانات تحتوي كائن `{ budget, midRange, luxury }`
-- `City.attractions` معرف كـ `string[]` لكن البيانات تحتوي كائنات
-- `City` ينقصها خاصية `bestTimeToVisit`
-- سيتم تحديث الـ interface ليطابق البيانات الفعلية
+### 3. PremiumHeroSection يحمّل صور ثقيلة
+- 3 صور خلفية (imports) تُحمّل كلها فوراً حتى لو غير ظاهرة
+- `homepageService.getHeroSlides()` تُستدعى عند كل mount بدون cache
+- الصور من قاعدة البيانات تحتوي على base64 ضخم (ظاهر في network response)
 
-**B. `src/pages/CityDetails.tsx`** - يستدعي `getCityById` بمعامل واحد بدل اثنين، ويستخدم خصائص غير موجودة في النوع الحالي. سيتم إصلاحه ليتوافق مع الأنواع المحدثة.
+### 4. CSS يفرض `transform: translateZ(0)` على كل العناصر التفاعلية
+- السطر 174-180 في `index.css` يطبق `will-change: auto` و `translateZ(0)` على كل `a, button, input, select, textarea` وكل عنصر يحتوي على `transition` أو `animate` - هذا يستهلك GPU بشكل مفرط
 
-**C. `src/components/Nav3D.tsx`** - خطأ في الوصول لـ `.items` على نوع `countries` الذي يحتوي `countries` بدلاً من `items`. سيتم إضافة type guard.
+### 5. `scroll-behavior: smooth` على مستوى HTML
+- يبطئ التنقل بين الصفحات
 
-**D. `src/components/globe/CityCard.tsx`** - خطأ `nameAr` على نوع `never`. سيتم إصلاح النوع.
+### 6. `content-visibility: auto` على كل section/article
+- قد يسبب layout shifts ومشاكل في الأداء مع العناصر الكبيرة
 
----
+## الحلول المقترحة
 
-### 2. نظام الصلاحيات
+### الملف 1: `src/index.css`
+- إزالة `scroll-behavior: smooth` من `html`
+- إزالة قاعدة `translateZ(0)` و `will-change: auto` الشاملة (السطر 174-180) - هذه تضر أكثر مما تنفع
+- تقليل نطاق `content-visibility: auto` ليشمل فقط `main > section`
 
-**الوضع الحالي:**
-- جدول `user_roles` موجود لكنه فارغ
-- دالة `has_role()` موجودة وتعمل
-- `useAuth` يقرأ الأدوار من جدول `users` (خطأ أمني) بدلاً من `user_roles`
-- المستخدم `klidmorre@gmail.com` موجود بالفعل في `auth.users`
+### الملف 2: `src/components/Nav3D.tsx`
+- تحويل `navLinks` لاستخدام `useMemo` بدلاً من `useState` + `useEffect`
+- إزالة أنيميشن `rotate3d` الدائمة من اللوغو (الأثقل)
+- تبسيط الـ floating particles (إزالة 2 من 3)
+- Lazy render لـ mega menu dropdown (لا يُرندر إلا عند الفتح)
 
-**الخطوات:**
+### الملف 3: `src/components/MobileNav.tsx`
+- إزالة إعادة جلب `mobileHomepageService.getData()` عند كل تغيير route - يكفي مرة واحدة عند الـ mount
+- تبسيط `getActiveIndex` لتجنب استدعائه مرتين
 
-**A. إدخال الأدوار في جدول `user_roles`:**
-- `klidmorre@gmail.com` → `admin` (مدير عام - صلاحيات كاملة)
-- `eng.khalid.work@gmail.com` → `moderator` (موظف - صلاحيات محدودة)
+### الملف 4: `src/contexts/FavoritesContext.tsx`
+- إضافة flag لمنع إعادة الجلب المتكرر من Supabase
 
-ملاحظة: الأدوار المتاحة حالياً في `app_role` هي: `admin`, `moderator`, `user`. سنستخدم `moderator` للموظف.
+### الملف 5: `src/components/PremiumHeroSection.tsx`
+- تأجيل تحميل الصور غير المرئية باستخدام `loading="lazy"` على الـ background images
+- Cache نتيجة `getHeroSlides` في الذاكرة
 
-**B. تحديث `useAuth.tsx`:**
-- تغيير قراءة الدور من جدول `users` إلى `user_roles`
-- تحديث نوع `UserRole` ليطابق `app_role` enum
+### الملف 6: `src/hooks/useAuth.tsx`
+- إضافة `useRef` لمنع استدعاء `fetchUserRole` أكثر من مرة لنفس المستخدم
 
-**C. تحديث `ProtectedRoute.tsx`:**
-- إضافة دعم التحقق من الأدوار عبر `user_roles`
+### الملف 7: `src/components/ScrollToTop.tsx`
+- التأكد من أن السلوك `instant` (تم تطبيقه سابقاً)
 
-**D. تحديث `AdminLayout.tsx`:**
-- تعديل القائمة الجانبية لإظهار العناصر حسب الدور
-- الموظف يرى فقط: لوحة التحكم، البرامج، العروض (إضافة/تعديل/حذف)
-- المدير يرى كل شيء
+## الملفات المتأثرة
 
-**E. تحديث مسارات Admin في `App.tsx`:**
-- حماية المسارات بأدوار محددة
-- البرامج والعروض: متاحة للموظف والمدير
-- باقي الصفحات: مدير فقط
+| الملف | العملية |
+|---|---|
+| `src/index.css` | إزالة CSS rules ضارة بالأداء |
+| `src/components/Nav3D.tsx` | تخفيف أنيميشن + memoize + lazy dropdown |
+| `src/components/MobileNav.tsx` | إيقاف إعادة الجلب عند كل تنقل |
+| `src/contexts/FavoritesContext.tsx` | منع الجلب المكرر |
+| `src/components/PremiumHeroSection.tsx` | تحسين تحميل الصور |
+| `src/hooks/useAuth.tsx` | منع استدعاء fetchUserRole المكرر |
 
----
-
-### التفاصيل التقنية
-
-**صلاحيات الموظف (moderator):**
-| الصفحة | الصلاحية |
-|--------|----------|
-| لوحة التحكم | عرض فقط |
-| البرامج | إضافة/تعديل/حذف |
-| العروض | إضافة/تعديل/حذف |
-
-**صلاحيات المدير (admin):**
-- كل شيء بدون قيود
+## النتيجة المتوقعة
+- تقليل عدد Network requests بنسبة ~50% عند التنقل
+- تقليل استهلاك GPU بإزالة الأنيميشنات الدائمة غير المرئية
+- تسريع التنقل بين الصفحات بشكل ملحوظ
+- لا تأثير على شكل التطبيق أو البيانات
 
