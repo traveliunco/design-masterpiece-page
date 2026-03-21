@@ -837,4 +837,4 @@ const Nav3D = () => {
   );
 };
 
-export default Nav3D;
+export default memo(Nav3D);
