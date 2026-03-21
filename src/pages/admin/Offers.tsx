@@ -77,7 +77,7 @@ const AdminOffers = () => {
   const handleDelete = async (id: string) => {
     if (!confirm("هل أنت متأكد من حذف هذا العرض؟")) return;
     try {
-      const { error } = await (supabase as any).from("special_offers").delete().eq("id", id);
+      const { error } = await supabase.from("special_offers").delete().eq("id", id);
       if (error) throw error;
       toast.success("تم حذف العرض بنجاح");
       loadOffers();
