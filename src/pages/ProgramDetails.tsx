@@ -197,7 +197,7 @@ const ProgramDetails = () => {
             {/* Countries */}
             {countries.length > 0 && (
               <div className="flex items-center gap-2 text-white/90 mb-4">
-                <Globe className="w-5 h-5 text-luxury-gold" />
+                <Globe className="w-5 h-5 text-secondary" />
                 <span className="text-lg font-semibold">{countries.join(" • ")}</span>
               </div>
             )}
