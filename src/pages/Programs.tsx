@@ -148,8 +148,8 @@ const Programs = () => {
                     className={cn(
                       "px-5 py-3 rounded-xl text-sm font-semibold transition-all",
                       selectedType === type.id
-                        ? "bg-luxury-teal text-white shadow-glow-teal"
-                        : "bg-white text-luxury-navy/70 hover:bg-luxury-teal/10 border border-border"
+                        ? "bg-secondary text-white shadow-lg shadow-secondary/20"
+                        : "bg-white text-foreground/70 hover:bg-secondary/10 border border-border"
                     )}
                   >
                     <span className="ml-2">{type.icon}</span>
