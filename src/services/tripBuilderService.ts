@@ -181,7 +181,7 @@ export const tripBuilderService = {
 
     const { data, error } = await query.order('price_per_person').limit(30);
     if (error) throw error;
-    const result = (data || []) as any[];
+    const result = data || [];
     setCache(key, result);
     return result;
   },
