@@ -406,11 +406,10 @@ const ProgramDetails = () => {
                   </h2>
                   <div className="space-y-6">
                     {itinerary.map((day, i) => (
-                      <div key={i} className="relative border-r-4 border-luxury-teal pr-8 pb-6 last:pb-0">
-                        {/* Timeline dot */}
-                        <div className="absolute -right-[18px] top-0 w-8 h-8 bg-luxury-teal rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                          {day.day}
-                        </div>
+                       <div key={i} className="relative border-r-4 border-secondary pr-8 pb-6 last:pb-0">
+                         <div className="absolute -right-[18px] top-0 w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                           {day.day}
+                         </div>
                         <div className="bg-luxury-cream/30 rounded-2xl p-5">
                           <h3 className="text-lg font-bold text-luxury-navy mb-2">
                             اليوم {day.day}: {day.title}
