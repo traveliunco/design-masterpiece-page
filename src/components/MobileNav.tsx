@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Home, MapPin, Plane, Gift, User, Heart } from "lucide-react";
 import { useNavigation } from "@/contexts/NavigationContext";
