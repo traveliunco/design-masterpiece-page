@@ -35,6 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<UserRole>(null);
+  const roleFetchedForRef = useRef<string | null>(null);
 
   // Fetch user role من مصادر بالأولوية:
   // 1. جدول users في Supabase
