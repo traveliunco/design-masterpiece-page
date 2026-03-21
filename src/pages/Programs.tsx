@@ -369,7 +369,7 @@ const Programs = () => {
       </section>
 
       {/* What's Included */}
-      <section className="py-20 bg-luxury-cream/50">
+      <section className="py-20 bg-muted/50">
         <div className="container px-4">
           <SectionTitle
             badge="مزايا البرامج"
