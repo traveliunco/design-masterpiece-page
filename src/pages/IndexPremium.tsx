@@ -3,6 +3,7 @@ import PremiumHeroSection from "@/components/PremiumHeroSection";
 import MarqueeBanner from "@/components/MarqueeBanner";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import InteractiveDestinations from "@/components/InteractiveDestinations";
+import ExclusiveDeals from "@/components/ExclusiveDeals";
 import HoneymoonSection from "@/components/HoneymoonSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
