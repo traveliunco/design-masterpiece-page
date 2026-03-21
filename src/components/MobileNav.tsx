@@ -44,7 +44,7 @@ const MobileNav = () => {
     } else {
       setNavItems(activeNav);
     }
-  }, [location.pathname]);
+  }, []);
 
   if (isAdmin) return null;
 
