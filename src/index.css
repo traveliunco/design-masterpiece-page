@@ -568,20 +568,20 @@
     letter-spacing: 0.02em;
     background: linear-gradient(
       135deg,
-      hsl(175, 84%, 32%) 0%,
-      hsl(185, 84%, 39%) 100%
+      hsl(213, 52%, 25%) 0%,
+      hsl(217, 91%, 60%) 100%
     );
     color: white;
     box-shadow:
-      0 4px 15px -3px rgba(20, 184, 166, 0.5),
+      0 4px 15px -3px rgba(30, 58, 95, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .btn-luxury:hover {
     transform: translateY(-3px) scale(1.02);
     box-shadow:
-      0 15px 35px -5px rgba(20, 184, 166, 0.5),
-      0 0 50px -10px rgba(20, 184, 166, 0.3);
+      0 15px 35px -5px rgba(59, 130, 246, 0.5),
+      0 0 50px -10px rgba(59, 130, 246, 0.3);
   }
 
   .btn-gold {
@@ -591,20 +591,20 @@
     letter-spacing: 0.02em;
     background: linear-gradient(
       135deg,
-      hsl(45, 93%, 58%) 0%,
-      hsl(35, 91%, 55%) 100%
+      hsl(217, 91%, 60%) 0%,
+      hsl(217, 92%, 68%) 100%
     );
-    color: hsl(222, 47%, 11%);
+    color: white;
     box-shadow:
-      0 4px 15px -3px rgba(234, 179, 8, 0.5),
+      0 4px 15px -3px rgba(59, 130, 246, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .btn-gold:hover {
     transform: translateY(-3px) scale(1.02);
     box-shadow:
-      0 15px 35px -5px rgba(234, 179, 8, 0.5),
-      0 0 50px -10px rgba(234, 179, 8, 0.3);
+      0 15px 35px -5px rgba(59, 130, 246, 0.5),
+      0 0 50px -10px rgba(59, 130, 246, 0.3);
   }
 
   .btn-outline-luxury {
@@ -612,15 +612,15 @@
     font-family: "IBM Plex Sans Arabic", sans-serif;
     font-weight: 600;
     background: transparent;
-    border: 2px solid hsl(175, 84%, 32%);
-    color: hsl(175, 84%, 32%);
+    border: 2px solid hsl(217, 91%, 60%);
+    color: hsl(217, 91%, 60%);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .btn-outline-luxury:hover {
-    background: hsl(175, 84%, 32%);
+    background: hsl(217, 91%, 60%);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px -5px rgba(20, 184, 166, 0.4);
+    box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.4);
   }
 }
 
