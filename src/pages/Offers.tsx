@@ -425,7 +425,7 @@ const Offers = () => {
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[150px]" />
         </div>
         <div className="container px-4 text-center relative z-10">
-          <Sparkles className="w-16 h-16 text-luxury-gold mx-auto mb-6" />
+          <Sparkles className="w-16 h-16 text-secondary mx-auto mb-6" />
           <h2 className="text-4xl font-black text-white mb-4">لم تجد العرض المناسب؟</h2>
           <p className="text-white/60 text-lg mb-8 max-w-xl mx-auto">
             تواصل معنا وسنصمم لك عرضاً خاصاً يناسب ميزانيتك وتفضيلاتك
