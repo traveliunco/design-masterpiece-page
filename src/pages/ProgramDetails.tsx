@@ -509,7 +509,7 @@ const ProgramDetails = () => {
 
                 {/* Why this program */}
                 <div className="card-3d p-6">
-                  <h3 className="font-bold text-luxury-navy mb-4">لماذا هذا البرنامج؟</h3>
+                  <h3 className="font-bold text-foreground mb-4">لماذا هذا البرنامج؟</h3>
                   <ul className="space-y-3">
                     {[
                       { icon: Shield, text: "ضمان أفضل سعر" },
