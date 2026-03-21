@@ -409,7 +409,7 @@ const Offers = () => {
               { icon: <Users className="w-8 h-8" />, value: "+2,500", label: "عميل سعيد" },
             ].map((stat, idx) => (
               <div key={idx} className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors">
-                <div className="text-luxury-gold mb-3 flex justify-center">{stat.icon}</div>
+                <div className="text-secondary mb-3 flex justify-center">{stat.icon}</div>
                 <p className="text-3xl font-black text-white mb-1">{stat.value}</p>
                 <p className="text-white/60 text-sm">{stat.label}</p>
               </div>
