@@ -171,7 +171,7 @@ const Nav3D = () => {
     <>
       {/* Top Bar */}
       {sysSettings.header.showTopBar && (
-        <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-teal-600 to-cyan-500 text-white text-xs py-2 px-4 flex items-center justify-between z-[calc(var(--z-navigation)+1)] shadow-md">
+        <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-blue-700 to-blue-500 text-white text-xs py-2 px-4 flex items-center justify-between z-[calc(var(--z-navigation)+1)] shadow-md">
           <div className="flex-1 text-center font-bold tracking-wide animate-pulse-slow">
             {sysSettings.header.topBarText}
           </div>
@@ -219,9 +219,9 @@ const Nav3D = () => {
               <div className="relative transition-all duration-300 group-hover:scale-110">
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center overflow-hidden
-                    bg-gradient-to-br from-primary via-teal-500 to-teal-600
-                    shadow-[0_8px_30px_rgba(20,184,166,0.5)]
-                    group-hover:shadow-[0_12px_40px_rgba(20,184,166,0.7)]
+                    bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800
+                    shadow-[0_8px_30px_rgba(59,130,246,0.5)]
+                    group-hover:shadow-[0_12px_40px_rgba(59,130,246,0.7)]
                     transition-shadow duration-300"
                 >
                   <img 
@@ -230,7 +230,7 @@ const Nav3D = () => {
                     className="w-10 h-10 object-contain relative z-10"
                   />
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-luxury-gold rounded-full shadow-[0_0_15px_rgba(234,179,8,0.8)]" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
               </div>
               <div>
                 <span className={cn(
@@ -560,9 +560,9 @@ const Nav3D = () => {
                 rel="noopener noreferrer"
                 className={cn(
                   "hidden sm:flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300",
-                  "bg-gradient-to-r from-teal-500 to-cyan-500 text-white",
-                  "shadow-[0_4px_20px_rgba(20,184,166,0.4),inset_0_1px_0_rgba(255,255,255,0.3)]",
-                  "hover:shadow-[0_8px_30px_rgba(20,184,166,0.5)] hover:scale-105",
+                  "bg-gradient-to-r from-blue-600 to-blue-500 text-white",
+                  "shadow-[0_4px_20px_rgba(59,130,246,0.4),inset_0_1px_0_rgba(255,255,255,0.3)]",
+                  "hover:shadow-[0_8px_30px_rgba(59,130,246,0.5)] hover:scale-105",
                   "transform-gpu"
                 )}
                 aria-label="تواصل معنا عبر واتساب للحجز"
@@ -688,7 +688,7 @@ const Nav3D = () => {
                   transform: isMobileMenuOpen ? "translateX(0)" : "translateX(20px)"
                 }}
               >
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-400">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-blue-400">
                   {link.dropdownKey === 'services' ? <Sparkles className="w-5 h-5" /> : link.dropdownKey === 'countries' ? <MapPin className="w-5 h-5" /> : link.name === 'الرئيسية' ? <Plane className="w-5 h-5" /> : link.path === '/offers' ? <Heart className="w-5 h-5" /> : link.path === '/programs' ? <Calendar className="w-5 h-5" /> : link.path === '/flights' ? <Plane className="w-5 h-5" /> : link.path === '/hotels' ? <Hotel className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
                 </div>
                 <span>{link.name}</span>
@@ -772,8 +772,8 @@ const Nav3D = () => {
               rel="noopener noreferrer"
               className={cn(
                 "flex items-center justify-center gap-3 w-full py-5 rounded-3xl font-black text-lg transition-all",
-                "bg-gradient-to-r from-teal-500 to-cyan-500 text-white",
-                "shadow-[0_8px_30px_rgba(20,184,166,0.5)]",
+                "bg-gradient-to-r from-blue-600 to-blue-500 text-white",
+                "shadow-[0_8px_30px_rgba(59,130,246,0.5)]",
                 "hover:scale-105 active:scale-95 transform-gpu"
               )}
             >

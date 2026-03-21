@@ -11,24 +11,24 @@
 
 @layer base {
   :root {
-    /* Premium Color Palette */
+    /* Premium Color Palette - Unified Blue */
     --background: 220 20% 97%;
     --foreground: 222 47% 11%;
 
-    /* Luxury Accents */
-    --luxury-gold: 45 93% 58%;
-    --luxury-teal: 175 84% 32%;
+    /* Luxury Accents - Blue Spectrum */
+    --luxury-gold: 217 91% 60%;
+    --luxury-teal: 213 52% 25%;
     --luxury-navy: 222 47% 11%;
-    --luxury-cream: 40 40% 96%;
+    --luxury-cream: 220 20% 97%;
 
     /* System Colors */
-    --primary: 175 84% 32%;
+    --primary: 213 52% 25%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 45 93% 58%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 0 0% 100%;
 
-    --accent: 175 84% 32%;
+    --accent: 217 92% 68%;
     --accent-foreground: 0 0% 100%;
 
     --card: 0 0% 100%;
@@ -45,7 +45,7 @@
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 175 84% 32%;
+    --ring: 217 91% 60%;
 
     --radius: 1rem;
 
@@ -186,7 +186,7 @@
   }
 
   ::selection {
-    background: hsl(175 84% 32%);
+    background: hsl(217 91% 60%);
     color: white;
   }
 
@@ -340,9 +340,9 @@
   .text-gradient-gold {
     background: linear-gradient(
       135deg,
-      hsl(45, 93%, 58%) 0%,
-      hsl(35, 91%, 60%) 50%,
-      hsl(45, 93%, 58%) 100%
+      hsl(217, 91%, 60%) 0%,
+      hsl(217, 92%, 68%) 50%,
+      hsl(217, 91%, 60%) 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -352,9 +352,9 @@
   .text-gradient-teal {
     background: linear-gradient(
       135deg,
-      hsl(175, 84%, 32%) 0%,
-      hsl(185, 84%, 39%) 50%,
-      hsl(175, 84%, 32%) 100%
+      hsl(213, 52%, 25%) 0%,
+      hsl(217, 91%, 60%) 50%,
+      hsl(213, 52%, 25%) 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -532,19 +532,19 @@
     box-shadow:
       0 20px 25px -5px rgba(0, 0, 0, 0.08),
       0 35px 60px -15px rgba(0, 0, 0, 0.12),
-      0 0 80px -20px rgba(20, 184, 166, 0.2);
+      0 0 80px -20px rgba(59, 130, 246, 0.2);
   }
 
   .glow-gold {
     box-shadow:
-      0 10px 40px -10px rgba(234, 179, 8, 0.4),
-      0 0 60px -20px rgba(234, 179, 8, 0.3);
+      0 10px 40px -10px rgba(59, 130, 246, 0.4),
+      0 0 60px -20px rgba(59, 130, 246, 0.3);
   }
 
   .glow-teal {
     box-shadow:
-      0 10px 40px -10px rgba(20, 184, 166, 0.4),
-      0 0 60px -20px rgba(20, 184, 166, 0.3);
+      0 10px 40px -10px rgba(30, 58, 95, 0.4),
+      0 0 60px -20px rgba(30, 58, 95, 0.3);
   }
 
   .floating {
@@ -568,20 +568,20 @@
     letter-spacing: 0.02em;
     background: linear-gradient(
       135deg,
-      hsl(175, 84%, 32%) 0%,
-      hsl(185, 84%, 39%) 100%
+      hsl(213, 52%, 25%) 0%,
+      hsl(217, 91%, 60%) 100%
     );
     color: white;
     box-shadow:
-      0 4px 15px -3px rgba(20, 184, 166, 0.5),
+      0 4px 15px -3px rgba(30, 58, 95, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .btn-luxury:hover {
     transform: translateY(-3px) scale(1.02);
     box-shadow:
-      0 15px 35px -5px rgba(20, 184, 166, 0.5),
-      0 0 50px -10px rgba(20, 184, 166, 0.3);
+      0 15px 35px -5px rgba(59, 130, 246, 0.5),
+      0 0 50px -10px rgba(59, 130, 246, 0.3);
   }
 
   .btn-gold {
@@ -591,20 +591,20 @@
     letter-spacing: 0.02em;
     background: linear-gradient(
       135deg,
-      hsl(45, 93%, 58%) 0%,
-      hsl(35, 91%, 55%) 100%
+      hsl(217, 91%, 60%) 0%,
+      hsl(217, 92%, 68%) 100%
     );
-    color: hsl(222, 47%, 11%);
+    color: white;
     box-shadow:
-      0 4px 15px -3px rgba(234, 179, 8, 0.5),
+      0 4px 15px -3px rgba(59, 130, 246, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .btn-gold:hover {
     transform: translateY(-3px) scale(1.02);
     box-shadow:
-      0 15px 35px -5px rgba(234, 179, 8, 0.5),
-      0 0 50px -10px rgba(234, 179, 8, 0.3);
+      0 15px 35px -5px rgba(59, 130, 246, 0.5),
+      0 0 50px -10px rgba(59, 130, 246, 0.3);
   }
 
   .btn-outline-luxury {
@@ -612,15 +612,15 @@
     font-family: "IBM Plex Sans Arabic", sans-serif;
     font-weight: 600;
     background: transparent;
-    border: 2px solid hsl(175, 84%, 32%);
-    color: hsl(175, 84%, 32%);
+    border: 2px solid hsl(217, 91%, 60%);
+    color: hsl(217, 91%, 60%);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .btn-outline-luxury:hover {
-    background: hsl(175, 84%, 32%);
+    background: hsl(217, 91%, 60%);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px -5px rgba(20, 184, 166, 0.4);
+    box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.4);
   }
 }
 
@@ -701,10 +701,10 @@
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(20, 184, 166, 0.4);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
   }
   50% {
-    box-shadow: 0 0 40px rgba(20, 184, 166, 0.6);
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
   }
 }
 
@@ -799,7 +799,7 @@
 
 .focus-ring:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.4);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
 }
 
 .img-smooth {
