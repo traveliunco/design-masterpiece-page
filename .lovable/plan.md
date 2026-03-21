@@ -1,80 +1,86 @@
 
 
-# خطة تحسين سرعة التطبيق الشاملة
+# توحيد الهوية اللونية للصفحة الرئيسية
 
-## المشاكل المكتشفة
+## المشكلة الحالية
+التطبيق يستخدم ألوان متشتتة: teal، cyan، gold، emerald، indigo، green - مما يعطي انطباع "تطبيق مبني بالذكاء الصناعي".
 
-### 1. استعلامات Supabase مكررة عند كل تنقل
-- `user_roles` و `user_favorites` تُستدعى مرتين عند كل تنقل (ظاهرة في Network requests)
-- `MobileNav` يستدعي `mobileHomepageService.getData()` عند كل تغيير في `location.pathname`
-- `Nav3D` يعيد جلب `navLinks` عند كل تغيير في `location.pathname`
-- `FavoritesContext` يعيد الجلب من Supabase عند كل تغيير في `user`
-
-### 2. Nav3D ثقيل جداً (840 سطر)
-- يستورد 18 أيقونة من lucide-react
-- يحتوي على mega menu بحجم كبير ثابت في الذاكرة
-- أنيميشن `float3d` و `rotate3d` تعمل بشكل دائم على اللوغو (GPU drain)
-- 3 عناصر "floating particles" بأنيميشن `pulse` دائمة حول اللوغو
-- يعيد حساب `activeNavLinks` عند كل render
-
-### 3. PremiumHeroSection يحمّل صور ثقيلة
-- 3 صور خلفية (imports) تُحمّل كلها فوراً حتى لو غير ظاهرة
-- `homepageService.getHeroSlides()` تُستدعى عند كل mount بدون cache
-- الصور من قاعدة البيانات تحتوي على base64 ضخم (ظاهر في network response)
-
-### 4. CSS يفرض `transform: translateZ(0)` على كل العناصر التفاعلية
-- السطر 174-180 في `index.css` يطبق `will-change: auto` و `translateZ(0)` على كل `a, button, input, select, textarea` وكل عنصر يحتوي على `transition` أو `animate` - هذا يستهلك GPU بشكل مفرط
-
-### 5. `scroll-behavior: smooth` على مستوى HTML
-- يبطئ التنقل بين الصفحات
-
-### 6. `content-visibility: auto` على كل section/article
-- قد يسبب layout shifts ومشاكل في الأداء مع العناصر الكبيرة
-
-## الحلول المقترحة
-
-### الملف 1: `src/index.css`
-- إزالة `scroll-behavior: smooth` من `html`
-- إزالة قاعدة `translateZ(0)` و `will-change: auto` الشاملة (السطر 174-180) - هذه تضر أكثر مما تنفع
-- تقليل نطاق `content-visibility: auto` ليشمل فقط `main > section`
-
-### الملف 2: `src/components/Nav3D.tsx`
-- تحويل `navLinks` لاستخدام `useMemo` بدلاً من `useState` + `useEffect`
-- إزالة أنيميشن `rotate3d` الدائمة من اللوغو (الأثقل)
-- تبسيط الـ floating particles (إزالة 2 من 3)
-- Lazy render لـ mega menu dropdown (لا يُرندر إلا عند الفتح)
-
-### الملف 3: `src/components/MobileNav.tsx`
-- إزالة إعادة جلب `mobileHomepageService.getData()` عند كل تغيير route - يكفي مرة واحدة عند الـ mount
-- تبسيط `getActiveIndex` لتجنب استدعائه مرتين
-
-### الملف 4: `src/contexts/FavoritesContext.tsx`
-- إضافة flag لمنع إعادة الجلب المتكرر من Supabase
-
-### الملف 5: `src/components/PremiumHeroSection.tsx`
-- تأجيل تحميل الصور غير المرئية باستخدام `loading="lazy"` على الـ background images
-- Cache نتيجة `getHeroSlides` في الذاكرة
-
-### الملف 6: `src/hooks/useAuth.tsx`
-- إضافة `useRef` لمنع استدعاء `fetchUserRole` أكثر من مرة لنفس المستخدم
-
-### الملف 7: `src/components/ScrollToTop.tsx`
-- التأكد من أن السلوك `instant` (تم تطبيقه سابقاً)
+## الحل: لوحة ألوان موحدة
+```text
+اللون الأساسي:    أزرق داكن     #1e3a5f (hsl 213 52% 25%)
+اللون الثانوي:    أزرق فاتح     #3b82f6 (hsl 217 91% 60%)  
+اللون المميز:     أزرق سماوي    #60a5fa (hsl 217 92% 68%)
+الخلفية الداكنة:  رمادي-أزرق    #0f172a (hsl 222 47% 11%)
+النصوص الفرعية:   رمادي          #94a3b8
+```
 
 ## الملفات المتأثرة
 
-| الملف | العملية |
-|---|---|
-| `src/index.css` | إزالة CSS rules ضارة بالأداء |
-| `src/components/Nav3D.tsx` | تخفيف أنيميشن + memoize + lazy dropdown |
-| `src/components/MobileNav.tsx` | إيقاف إعادة الجلب عند كل تنقل |
-| `src/contexts/FavoritesContext.tsx` | منع الجلب المكرر |
-| `src/components/PremiumHeroSection.tsx` | تحسين تحميل الصور |
-| `src/hooks/useAuth.tsx` | منع استدعاء fetchUserRole المكرر |
+### 1. `src/index.css` - تغيير متغيرات CSS الجذرية
+- `--primary`: من teal إلى أزرق داكن `213 52% 25%`
+- `--secondary`: من gold إلى أزرق فاتح `217 91% 60%`
+- `--accent`: أزرق سماوي `217 92% 68%`
+- `--ring`: أزرق
+- `::selection`: أزرق
+- تحديث `.text-gradient-gold` → تدرج أزرق
+- تحديث `.text-gradient-teal` → تدرج أزرق
+- تحديث `.btn-luxury` و `.btn-gold` → تدرجات أزرق
+- تحديث `.glow-gold` و `.glow-teal` → توهج أزرق
 
-## النتيجة المتوقعة
-- تقليل عدد Network requests بنسبة ~50% عند التنقل
-- تقليل استهلاك GPU بإزالة الأنيميشنات الدائمة غير المرئية
-- تسريع التنقل بين الصفحات بشكل ملحوظ
-- لا تأثير على شكل التطبيق أو البيانات
+### 2. `tailwind.config.ts` - ألوان Tailwind
+- `luxury-gold` → أزرق فاتح
+- `luxury-teal` → أزرق داكن
+- `glow-teal` و `glow-gold` → ظلال أزرق
+
+### 3. `src/components/PremiumHeroSection.tsx`
+- الـ overlay: تدرج أزرق-رمادي بدل teal
+- الـ floating orbs: أزرق بدل secondary/accent
+- زر CTA: أزرق بدل gold
+- الإحصائيات: أزرق فاتح بدل secondary
+- الـ highlight في العنوان: تدرج أزرق بدل gold
+
+### 4. `src/components/WhyChooseUs.tsx`
+- توحيد ألوان الأيقونات كلها لدرجات الأزرق فقط
+- شريط الإحصائيات: تدرج أزرق بدل teal-cyan-blue
+- الحدود عند hover: أزرق
+
+### 5. `src/components/InteractiveDestinations.tsx`
+- الأزرار النشطة: أزرق داكن (موجود)
+- شريط معلومات الدولة: تدرج أزرق
+- overlay المدن: أزرق-رمادي بدل teal
+- زر "اكتشف الوجهات": أزرق
+- نجمة التقييم: أزرق
+
+### 6. `src/components/MarqueeBanner.tsx`
+- الخلفية: تدرج أزرق بدل teal-cyan-blue
+- الأيقونات: أزرق فاتح بدل cyan
+
+### 7. `src/components/HoneymoonSection.tsx`
+- الخلفية: تدرج أزرق-رمادي داكن
+- الأيقونات والنصوص المميزة: أزرق فاتح بدل cyan
+- زر CTA: أزرق
+
+### 8. `src/components/TestimonialsSection.tsx`
+- نجوم التقييم: أزرق بدل teal
+- أيقونات الثقة: أزرق
+- حدود hover: أزرق
+
+### 9. `src/components/CTASection.tsx`
+- الخلفية: تدرج أزرق-رمادي
+- زر الاتصال: أزرق بدل teal
+- النص المميز: تدرج أزرق
+
+### 10. `src/components/PremiumFooter.tsx`
+- اللوغو: تدرج أزرق بدل teal-emerald
+- hover الروابط: أزرق فاتح بدل gold
+- الأيقونات الاجتماعية: hover أزرق
+- التوهج الخلفي: أزرق بدل teal/gold
+
+### 11. `src/components/Nav3D.tsx`
+- ألوان اللوغو والتفاعلات: أزرق بدل teal
+
+## القواعد
+- لا تغيير في البيانات أو المحتوى النصي
+- لا تغيير في الهيكل أو التخطيط
+- فقط استبدال الألوان لتكون موحدة بدرجات الأزرق والرمادي الداكن
 
