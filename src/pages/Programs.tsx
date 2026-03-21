@@ -307,7 +307,7 @@ const Programs = () => {
                               {originalPrice.toLocaleString()} ر.س
                             </span>
                           )}
-                          <div className="text-luxury-teal font-bold text-xl">
+                          <div className="text-secondary font-bold text-xl">
                             {(program.base_price || program.price || 0).toLocaleString()} ر.س
                           </div>
                         </div>
