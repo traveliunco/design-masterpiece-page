@@ -431,7 +431,9 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
           <>
               <div className={cn(
               "grid gap-3",
-              isMobile ? "grid-cols-1" : tripType === "roundtrip" ? "grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr_1fr]" : "grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr]"
+              isMobile ? "grid-cols-1" : tripType === "roundtrip" 
+                ? "grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr_1fr_auto]" 
+                : "grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr_auto]"
             )}>
                 {/* Origin */}
                 <div ref={originRef} className="relative">
@@ -511,50 +513,23 @@ const SkyscannerSearch = ({ variant = "hero", className }: SkyscannerSearchProps
                     </div>
                   </div>
               }
-              </div>
 
-              {/* Passengers + Class + Add hotel row */}
-              <div className="flex flex-wrap items-center gap-3 pt-1">
-                <div ref={passRef} className="relative">
-                  <button
-                  onClick={() => {setShowPassengers(!showPassengers);setShowOriginDropdown(false);setShowDestDropdown(false);}}
-                  className={cn("flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm transition-all", inputBg)}>
-                  
-                    <svg className={cn("w-4 h-4", isHero ? "text-teal-300" : "text-primary")} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    <span className={cn("font-medium", textColor)}>
-                      {totalPassengers} {totalPassengers === 1 ? "بالغ" : "مسافرون"}
-                      {passengers.children > 0 && `, ${passengers.children} طفل`}
-                      {passengers.infants > 0 && `, ${passengers.infants} رضيع`}
-                    </span>
-                    <span className={cn("text-xs", mutedText)}>, {cabinLabels[cabinClass]}</span>
-                    <ChevronDown className={cn("w-3.5 h-3.5", mutedText)} />
-                  </button>
-                  {showPassengers &&
-                <PassengersDropdown passengers={passengers} cabinClass={cabinClass} cabinLabels={cabinLabels} onAdjust={adjustPassenger} onCabinChange={setCabinClass} onClose={() => setShowPassengers(false)} isHero={isHero} />
-                }
-                </div>
-
-                <label className={cn("flex items-center gap-2 text-sm cursor-pointer", mutedText)}>
-                  <input type="checkbox" checked={addHotel} onChange={(e) => setAddHotel(e.target.checked)} className="w-4 h-4 rounded accent-primary" />
-                  <Building2 className="w-4 h-4" />
-                  أضف فندقًا
-                </label>
-
+                {/* Search button - inline with fields */}
                 <button
                 onClick={handleSearch}
                 disabled={!origin || !destination}
                 className={cn(
-                  "mr-auto flex items-center gap-2 px-8 py-3 rounded-2xl font-bold text-base transition-all shadow-lg",
+                  "flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-bold text-base transition-all shadow-lg",
+                  isMobile && "w-full",
                   !origin || !destination ?
                   "opacity-50 cursor-not-allowed bg-gray-300 text-gray-500" :
-                  "bg-gradient-to-r from-primary to-teal-500 hover:from-primary/90 hover:to-teal-400 text-white hover:shadow-primary/30 hover:scale-[1.03] active:scale-95"
+                  isHero
+                    ? "bg-gradient-to-r from-secondary via-[hsl(40,85%,55%)] to-secondary text-secondary-foreground hover:shadow-[0_8px_30px_rgba(212,175,55,0.4)] hover:scale-[1.03] active:scale-95"
+                    : "bg-gradient-to-r from-primary to-teal-500 hover:from-primary/90 hover:to-teal-400 text-white hover:shadow-primary/30 hover:scale-[1.03] active:scale-95"
                 )}>
                 
                   <Search className="w-5 h-5" />
-                  بحث عن رحلات
+                  <span className="hidden md:inline">بحث</span>
                 </button>
               </div>
             </>)
