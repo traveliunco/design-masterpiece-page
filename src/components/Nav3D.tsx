@@ -230,7 +230,7 @@ const Nav3D = () => {
                     className="w-10 h-10 object-contain relative z-10"
                   />
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-luxury-gold rounded-full shadow-[0_0_15px_rgba(234,179,8,0.8)]" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
               </div>
               <div>
                 <span className={cn(
