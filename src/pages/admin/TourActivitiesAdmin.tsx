@@ -56,10 +56,10 @@ const TourActivitiesAdmin = () => {
   const saveMutation = useMutation({
     mutationFn: async (formData: Partial<Activity>) => {
       if (editId) {
-        const { error } = await (supabase.from("tour_activities" as any) as any).update(formData).eq("id", editId);
+        const { error } = await supabase.from("tour_activities").update(formData as any).eq("id", editId);
         if (error) throw error;
       } else {
-        const { error } = await (supabase.from("tour_activities" as any) as any).insert(formData);
+        const { error } = await supabase.from("tour_activities").insert(formData as any);
         if (error) throw error;
       }
     },
