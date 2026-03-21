@@ -346,7 +346,7 @@ const Offers = () => {
                           <div>
                             <span className="text-muted-foreground line-through text-sm block">{offer.original_price.toLocaleString()} ر.س</span>
                             <div className="flex items-baseline gap-1">
-                              <span className="text-3xl font-black text-luxury-teal">{offer.discounted_price.toLocaleString()}</span>
+                              <span className="text-3xl font-black text-secondary">{offer.discounted_price.toLocaleString()}</span>
                               <span className="text-sm text-muted-foreground">ر.س</span>
                             </div>
                           </div>
